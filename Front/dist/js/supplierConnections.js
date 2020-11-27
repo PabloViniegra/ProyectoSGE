@@ -1,9 +1,9 @@
-async function loadClient() {
+async function loadSupplier() {
     const querystring = location.search;
     const params = new URLSearchParams(querystring)
     let id = params.get("id");
     if (id == undefined) id = 1
-    let url = 'http://localhost:8080/api/v1/suppliers';
+    let url = 'http://localhost:8080/api/v1/supplier';
     let getInit = {
         method: 'GET',
         headers: {
@@ -62,7 +62,7 @@ async function loadClient() {
 
                 a.appendChild(li);
 
-                document.getElementById('LastSuppliersList').appendChild(a);
+                document.getElementById('lastSuppliersList').appendChild(a);
             }
         })
 }
@@ -76,7 +76,7 @@ async function addSupplier() {
         const params = new URLSearchParams(querystring)
         let id = params.get("id");
         if (id == undefined) id = 1
-        let name = document.getElementById('inputCompletName')
+        let name = document.getElementById('inputCompleteName')
         let email = document.getElementById('inputEmail')
         let dni = document.getElementById('inputDNI')
         let telephone = document.getElementById('inputTelephone')
@@ -85,7 +85,6 @@ async function addSupplier() {
         let data = {
             fullName: name.value,
             email: email.value,
-            iban: iban.value,
             dni: dni.value,
             telephones: [{
                 number: telephone.value
@@ -96,7 +95,7 @@ async function addSupplier() {
             purchases: []
         }
 
-        let url = 'http://localhost:8080/api/v1/suppliers';
+        let url = 'http://localhost:8080/api/v1/supplier';
         let postInit = {
             method: 'POST',
             headers: {
@@ -144,7 +143,7 @@ async function updateSuppliers() {
 
         console.log(data)
 
-        let url = 'http://localhost:8080/api/v1/suppliers/' + id;
+        let url = 'http://localhost:8080/api/v1/supplier/' + id;
         let postInit = {
             method: 'PUT',
             headers: {
