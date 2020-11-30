@@ -113,7 +113,7 @@ async function addSupplier() {
     })
 }
 
-async function updateSuppliers() {
+async function updateSupplier() {
     let form = document.getElementById('updateSupplier')
 
     form.addEventListener('submit', async(e) => {
@@ -131,6 +131,7 @@ async function updateSuppliers() {
         let data = {
             fullName: name.value,
             email: email.value,
+            iban: iban.value,
             dni: dni.value,
             telephones: [{
                 number: telephone.value
