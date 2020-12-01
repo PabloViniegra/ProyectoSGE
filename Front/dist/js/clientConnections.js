@@ -208,4 +208,27 @@ function deleteClient() {
 
 }
 
+async function getAllClientsInaSelected() {
+    let url = "'http://localhost:8080/api/v1/clients";
+    let getInit = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    }
+
+    await fetch(url,getInit)
+    .then(response => response.json())
+    .then (response => {
+        let select = document.getElementById('clienteForSale');
+        response.forEach(c => {
+            let option = document.createElement('option');
+            option.setAttribute('value',response.id);
+            option.innerHTML = response.fullName;
+            select.appendChild(option);
+        });
+    })
+}
+
 // <a href=""><li><i class="fas fa-clipboard mr-2"></i>Lorem ipsum dolor sit amet consectetur</li></a>

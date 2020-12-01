@@ -86,10 +86,14 @@
                         <div class="collapse" id="collapseExample">
                             <form class="my-4 ml-2">
                                 <div class="form-row">
-                                    <div class="form-group col-6">
-                                        <label for="personalID" class="text-black-50 text-center">ID del Personal</label>
-                                        <input type="text" class="form-control" id="personalID">
+                                    <div class="form-group col-6" onload="getAllClientsInaSelected()">
+                                        <!--Deberá desplegar los clientes <selected><option></option></selected-->
+                                        <label for="clienteForSale" class="text-black-50 text-center">Cliente</label>
+                                        <select name="" id="clienteForSale">
+
+                                        </select>
                                     </div>
+                                    <!--Deberá desplegar todos el personal disponible-->
                                     <div class="form-group col-6">
                                         <label for="personalName" class="text-black-50 text-center">Nombre completo</label>
                                         <input type="text" class="form-control" id="personalName">
@@ -125,49 +129,8 @@
                         <div class="col">
                             <div class="collapse" id="collapseExample2">
                                 <form class="form-inline my-2 my-lg-0 my-n3">
-                                    <input class="form-control mr-sm-2" type="search" placeholder="Buscar por ID" aria-label="Search">
-                                    <button class="btn btn-dark my-2 my-sm-0" type="submit">Buscar</button>
+                                    
                                 </form>
-                                <table class="table table-bordered table-dark my-4">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">ID</th>
-                                            <th scope="col">Fecha</th>
-                                            <th scope="col">Cliente</th>
-                                            <th scope="col">Cantidad</th>
-                                            <th scope="col">Personal</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <a href="">
-                                                <th scope="row">1</th>
-                                            </a>
-                                            <td>09-11-2020</td>
-                                            <td>Alejandro</td>
-                                            <td>4</td>
-                                            <td>Manuel</td>
-                                        </tr>
-                                       
-                                    </tbody>
-                                </table>
-                                <nav aria-label="Page navigation example">
-                                    <ul class="pagination">
-                                        <li class="page-item">
-                                            <a class="page-link" href="#" aria-label="Previous">
-                                                <span aria-hidden="true" class="text-dark">&laquo;</span>
-                                            </a>
-                                        </li>
-                                        <li class="page-item" class="text-dark"><a class="page-link" href="#">1</a></li>
-                                        <li class="page-item" class="text-dark"><a class="page-link" href="#">2</a></li>
-                                        <li class="page-item" class="text-dark"><a class="page-link" href="#">3</a></li>
-                                        <li class="page-item">
-                                            <a class="page-link" href="#" aria-label="Next">
-                                                <span aria-hidden="true" class="text-dark">&raquo;</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </nav>
                             </div>
                         </div>
                     </div>
@@ -208,6 +171,7 @@
             </div>
         </footer>
         </div>
+        <script src="../dist/js/clientConnections.js"></script>
         <script src="../assets/bootstrap-4.5.3-dist/js/bootstrap.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
