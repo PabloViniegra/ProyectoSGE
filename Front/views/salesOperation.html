@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="../dist/css/styles.css" />
 </head>
 
-<body>
+<body onload="getAllClientsInaSelected(); getAllStaffInaSelected(); getAllProductsInaSelected()">
     <div class="container-fluid">
         <nav class="navbar navbar-expand-md navbar-dark myNavbar">
             <a class="navbar-brand" href="../index.html">
@@ -70,7 +70,7 @@
                 <hr class="bg-white" />
             </aside>
             <section class="col-8 row justify-content-center my-3">
-                <p>
+                <p class="col-12">
                     <a class="btn btn-dark" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
               Agregar Venta
             </a>
@@ -86,22 +86,24 @@
                         <div class="collapse" id="collapseExample">
                             <form class="my-4 ml-2">
                                 <div class="form-row">
-                                    <div class="form-group col-6" onload="getAllClientsInaSelected()">
-                                        <!--Deberá desplegar los clientes <selected><option></option></selected-->
+                                    <div class="form-group col-6">
                                         <label for="clienteForSale" class="text-black-50 text-center">Cliente</label>
-                                        <select name="" id="clienteForSale">
+                                        <select id="clienteForSale">
 
                                         </select>
                                     </div>
-                                    <!--Deberá desplegar todos el personal disponible-->
                                     <div class="form-group col-6">
-                                        <label for="personalName" class="text-black-50 text-center">Nombre completo</label>
-                                        <input type="text" class="form-control" id="personalName">
+                                        <label for="personalName" class="text-black-50 text-center">Personal</label>
+                                        <select id="personalName">
+
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="products" class="text-black-50 text-center">Productos</label>
-                                    <input type="text" class="form-control" id="products" placeholder="1234 Main St">
+                                    <select id="productName">
+
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="client" class="text-black-50 text-white">Cliente</label>
@@ -129,7 +131,7 @@
                         <div class="col">
                             <div class="collapse" id="collapseExample2">
                                 <form class="form-inline my-2 my-lg-0 my-n3">
-                                    
+
                                 </form>
                             </div>
                         </div>
@@ -145,19 +147,19 @@
                                     <div class="card text-white bg-dark mb-3 text-center" style="max-width: 18rem;">
                                         <table class="table table-dark">
                                             <thead>
-                                              <tr>
-                                                <th scope="col">ID</th>
-                                                <th scope="col">Cliente</th>
-                                                <th scope="col">Personal encargado</th>
-                                                <th scope="col">Fecha de la factura</th>
-                                                <th scope="col">Total</th>
-                                                <th scope="col">Productos</th>
-                                              </tr>
+                                                <tr>
+                                                    <th scope="col">ID</th>
+                                                    <th scope="col">Cliente</th>
+                                                    <th scope="col">Personal encargado</th>
+                                                    <th scope="col">Fecha de la factura</th>
+                                                    <th scope="col">Total</th>
+                                                    <th scope="col">Productos</th>
+                                                </tr>
                                             </thead>
                                             <tbody>
-                                              
+
                                             </tbody>
-                                          </table>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -171,7 +173,7 @@
             </div>
         </footer>
         </div>
-        <script src="../dist/js/clientConnections.js"></script>
+        <script src="../dist/js/salesConnection.js"></script>
         <script src="../assets/bootstrap-4.5.3-dist/js/bootstrap.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>

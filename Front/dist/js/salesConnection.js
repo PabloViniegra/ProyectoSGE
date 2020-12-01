@@ -126,3 +126,72 @@ async function loadSale() {
             });
         })
 }
+
+async function getAllClientsInaSelected() {
+    let url = 'http://localhost:8080/api/v1/clients';
+    let getInit = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    }
+
+    await fetch(url, getInit)
+        .then(response => response.json())
+        .then(response => {
+            let select = document.getElementById('clienteForSale');
+            response.forEach(c => {
+                let option = document.createElement('option');
+                option.setAttribute('value', c.id);
+                option.innerHTML = c.fullName;
+                select.appendChild(option);
+            });
+        })
+}
+
+async function getAllStaffInaSelected() {
+    let url = 'http://localhost:8080/api/v1/staffs';
+    let getInit = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    }
+
+    await fetch(url, getInit)
+        .then(response => response.json())
+        .then(response => {
+            let select = document.getElementById('personalName');
+            response.forEach(c => {
+                let option = document.createElement('option');
+                option.setAttribute('value', c.id);
+                option.innerHTML = c.name;
+                select.appendChild(option);
+            });
+        })
+}
+
+async function getAllProductsInaSelected() {
+    let url = 'http://localhost:8080/api/v1/products';
+    let getInit = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    }
+
+    await fetch(url, getInit)
+        .then(response => response.json())
+        .then(response => {
+            let select = document.getElementById('productName');
+            response.forEach(c => {
+                let option = document.createElement('option');
+                option.setAttribute('value', c.id);
+                option.innerHTML = c.name;
+                select.appendChild(option);
+            });
+        })
+}
