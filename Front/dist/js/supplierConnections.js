@@ -2,7 +2,7 @@ async function loadSupplier() {
     const querystring = location.search;
     const params = new URLSearchParams(querystring)
     let id = params.get("id");
-    if (id == undefined) id = 1
+    if (id == undefined) id = 2
     let url = 'http://localhost:8080/api/v1/supplier';
     let getInit = {
         method: 'GET',
@@ -14,6 +14,23 @@ async function loadSupplier() {
     await fetch(url + '/' + id, getInit)
         .then(response => response.json())
         .then(response => {
+            let deleteForm = document.getElementById('bodyDelete');
+            let trDelete = document.createElement('tr')
+            //id - nombre - email - dni
+            let tdId = document.createElement('td')
+            tdId.innerHTML = response.id;
+            trDelete.appendChild(tdId)
+            let tdNombre = document.createElement('td')
+            tdNombre.innerHTML = response.fullName;
+            trDelete.appendChild(tdNombre)
+            let tdEmail = document.createElement('td')
+            tdEmail.innerHTML = response.email;
+            trDelete.appendChild(tdEmail)
+            let tdDni = document.createElement('td')
+            tdDni.innerHTML = response.dni;
+            trDelete.appendChild(tdDni)
+            deleteForm.appendChild(trDelete)
+
             let name = document.getElementById('NombreProveedor')
             name.innerHTML = name.innerHTML + response.fullName;
             let inputName = document.getElementById('inputCompleteName2');
@@ -62,7 +79,7 @@ async function loadSupplier() {
 
                 a.appendChild(li);
 
-                document.getElementById('lastSuppliersList').appendChild(a);
+                document.getElementById('lastSupplierList').appendChild(a);
             }
         })
 }
@@ -131,7 +148,6 @@ async function updateSupplier() {
         let data = {
             fullName: name.value,
             email: email.value,
-            iban: iban.value,
             dni: dni.value,
             telephones: [{
                 number: telephone.value
@@ -159,4 +175,27 @@ async function updateSupplier() {
 
         location.href = 'suppliers.html?id=' + id;
     })
+}
+
+function deleteSupplier() {
+    let form = document.getElementById('deleteSupplier')
+    form.addEventListener('submit', async(e) => {
+        const querystring = location.search;
+        const params = new URLSearchParams(querystring)
+        let id = params.get("id");
+        let url = 'http://localhost:8080/api/v1/supplier/' + id;
+        let deleteInit = {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        }
+
+        await fetch(url, deleteInit)
+            .then(response => console.log(response))
+
+        location.href = 'suppliers.html';
+    })
+
 }
