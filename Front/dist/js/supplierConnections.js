@@ -2,7 +2,7 @@ async function loadSupplier() {
     const querystring = location.search;
     const params = new URLSearchParams(querystring)
     let id = params.get("id");
-    if (id == undefined) id = 2
+    if (id == undefined) id = 1
     let url = 'http://localhost:8080/api/v1/supplier';
     let getInit = {
         method: 'GET',
@@ -31,7 +31,7 @@ async function loadSupplier() {
             trDelete.appendChild(tdDni)
             deleteForm.appendChild(trDelete)
 
-            let name = document.getElementById('NombreProveedor')
+            let name = document.getElementById('NombreSupplier')
             name.innerHTML = name.innerHTML + response.fullName;
             let inputName = document.getElementById('inputCompleteName2');
             inputName.value = response.fullName;

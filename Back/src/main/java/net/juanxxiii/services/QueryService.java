@@ -287,6 +287,7 @@ public class QueryService {
                     newSupplier.getTelephones()
                             .forEach(telephone -> {
                                 if (!telephones.contains(telephone)) {
+                                    telephone.setSupplier(supplier.getId());
                                     supplierTelephoneRepository.save(telephone);
                                 }
                             });
@@ -298,6 +299,7 @@ public class QueryService {
                     newSupplier.getDirections()
                             .forEach(direction -> {
                                 if (!directions.contains(direction)) {
+                                    direction.setSupplier(supplier.getId());
                                     supplierDirectionRepository.save(direction);
                                 }
                             });
@@ -312,9 +314,10 @@ public class QueryService {
                                     purchaseRepository.save(purchase);
                                 }
                             });
-                    purchases.forEach(sale -> {
-                        if (!newSupplier.getPurchases().contains(sale)) {
-                            purchaseRepository.deleteById(sale.getId());
+                    purchases.forEach(purchase -> {
+                        if (!newSupplier.getPurchases().contains(purchase)) {
+                            purchase.setSupplier(supplier.getId());
+                            purchaseRepository.deleteById(purchase.getId());
                         }
                     });
                     return supplierRepository.updateSupplier(newSupplier.getFullName(), newSupplier.getDni(), newSupplier.getEmail(), newSupplier.getId());
