@@ -10,7 +10,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
 </head>
 
-<body>
+<body onload="getAllProductsInaSelected(), getAllStaffInaSelected(), getAllSuppliersInaSelected()">
     <div class="container-fluid">
         <nav class="navbar navbar-expand-md navbar-dark myNavbar">
             <a class="navbar-brand" href="index.html"> <img src="../resources/logoTemporal.png" alt="" class="w-50"> </a>
@@ -84,37 +84,57 @@
                             <form class="my-4 ml-2">
                                 <div class="form-row">
                                     <div class="form-group col-6">
-                                        <label for="personalID" class="text-white text-center">ID del Personal</label>
-                                        <input type="text" class="form-control" id="personalID">
+                                        <label for="supplierForPurchase" class="text-black-50 text-center">Proveedor</label>
+                                        <select id="supplierForPurchase">
+
+                                        </select>
                                     </div>
                                     <div class="form-group col-6">
-                                        <label for="personalName" class="text-white text-center">Nombre completo</label>
-                                        <input type="text" class="form-control" id="personalName">
+                                        <label for="personalName" class="text-black-50 text-center">Personal</label>
+                                        <select id="personalName">
+
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="products" class="text-white text-center">Productos</label>
-                                    <input type="text" class="form-control" id="products" placeholder="1234 Main St">
-                                </div>
-                                <div class="form-group">
-                                    <label for="client" class="text-center text-white">Proveedor</label>
-                                    <input type="text" class="form-control" id="client" placeholder="Pablo Viniegra">
+                                    <label for="productName" class="text-black-50 text-center">Productos</label>
+                                    <select id="productName">
+
+                                    </select>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-6">
-                                        <label for="dateSell" class="text-white text-center">Fecha de Compra</label>
-                                        <input type="date" class="form-control" id="dateSell">
+                                        <label for="datePurchase" class="text-black-50 text-center">Fecha de compra</label>
+                                        <input type="date" class="form-control" id="datePurchase">
                                     </div>
                                     <div class="form-group col-6">
-                                        <label for="countSell" class="text-center text-white">Cantidad comprada</label>
-                                        <input type="number" class="form-control" id="countSell">
+                                        <label for="countPurchase" class="text-black-50 text-white">Cantidad</label>
+                                        <input type="number" class="form-control" id="countPurchase" onclick="getInfoFromProduct()">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-4">
+                                        <label for="subTotalPurchase" class="text-black-50 text-center">Subtotal</label>
+                                        <h6 type="date" class="form-control" id="subTotalPurchase"></h6>
+                                    </div>
+                                    <div class="form-group col-4">
+                                        <label for="discountPurchase" class="text-black-50 text-center">Descuentos</label>
+                                        <h6 type="date" class="form-control" id="discountPurchase"></h6>
+                                    </div>
+                                    <div class="form-group col-4">
+                                        <label for="ivaPurchase" class="text-black-50 text-center">IVA</label>
+                                        <h6 type="date" class="form-control" id="ivaPurchase">21%</h6>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-12">
+                                        <label for="totalPurchase" class="text-black-50 text-center">Total de la compra</label>
+                                        <h6 type="date" class="form-control" id="totalPurchase"></h6>
                                     </div>
                                 </div>
                                 <div class="buttons row justify-content-around">
-                                    <button type="submit" class="btn btn2 col-4">Agregar Proveedor</button>
-                                    <button type="submit" class="btn btn2 col-4">Generar Factura</button>
+                                    <button type="button" class="btn btn2 col-4" onclick="getInfoFromProduct()">Realizar compra</button>
                                 </div>
-
                             </form>
                         </div>
                     </div>
@@ -122,55 +142,8 @@
                         <div class="col">
                             <div class="collapse" id="collapseExample2">
                                 <form class="form-inline my-2 my-lg-0 my-n3">
-                                    <input class="form-control mr-sm-2" type="search" placeholder="Buscar por ID" aria-label="Search">
-                                    <button class="btn btn-dark my-2 my-sm-0" type="submit">Buscar</button>
+
                                 </form>
-                                <table class="table table-bordered table-dark my-4">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">ID</th>
-                                            <th scope="col">Fecha</th>
-                                            <th scope="col">Proveedor</th>
-                                            <th scope="col">Cantidad</th>
-                                            <th scope="col">Personal</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <a href="">
-                                                <th scope="row">1</th>
-                                            </a>
-                                            <td>09-11-2020</td>
-                                            <td>Alejandro</td>
-                                            <td>4</td>
-                                            <td>Manuel</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">2</th>
-                                            <td>07-11-2020</td>
-                                            <td>Fernando</td>
-                                            <td>2</td>
-                                            <td>Manuel</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <nav aria-label="Page navigation example">
-                                    <ul class="pagination">
-                                        <li class="page-item">
-                                            <a class="page-link" href="#" aria-label="Previous">
-                                                <span aria-hidden="true" class="text-dark">&laquo;</span>
-                                            </a>
-                                        </li>
-                                        <li class="page-item" class="text-dark"><a class="page-link" href="#">1</a></li>
-                                        <li class="page-item" class="text-dark"><a class="page-link" href="#">2</a></li>
-                                        <li class="page-item" class="text-dark"><a class="page-link" href="#">3</a></li>
-                                        <li class="page-item">
-                                            <a class="page-link" href="#" aria-label="Next">
-                                                <span aria-hidden="true" class="text-dark">&raquo;</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </nav>
                             </div>
                         </div>
                     </div>
@@ -179,22 +152,31 @@
                             <div class="collapse" id="collapseExample3">
                                 <form class="form-inline my-2 my-lg-0 my-n3">
                                     <input class="form-control mr-sm-2" type="search" placeholder="Buscar por ID" aria-label="Search">
-                                    <button class="btn btn-dark my-2 my-sm-0" type="submit">Buscar</button>
+                                    <button class="btn btn-dark my-2 my-sm-0" type="button">Buscar</button>
                                 </form>
-                                <div class="resultSearch row justify-content-center my-3">
+                                <div class="resultSearch row justify-content-center">
                                     <div class="card text-white bg-dark mb-3 text-center" style="max-width: 18rem;">
-                                        <div class="card-header">Fecha Compra</div>
-                                        <div class="card-body">
-                                            <h5 class="card-title">Proveedor</h5>
-                                            <h3 class="card-subtitle">Personal</h3>
-                                            <p class="card-text my-4">ID Compra</p>
-                                            <p class="card-text my-4">Productos</p>
-                                        </div>
+                                        <table class="table table-dark">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">ID</th>
+                                                <th scope="col">Cliente</th>
+                                                <th scope="col">Personal encargado</th>
+                                                <th scope="col">Fecha de la factura</th>
+                                                <th scope="col">Total</th>
+                                                <th scope="col">Productos</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
             </section>
         </section>
         <footer class="footer row">
@@ -203,7 +185,8 @@
             </div>
         </footer>
         </div>
-        <script src="../assets/bootstrap-4.5.3-dist/js/bootstrap.min.js"></script>
+    <script src="../dist/js/purchasesConnection.js"></script>
+    <script src="../assets/bootstrap-4.5.3-dist/js/bootstrap.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
         <script src="../assets/bootstrap-4.5.3-dist/js/bootstrap.bundle.js"></script>
 </body>

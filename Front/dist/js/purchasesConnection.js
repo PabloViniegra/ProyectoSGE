@@ -1,5 +1,7 @@
-async function loadSalesList() {
-    let url = 'http://localhost:8080/api/v1/sales'
+let idProduct;
+
+async function loadPurchasesList() {
+    let url = 'http://localhost:8080/api/v1/purchases'
     let getInit = {
         method: 'GET',
         headers: {
@@ -18,8 +20,8 @@ async function loadSalesList() {
             }
             for (let i = 0; i < final; i++) {
                 let a = document.createElement('a');
-                let urlClient = 'sales.html?id=' + response[i].id + '&idClient=' + response[i].client;
-                a.setAttribute('href', urlClient);
+                let urlSupplier = 'purchases.html?id=' + response[i].id + '&idSupplier=' + response[i].supplier;
+                a.setAttribute('href', urlSupplier);
 
                 let li = document.createElement('li');
 
@@ -31,19 +33,19 @@ async function loadSalesList() {
 
                 a.appendChild(li);
 
-                document.getElementById('LastClientList').appendChild(a);
+                document.getElementById('LastSuppliersListList').appendChild(a);
             }
         })
 }
 
-async function loadSale() {
+async function loadPurchase() {
     const querystring = location.search;
     const params = new URLSearchParams(querystring)
     let id = params.get('id')
-    let idClient = params.get('idClient');
+    let idSupplier = params.get('idSupplier');
     if (id == undefined) id = 1
-    if (idClient == undefined) idClient = 1;
-    let urlCliente = 'http://localhost:8080/api/v1/clients/' + idClient;
+    if (idSupplier == undefined) idSupplier = 1;
+    let urlSupplier = 'http://localhost:8080/api/v1/supplier/' + idSupplier;
     let getInit = {
         method: 'GET',
         headers: {
@@ -51,42 +53,40 @@ async function loadSale() {
             'Accept': 'application/json'
         }
     }
-    await fetch(urlCliente, getInit)
+    await fetch(urlSupplier, getInit)
         .then(response => response.json())
         .then(response => {
-            let name = document.getElementById('NombreCliente')
+            let name = document.getElementById('NombreProveedor')
             name.innerHTML = name.innerHTML + response.fullName;
-            let dni = document.getElementById('DniCliente')
+            let dni = document.getElementById('DniProveedor')
             dni.innerHTML = dni.innerHTML + response.dni;
-            let email = document.getElementById('EmailCliente')
+            let email = document.getElementById('EmailProveedor')
             email.innerHTML = email.innerHTML + response.email;
-            let iban = document.getElementById('IbanCliente')
-            iban.innerHTML = iban.innerHTML + response.iban;
-            let tele = document.getElementById('TelefonoCliente')
+            let tele = document.getElementById('TelefonoProveedor')
             tele.innerHTML = tele.innerHTML + response.telephones[0].number;
-            let dire = document.getElementById('DireccionCliente')
+            let dire = document.getElementById('DireccionProveedor')
             dire.innerHTML = dire.innerHTML + response.directions[0].direction;
-            let button = document.getElementById('EnlaceCliente')
-            button.setAttribute('href', 'clients.html?id=' + idClient)
+            let button = document.getElementById('EnlaceProveedor')
+            button.setAttribute('href', 'suppliers.html?id=' + idSupplier)
         })
-    let urlSale = 'http://localhost:8080/api/v1/sales/' + id;
-    await fetch(urlSale, getInit)
+    let urlPurchase = 'http://localhost:8080/api/v1/purchases/' + id;
+    await fetch(urlPurchase, getInit)
         .then(response => response.json())
         .then(response => {
             console.log(response)
 
-            let discount = document.getElementById('descuentoVenta')
+            let discount = document.getElementById('descuentoCompra')
             discount.innerHTML = discount.innerHTML + response.receipt.discounts;
-            let iva = document.getElementById('ivaVenta')
+            let iva = document.getElementById('ivaCompra')
             iva.innerHTML = iva.innerHTML + response.receipt.iva + '%';
-            let subtotal = document.getElementById('subtotalVenta')
+            let subtotal = document.getElementById('subtotalCompra')
             subtotal.innerHTML = subtotal.innerHTML + response.receipt.subtotal;
-            let total = document.getElementById('totalVenta')
+            let total = document.getElementById('totalCompra')
             total.innerHTML = total.innerHTML + response.receipt.total;
-            let date = document.getElementById('fechaVenta')
+            let date = document.getElementById('fechaCompra')
             date.innerHTML = date.innerHTML + response.receipt.receiptDate;
             let button = document.getElementById('enlaceRecibo')
-            button.setAttribute('href', 'receipts.html?id=' + idClient)
+            button.setAttribute('href', 'receipts.html?id=' + idSupplier)
 
             let idPersonal = document.getElementById('idStaff')
             idPersonal.innerHTML = idPersonal.innerHTML + response.staff.idStaff;
@@ -98,8 +98,8 @@ async function loadSale() {
             emailStaff.innerHTML = emailStaff.innerHTML + response.staff.email;
 
             let tBody = document.getElementById('products')
-            response.saleLines.forEach(line => {
-                //line.idProduct
+            response.purchaseLines.forEach(line => {
+
                 let tr = document.createElement('tr');
                 let id = document.createElement('td');
                 id.innerHTML = line.idProduct.id;
@@ -125,10 +125,10 @@ async function loadSale() {
                 tBody.appendChild(tr)
             });
         })
-}
+    }
 
-async function getAllClientsInaSelected() {
-    let url = 'http://localhost:8080/api/v1/clients';
+async function getAllSuppliersInaSelected() {
+    let url = 'http://localhost:8080/api/v1/supplier';
     let getInit = {
         method: 'GET',
         headers: {
@@ -140,7 +140,7 @@ async function getAllClientsInaSelected() {
     await fetch(url, getInit)
         .then(response => response.json())
         .then(response => {
-            let select = document.getElementById('clienteForSale');
+            let select = document.getElementById('supplierForPurchase');
             response.forEach(c => {
                 let option = document.createElement('option');
                 option.setAttribute('value', c.id);
@@ -149,6 +149,7 @@ async function getAllClientsInaSelected() {
             });
         })
 }
+
 
 async function getAllStaffInaSelected() {
     let url = 'http://localhost:8080/api/v1/staffs';
@@ -190,9 +191,36 @@ async function getAllProductsInaSelected() {
             response.forEach(c => {
                 let option = document.createElement('option');
                 option.setAttribute('value', c.id);
+                idProduct = c.id;
                 option.innerHTML = c.name;
                 select.appendChild(option);
             });
         })
+
 }
 
+async function getInfoFromProduct() {
+    let url = 'http://localhost:8080/api/v1/products/' + idProduct;
+    let getInit = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    }
+
+    await fetch(url, getInit)
+        .then(response => response.json())
+        .then(response => {
+            let precioSinIva = response.sellPrice;
+            precioSinIva.innerHTML = precioSinIva.innerHTML
+            let subtotal = document.getElementById("subTotalPurchase")
+            let precioConIva = precioSinIva * 1.21;
+            let totalCompra = precioConIva * document.getElementById("countPurchase").value;
+            totalCompra.innerHTML = totalCompra.innerHTML + totalCompra
+            subtotal.innerHTML = precioSinIva * document.getElementById("countPurchase").value;
+            let total = document.getElementById("totalPurchase")
+            total.innerHTML = totalCompra
+        })
+
+}
