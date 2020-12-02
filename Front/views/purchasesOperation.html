@@ -109,7 +109,7 @@
                                     </div>
                                     <div class="form-group col-6">
                                         <label for="countPurchase" class="text-black-50 text-white">Cantidad</label>
-                                        <input type="number" class="form-control" id="countPurchase" onclick="getInfoFromProduct()">
+                                        <input type="number" class="form-control" id="countPurchase" min="0" onchange="getInfoFromProduct()">
                                     </div>
                                 </div>
                                 <div class="form-row">
@@ -118,12 +118,12 @@
                                         <h6 type="date" class="form-control" id="subTotalPurchase"></h6>
                                     </div>
                                     <div class="form-group col-4">
-                                        <label for="discountPurchase" class="text-black-50 text-center">Descuentos</label>
-                                        <h6 type="date" class="form-control" id="discountPurchase"></h6>
+                                        <label for="discountPurchase" class="text-black-50 text-center">Descuentos (%)</label>
+                                        <input type="number" class="form-control" id="discountPurchase" min="0" max="100"></input>
                                     </div>
                                     <div class="form-group col-4">
-                                        <label for="ivaPurchase" class="text-black-50 text-center">IVA</label>
-                                        <h6 type="date" class="form-control" id="ivaPurchase">21%</h6>
+                                        <label for="ivaPurchase" class="text-black-50 text-center">IVA (%)</label>
+                                        <input type="number" class="form-control" id="ivaPurchase" min="0" max="100"></input>
                                     </div>
                                 </div>
                                 <div class="form-row">
@@ -133,7 +133,7 @@
                                     </div>
                                 </div>
                                 <div class="buttons row justify-content-around">
-                                    <button type="button" class="btn btn2 col-4" onclick="getInfoFromProduct()">Realizar compra</button>
+                                    <button type="button" class="btn btn2 col-4" >Realizar compra</button>
                                 </div>
                             </form>
                         </div>
