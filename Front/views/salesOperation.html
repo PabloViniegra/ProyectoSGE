@@ -157,70 +157,60 @@
                             <!-- Card body -->
                             <div id="collapse5" class="collapse" role="tabpanel" aria-labelledby="heading5" data-parent="#accordionEx194">
                                 <div class="card-body pt-0 row justify-content-center bg-secondary">
-                                    <div class="col-12 ml-4">
+                                    <div class="col-12">
                                         <div>
                                             <form class="my-4 ml-2" id="formAdd">
                                                 <div class="form-row">
                                                     <div class="form-group col-6">
                                                         <label for="clienteForSale" class="text-white-50 text-center">Cliente</label>
-                                                        <select id="clienteForSale">
+                                                        <select id="clienteForSale" class="browser-default custom-select form-control" data-width="100%">
 
                                                         </select>
                                                     </div>
                                                     <div class="form-group col-6">
                                                         <label for="personalName" class="text-white-50 text-center">Personal</label>
-                                                        <select id="personalName">
+                                                        <select id="personalName" class="browser-default custom-select form-control" data-width="100%">
 
                                                         </select>
                                                     </div>
-                                                </div>
-                                                <div class="form-row">
-                                                    <table class="col-12 table table-dark table-bordered text-center">
-                                                        <thead>
-                                                            <tr>
-                                                                <th scope="col">Nombre</th>
-                                                                <th scope="col">Cantidad</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody id="productSale">
-                                                        </tbody>
-                                                    </table>
+                                                    <div class="form-group col-6">
+                                                        <label for="subtotal" class="text-white-50 text-white">Subtotal</label>
+                                                        <input type="number" class="form-control" id="subtotal" value="0" readonly>
+                                                    </div>
+                                                    <div class="form-group col-6">
+                                                        <label for="iva" class="text-white-50 text-white">Iva</label>
+                                                        <input type="number" class="form-control" id="iva" min="1" value="21">
+                                                    </div>
                                                     <div class="form-group col-6">
                                                         <label for="products" class="text-white-50 text-center">Productos</label>
-                                                        <select id="productName" class="browser-default custom-select">
+                                                        <select id="productName" class="browser-default custom-select form-control">
     
                                                         </select>
                                                     </div>
                                                     <div class="form-group col-6">
                                                         <label for="countSell" class="text-white-50 text-white">Cantidad</label>
-                                                        <input type="number" class="form-control" id="countSell" min="0">
+                                                        <input type="number" class="form-control" id="countSell" min="1" value="1">
                                                     </div>
                                                     <div class="col-12 row justify-content-center">
-                                                        <button class="btn btn-dark" type="submit">Añadir</button>
+                                                        <button class="btn btn-dark" type="submit">Añadir Producto</button>
                                                     </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="client" class="text-white-50 text-white">Cliente</label>
-                                                    <input type="text" class="form-control" id="client" placeholder="Pablo Viniegra">
-                                                </div>
-                                                <div class="form-row">
-                                                    <div class="form-group col-6">
-                                                        <label for="dateSell" class="text-white-50 text-center">Fecha de
-                                                            venta</label>
-                                                        <input type="date" class="form-control" id="dateSell">
+                                                    <hr class="col-12">
+                                                    <div class="col-12 row justify-content-center">
+                                                        <button type="submit" class="btn btn2 col-4">Agregar
+                                                            Venta</button>
                                                     </div>
-                                                    <div class="form-group col-6">
-                                                        <label for="countSell" class="text-black-50 text-white">Cantidad</label>
-                                                        <input type="number" class="form-control" id="countSell">
-                                                    </div>
+                                                    <hr class="col-12">
+                                                    <table class="col-12 table table-dark table-bordered text-center">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col" class="col-6">Nombre</th>
+                                                                <th scope="col" class="col-6">Cantidad</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="productSale">
+                                                        </tbody>
+                                                    </table>
                                                 </div>
-                                                <div class="buttons row justify-content-around">
-                                                    <button type="submit" class="btn btn2 col-4">Agregar
-                                                        Cliente</button>
-                                                    <button type="submit" class="btn btn2 col-4">Generar
-                                                        Factura</button>
-                                                </div>
-
                                             </form>
                                         </div>
                                     </div>

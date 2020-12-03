@@ -190,6 +190,7 @@ async function getAllProductsInaSelected() {
             response.forEach(c => {
                 let option = document.createElement('option');
                 option.setAttribute('value', c.id);
+                option.setAttribute('sellPrice', c.sellPrice)
                 option.innerHTML = c.name;
                 select.appendChild(option);
             });
@@ -208,6 +209,8 @@ function createProduct() {
     let select = document.getElementById('productName')
     let quantity = document.getElementById('countSell')
     let table = document.getElementById('productSale')
+    let subtotal = document.getElementById('subtotal')
+    let count = document.getElementById('countSell')
     let tr = document.createElement('tr')
     let td1 = document.createElement('td')
     td1.innerHTML = select.options[select.selectedIndex].text;
@@ -215,6 +218,9 @@ function createProduct() {
     let td2 = document.createElement('td')
     td2.innerHTML = quantity.value;
     tr.appendChild(td2);
-    table.appendChild(tr)
-    console.log(tr)
+    table.appendChild(tr);
+    let optionnValue = Number(select.options[select.selectedIndex].getAttribute('sellPrice'))
+    let actualValue = Number(subtotal.value)
+    let countQuantity = Number(count.value)
+    subtotal.value = actualValue + (optionnValue * countQuantity);
 }
