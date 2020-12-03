@@ -18,7 +18,7 @@ async function loadSalesList() {
             }
             for (let i = 0; i < final; i++) {
                 let a = document.createElement('a');
-                let urlClient = 'sales.html?id=' + response[i].id + '&idClient=' + response[i].client;
+                let urlClient = 'salesOperation.html?id=' + response[i].id + '&idClient=' + response[i].client;
                 a.setAttribute('href', urlClient);
 
                 let li = document.createElement('li');
@@ -196,3 +196,30 @@ async function getAllProductsInaSelected() {
         })
 }
 
+function addProductToTheCart() {
+    let form = document.getElementById('formAdd');
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        createProduct();
+    })
+}
+
+function createProduct() {
+    let select = document.getElementById('productName')
+    let quantity = document.getElementById('countSell')
+    let table = document.getElementById('productSale')
+    let subtotal = document.getElementById('subtotal')
+    let count = document.getElementById('countSell')
+    let tr = document.createElement('tr')
+    let td1 = document.createElement('td')
+    td1.innerHTML = select.options[select.selectedIndex].text;
+    tr.appendChild(td1);
+    let td2 = document.createElement('td')
+    td2.innerHTML = quantity.value;
+    tr.appendChild(td2);
+    table.appendChild(tr);
+    let optionnValue = Number(select.options[select.selectedIndex].getAttribute('sellPrice'))
+    let actualValue = Number(subtotal.value)
+    let countQuantity = Number(count.value)
+    subtotal.value = actualValue + (optionnValue * countQuantity);
+}
