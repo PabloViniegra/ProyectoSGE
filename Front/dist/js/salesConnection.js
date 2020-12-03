@@ -198,10 +198,17 @@ async function getAllProductsInaSelected() {
 }
 
 function addProductToTheCart() {
-    let form = document.getElementById('formAdd');
+    let form = document.getElementById('formSale');
     form.addEventListener('submit', (e) => {
         e.preventDefault();
+    })
+    let button1 = document.getElementById('addProduct');
+    button1.addEventListener('click', () => {
         createProduct();
+    })
+    let button2 = document.getElementById('applyDiscount');
+    button2.addEventListener('click', () => {
+        applyDiscount();
     })
 }
 
@@ -211,6 +218,8 @@ function createProduct() {
     let table = document.getElementById('productSale')
     let subtotal = document.getElementById('subtotal')
     let count = document.getElementById('countSell')
+    let total = document.getElementById('total')
+    let iva = document.getElementById('iva')
     let tr = document.createElement('tr')
     let td1 = document.createElement('td')
     td1.innerHTML = select.options[select.selectedIndex].text;
@@ -223,4 +232,18 @@ function createProduct() {
     let actualValue = Number(subtotal.value)
     let countQuantity = Number(count.value)
     subtotal.value = actualValue + (optionnValue * countQuantity);
+    let ivaValue = Number(iva.value);
+    total.value = (actualValue + (optionnValue * countQuantity)) * ((ivaValue / 100) + 1)
+}
+
+function applyDiscount() {
+    let subtotal = document.getElementById('subtotal')
+    let discount = document.getElementById('discount')
+    let total = document.getElementById('total')
+    let iva = document.getElementById('iva')
+    let discountValue = Number(discount.value)
+    let actualValue = Number(subtotal.value)
+    let ivaValue = Number(iva.value);
+    let total2 = actualValue * ((ivaValue / 100) + 1)
+    total.value = total2 - (total2 * (discountValue / 100))
 }
