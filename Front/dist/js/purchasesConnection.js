@@ -192,11 +192,10 @@ async function getAllProductsInaSelected() {
                 let option = document.createElement('option');
                 option.setAttribute('value', c.id);
                 option.setAttribute("buyPrice", c.buyPrice)
-                option.innerHTML = c.name;
+                option.innerHTML = c.name + " - " + c.buyPrice + "€";
                 select.appendChild(option);
             });
         })
-
 }
 
 function addProductToTheCart() {

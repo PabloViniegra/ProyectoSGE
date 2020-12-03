@@ -191,7 +191,7 @@ async function getAllProductsInaSelected() {
                 let option = document.createElement('option');
                 option.setAttribute('value', c.id);
                 option.setAttribute("sellPrice", c.sellPrice)
-                option.innerHTML = c.name;
+                option.innerHTML = c.name + " - " + c.sellPrice + "€";
                 select.appendChild(option);
             });
         })
