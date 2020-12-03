@@ -191,7 +191,7 @@ async function getAllProductsInaSelected() {
             response.forEach(c => {
                 let option = document.createElement('option');
                 option.setAttribute('value', c.id);
-                idProduct = c.id;
+                option.setAttribute("buyPrice", c.buyPrice)
                 option.innerHTML = c.name;
                 select.appendChild(option);
             });
@@ -199,6 +199,35 @@ async function getAllProductsInaSelected() {
 
 }
 
+function addProductToTheCart() {
+    let form = document.getElementById('formAdd');
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        createProduct();
+    })
+}
+
+function createProduct() {
+    let select = document.getElementById('productName')
+    let quantity = document.getElementById('countPurchase')
+    let table = document.getElementById('productPurchase')
+    let subtotal = document.getElementById('subTotalPurchase')
+    let count = document.getElementById('countPurchase')
+    let tr = document.createElement('tr')
+    let td1 = document.createElement('td')
+    td1.innerHTML = select.options[select.selectedIndex].text;
+    tr.appendChild(td1);
+    let td2 = document.createElement('td')
+    td2.innerHTML = quantity.value;
+    tr.appendChild(td2);
+    table.appendChild(tr);
+    let optionnValue = Number(select.options[select.selectedIndex].getAttribute('buyPrice'))
+    let actualValue = Number(subtotal.value)
+    let countQuantity = Number(count.value)
+    subtotal.value = actualValue + (optionnValue * countQuantity);
+}
+
+/*
 async function getInfoFromProduct() {
     let url = 'http://localhost:8080/api/v1/products/' + idProduct;
     let getInit = {
@@ -222,5 +251,4 @@ async function getInfoFromProduct() {
             let total = document.getElementById("totalPurchase")
             total.innerHTML = totalCompra
         })
-
-}
+}*/

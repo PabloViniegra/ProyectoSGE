@@ -190,6 +190,7 @@ async function getAllProductsInaSelected() {
             response.forEach(c => {
                 let option = document.createElement('option');
                 option.setAttribute('value', c.id);
+                option.setAttribute("sellPrice", c.sellPrice)
                 option.innerHTML = c.name;
                 select.appendChild(option);
             });
