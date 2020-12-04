@@ -59,6 +59,8 @@ async function loadStaff() {
             email.innerHTML = email.innerHTML + ' ' + response.email;
             let position = document.getElementById('namePositionStaff')
             position.innerHTML = position.innerHTML + ' ' + response.positionStaff.name;
+            let tel = document.getElementById('telephoneStaff');
+            tel.innerHTML = tel.innerHTML + response.telephone;
             let section = document.getElementById('sectionPositionStaff')
             section.innerHTML = section.innerHTML + ' ' + response.positionStaff.section;
             let privilege = document.getElementById('privilegePositionStaff')
@@ -69,6 +71,8 @@ async function loadStaff() {
             nameModificar.value = response.name;
             let emailModificar = document.getElementById('personalEmailM')
             emailModificar.value = response.email;
+            let telefonoModificar = document.getElementById('inputTelefonoPersonalM');
+            telefonoModificar.value = response.telephone;
             let positionModificar = document.getElementById('positionStaffM')
             positionModificar.value = response.positionStaff.name;
             let sectionModificar = document.getElementById('seccionPersonalM')
@@ -98,6 +102,9 @@ async function loadStaff() {
             let celda6 = document.createElement('td');
             celda6.innerHTML = response.positionStaff.privilege;
             row.appendChild(celda6);
+            let celda7 = document.createElement('td');
+            celda7.innerHTML = response.telephone;
+            row.appendChild(celda7);
 
             tblBody.appendChild(row);
             table.appendChild(tblBody);
@@ -117,7 +124,7 @@ async function loadStaff() {
             let password = document.getElementById('inputPassword');
             let tel = document.getElementById('inputTelefonoPersonal');
             let position = document.getElementById('inputNombrePuesto');
-            let seccion = document.getElementById('inputNombrePuesto');
+            let seccion = document.getElementById('seccionPersonalAdd');
             let privilegio = document.getElementById('privilegioPersonal');
     
             let data = {
