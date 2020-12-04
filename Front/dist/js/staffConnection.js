@@ -34,15 +34,15 @@ async function loadLastStaffs() {
                 document.getElementById('lastStaffList').appendChild(a);
             }
         })
-    
+
 }
 
 async function loadStaff() {
     const querystring = location.search;
     const params = new URLSearchParams(querystring)
-    let idStaff = params.get('idStaff');
-    if (idStaff == undefined) idStaff=1;
-    let urlStaff = 'http://localhost:8080/api/v1/staffs/' + idStaff;
+    let id = params.get('id');
+    if (id == undefined) id = 1;
+    let urlStaff = 'http://localhost:8080/api/v1/staffs/' + id;
     let getInit = {
         method: 'GET',
         headers: {
@@ -50,9 +50,9 @@ async function loadStaff() {
             'Accept': 'application/json'
         }
     }
-    await fetch(urlStaff,getInit)
-    .then(response => response.json())
-    .then(response => {
+    await fetch(urlStaff, getInit)
+        .then(response => response.json())
+        .then(response => {
             let name = document.getElementById('nameStaff')
             name.innerHTML = name.innerHTML + ' ' + response.name;
             let email = document.getElementById('emailStaff')
@@ -109,106 +109,106 @@ async function loadStaff() {
             tblBody.appendChild(row);
             table.appendChild(tblBody);
         })
-    }
+}
 
-    async function addStaff() {
-        let form = document.getElementById('addStaff');
-        form.addEventListener('submit', async(e) => {
-            e.preventDefault();
-            const querystring = location.search;
-            const params = new URLSearchParams(querystring)
-            let id = params.get("id");
-            if (id == undefined) id = 1
-            let name = document.getElementById('personalNameInput');
-            let email = document.getElementById('personalEmailInput');
-            let password = document.getElementById('inputPassword');
-            let tel = document.getElementById('inputTelefonoPersonal');
-            let position = document.getElementById('inputNombrePuesto');
-            let seccion = document.getElementById('seccionPersonalAdd');
-            let privilegio = document.getElementById('privilegioPersonal');
-    
-            let data = {
-                name: name.value,
-                email: email.value,
-                password: password.value,
-                telephone:tel.value,
-                positionStaff: {
-                    name:position.value,
-                    section:seccion.value,
-                    privilege:privilegio.value
-                }
-                
+async function addStaff() {
+    let form = document.getElementById('addStaff');
+    form.addEventListener('submit', async(e) => {
+        e.preventDefault();
+        const querystring = location.search;
+        const params = new URLSearchParams(querystring)
+        let id = params.get("id");
+        if (id == undefined) id = 1
+        let name = document.getElementById('personalNameInput');
+        let email = document.getElementById('personalEmailInput');
+        let password = document.getElementById('inputPassword');
+        let tel = document.getElementById('inputTelefonoPersonal');
+        let position = document.getElementById('inputNombrePuesto');
+        let seccion = document.getElementById('seccionPersonalAdd');
+        let privilegio = document.getElementById('privilegioPersonal');
+
+        let data = {
+            name: name.value,
+            email: email.value,
+            password: password.value,
+            telephone: tel.value,
+            positionStaff: {
+                name: position.value,
+                section: seccion.value,
+                privilege: privilegio.value
             }
-    
-            let url = 'http://localhost:8080/api/v1/staffs'
-            let postInit = {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(data)
+
+        }
+
+        let url = 'http://localhost:8080/api/v1/staffs'
+        let postInit = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }
+
+        await fetch(url, postInit)
+            .then(response => response.json())
+            .then(response => console.log(response))
+
+        location.href = 'staff.html?id=' + id;
+    })
+}
+
+async function updateStaff() {
+    let form = document.getElementById('updateStaff');
+    form.addEventListener('submit', async(e) => {
+        const querystring = location.search;
+        const params = new URLSearchParams(querystring)
+        let id = params.get("id");
+        if (id == undefined) id = 1
+        e.preventDefault();
+        let name = document.getElementById('personalNameM');
+        let email = document.getElementById('personalEmailM');
+        let password = document.getElementById('inputPasswordM');
+        let tel = document.getElementById('inputTelefonoPersonalM');
+        let position = document.getElementById('positionStaffM');
+        let seccion = document.getElementById('seccionPersonalM');
+        let privilegio = document.getElementById('privilegioPersonalM');
+
+        let data = {
+            name: name.value,
+            email: email.value,
+            password: password.value,
+            telephone: tel.value,
+            positionStaff: {
+                name: position.value,
+                section: seccion.value,
+                privilege: privilegio.value
             }
-    
-            await fetch(url, postInit)
-                .then(response => response.json())
-                .then(response => console.log(response))
-    
-            location.href = 'staff.html?id=' + id;
-        })
-    }
 
-    async function updateStaff() {
-        let form = document.getElementById('updateStaff');
-        form.addEventListener('submit', async(e) => {
-            const querystring = location.search;
-            const params = new URLSearchParams(querystring)
-            let id = params.get("id");
-            if (id == undefined) id = 1
-            e.preventDefault();
-            let name = document.getElementById('personalNameM');
-            let email = document.getElementById('personalEmailM');
-            let password = document.getElementById('inputPasswordM');
-            let tel = document.getElementById('inputTelefonoPersonalM');
-            let position = document.getElementById('positionStaffM');
-            let seccion = document.getElementById('seccionPersonalM');
-            let privilegio = document.getElementById('privilegioPersonalM');
+        }
+        console.log(data);
 
-            let data = {
-                name: name.value,
-                email: email.value,
-                password: password.value,
-                telephone:tel.value,
-                positionStaff: {
-                    name:position.value,
-                    section:seccion.value,
-                    privilege:privilegio.value
-                }
-                
-            }
-            console.log(data);
+        let url = 'http://localhost:8080/api/v1/staffs/' + id;
+        let postInit = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }
 
-            let url = 'http://localhost:8080/api/v1/staffs/' + id;
-            let postInit = {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(data)
-            }
-    
-            await fetch(url, postInit)
-                .then(response => console.log(response))
-    
-            location.href = 'staff.html?id=' + id;
+        await fetch(url, postInit)
+            .then(response => console.log(response))
 
-        })
-    }
+        location.href = 'staff.html?id=' + id;
 
-    async function deleteStaff() {
-        let form = document.getElementById('deleteStaff')
-        form.addEventListener('submit', async(e) => {
+    })
+}
+
+async function deleteStaff() {
+    let form = document.getElementById('deleteStaff')
+    form.addEventListener('submit', async(e) => {
         e.preventDefault();
         const querystring = location.search;
         const params = new URLSearchParams(querystring)
@@ -227,22 +227,22 @@ async function loadStaff() {
 
         location.href = 'staff.html';
     })
-    }
+}
 
-    async function loadAllStaffs() {
-        let url = 'http://localhost:8080/api/v1/staffs';
-        let getInit = {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            }
+async function loadAllStaffs() {
+    let url = 'http://localhost:8080/api/v1/staffs';
+    let getInit = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
         }
-        let table = document.getElementById('tableAllStaffs');
-        let tblBody = document.getElementById('bodyTableStaffs');
-        await fetch(url, getInit)
+    }
+    let table = document.getElementById('tableAllStaffs');
+    let tblBody = document.getElementById('bodyTableStaffs');
+    await fetch(url, getInit)
         .then(response => response.json())
-        .then (response => {
+        .then(response => {
 
             response.forEach(s => {
                 let row = document.createElement('tr');
@@ -275,9 +275,7 @@ async function loadStaff() {
                 table.appendChild(tblBody);
             });
 
-            
+
         })
 
 }
-
-
