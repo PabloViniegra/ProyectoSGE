@@ -246,22 +246,39 @@ async function loadAllClients() {
             row.appendChild(celda5);
 
             let celda6 = document.createElement('td');
-            r.telephones.forEach(telephone => {
-                celda6.innerHTML = celda6.innerHTML + "\n" + telephone.number; 
+            let select6 = document.createElement('select')
+            select6.setAttribute('class', 'browser-default custom-select bg-dark text-white')
+            celda6.appendChild(select6)
+            r.telephones.forEach(tel => {
+                let hijoSelect6 = document.createElement('option')
+                hijoSelect6.innerHTML = tel.number + '<br>';
+                select6.appendChild(hijoSelect6)
             });
             row.appendChild(celda6);
 
+
             let celda7 = document.createElement('td');
+            let select7 = document.createElement('select')
+            select7.setAttribute('class', 'browser-default custom-select bg-dark text-white')
+            celda7.appendChild(select7)
             r.directions.forEach(dir => {
-                celda7.innerHTML = celda7.innerHTML + "\n" + dir.direction; 
+                let hijoSelect7 = document.createElement('option')
+                hijoSelect7.innerHTML = dir.direction + '<br>';
+                select7.appendChild(hijoSelect7)
             });
             row.appendChild(celda7);
 
             let celda8 = document.createElement('td');
+            let select8 = document.createElement('select')
+            select8.setAttribute('class', 'browser-default custom-select bg-dark text-white')
+            celda8.appendChild(select8)
             r.sales.forEach(sale => {
-                celda8.innerHTML = celda8.innerHTML + "\n" + sale.receipt.receiptDate;
+                let hijoSelect8 = document.createElement('option')
+                hijoSelect8.innerHTML = sale.receipt.receiptDate; + '<br>';
+                select8.appendChild(hijoSelect8)
             });
             row.appendChild(celda8);
+
             tblBody.appendChild(row);
         });
 

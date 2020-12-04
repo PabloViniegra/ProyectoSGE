@@ -118,22 +118,38 @@ async function loadAllSuppliers() {
                 row.appendChild(celda4);
 
                 let celda5 = document.createElement('td');
-                r.telephones.forEach(telephone => {
-                    celda5.innerHTML = celda5.innerHTML + "\n" + telephone.number;
+                let select5 = document.createElement('select')
+                select5.setAttribute('class', 'browser-default custom-select bg-dark text-white')
+                celda5.appendChild(select5)
+                r.telephones.forEach(tel => {
+                    let hijoSelect5 = document.createElement('option')
+                    hijoSelect5.innerHTML = tel.number + '<br>';
+                    select5.appendChild(hijoSelect5)
                 });
                 row.appendChild(celda5);
 
                 let celda6 = document.createElement('td');
+                let select6 = document.createElement('select')
+                select6.setAttribute('class', 'browser-default custom-select bg-dark text-white')
+                celda6.appendChild(select6)
                 r.directions.forEach(dir => {
-                    celda6.innerHTML = celda6.innerHTML + "\n" + dir.direction;
+                    let hijoSelect6 = document.createElement('option')
+                    hijoSelect6.innerHTML = dir.direction + '<br>';
+                    select6.appendChild(hijoSelect6)
                 });
                 row.appendChild(celda6);
 
                 let celda7 = document.createElement('td');
+                let select7 = document.createElement('select')
+                select7.setAttribute('class', 'browser-default custom-select bg-dark text-white')
+                celda7.appendChild(select7)
                 r.purchases.forEach(purchase => {
-                    celda7.innerHTML = celda7.innerHTML + "\n" + purchase.receipt.receiptDate;
+                    let hijoSelect7 = document.createElement('option')
+                    hijoSelect7.innerHTML = purchase.receipt.receiptDate; + '<br>';
+                    select7.appendChild(hijoSelect7)
                 });
                 row.appendChild(celda7);
+
                 tblBody.appendChild(row);
 
             });
