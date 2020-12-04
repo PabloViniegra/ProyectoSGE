@@ -257,50 +257,66 @@ async function allSalesLoad() {
             'Accept': 'application/json'
         }
     }
-    let table = document.getElementById('allSalesTable');
     let body = document.getElementById('bodyAllSalesTable');
-    await fetch (url,getInit)
-    .then (response => response.json())
-    .then (response => {
-        response.forEach(sale => {
-            let row = document.createElement('tr');
+    await fetch(url, getInit)
+        .then(response => response.json())
+        .then(response => {
+            response.forEach(async sale => {
+                let row = document.createElement('tr');
 
-            let celda1 = document.createElement('td');
-            celda1.innerHTML = sale.id;
-            row.appendChild(celda1);
+                let celda1 = document.createElement('td');
+                celda1.innerHTML = sale.id;
+                row.appendChild(celda1);
 
-            let celda2 = document.createElement('td');
-            celda2.innerHTML = sale.client;  //Habría que sacar el nombre del Cliente
-            row.appendChild(celda2);
+                let celda2 = document.createElement('td');
+                celda2.innerHTML = await giveMeClientName(sale.client); //Habría que sacar el nombre del Cliente
+                row.appendChild(celda2);
 
-            let celda3 = document.createElement('td');
-            celda3.innerHTML = sale.staff.name;
-            row.appendChild(celda3);
+                let celda3 = document.createElement('td');
+                celda3.innerHTML = sale.staff.name;
+                row.appendChild(celda3);
 
-            let celda4 = document.createElement('td');
-            celda4.innerHTML = sale.receipt.receiptDate;
-            row.appendChild(celda4);
+                let celda4 = document.createElement('td');
+                celda4.innerHTML = sale.receipt.receiptDate;
+                row.appendChild(celda4);
 
-            let celda5 = document.createElement('td');
-            celda5.innerHTML = sale.receipt.total;
-            row.appendChild(celda5);
+                let celda5 = document.createElement('td');
+                celda5.innerHTML = sale.receipt.total;
+                row.appendChild(celda5);
 
-            let celda6 = document.createElement('td');
-            celda6.innerHTML = sale.staff.positionStaff.name;
-            row.appendChild(celda6);
+                let celda7 = document.createElement('td');
+                let select = document.createElement('select')
+                select.setAttribute('class', 'browser-default custom-select bg-dark text-white')
+                celda7.appendChild(select)
+                sale.saleLines.forEach(line => {
+                    let hijoSelect = document.createElement('option')
+                    hijoSelect.innerHTML = line.idProduct.name + ' - ' + line.quantity + '<br>';
+                    select.appendChild(hijoSelect)
+                });
+                row.appendChild(celda7);
 
-            let celda7 = document.createElement('td');
-            sale.saleLines.forEach(line => {
-                celda7.innerHTML = celda7.innerHTML + ' ' + line.idProducts.name + '\n';
+                // let celda8 = document.createElement('td');
+                // sale.saleLines.forEach(line => {
+                //     celda8.innerHTML = celda8.innerHTML + ' ' + line.quantity + '<br>';
+                // });
+                // row.appendChild(celda8);
+                body.appendChild(row);
             });
-            row.appendChild(celda7);
+        })
+}
 
-            let celda8 = document.createElement('td');
-            sale.saleLines.forEach(line => {
-                celda8.innerHTML = celda8.innerHTML + ' ' + line.quantity + '\n';
-            });
-            row.appendChild(celda8);
-        });
-        body.appendChild(row);
-    })
+async function giveMeClientName(id) {
+    let url = 'http://localhost:8080/api/v1/clients/' + id;
+    let getInit = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    }
+    return await fetch(url, getInit)
+        .then(response => response.json())
+        .then(response => {
+            return response.fullName;
+        })
 }
