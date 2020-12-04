@@ -84,6 +84,63 @@ async function loadSupplier() {
         })
 }
 
+async function loadAllSuppliers() {
+    let url = 'http://localhost:8080/api/v1/supplier';
+    let getInit = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    }
+    let table = document.getElementById('tableAllSuppliers');
+    let tblBody = document.getElementById('bodyTableSuppliers');
+    await fetch(url,getInit)
+        .then(response => response.json())
+        .then (response => {
+            response.forEach(r => {
+                let row = document.createElement('tr');
+
+                let celda1 = document.createElement('td');
+                celda1.innerHTML = r.id;
+                row.appendChild(celda1);
+
+                let celda2 = document.createElement('td');
+                celda2.innerHTML = r.fullName;
+                row.appendChild(celda2);
+
+                let celda3 = document.createElement('td');
+                celda3.innerHTML = r.email;
+                row.appendChild(celda3);
+
+                let celda4 = document.createElement('td');
+                celda4.innerHTML = r.dni;
+                row.appendChild(celda4);
+
+                let celda5 = document.createElement('td');
+                r.telephones.forEach(telephone => {
+                    celda5.innerHTML = celda5.innerHTML + "\n" + telephone.number;
+                });
+                row.appendChild(celda5);
+
+                let celda6 = document.createElement('td');
+                r.directions.forEach(dir => {
+                    celda6.innerHTML = celda6.innerHTML + "\n" + dir.direction;
+                });
+                row.appendChild(celda6);
+
+                let celda7 = document.createElement('td');
+                r.purchases.forEach(purchase => {
+                    celda7.innerHTML = celda7.innerHTML + "\n" + purchase.receipt.receiptDate;
+                });
+                row.appendChild(celda7);
+                tblBody.appendChild(row);
+
+            });
+
+        })
+}
+
 async function addSupplier() {
     let form = document.getElementById('addSupplier')
 
