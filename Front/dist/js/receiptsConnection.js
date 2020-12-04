@@ -105,7 +105,7 @@ async function loadReceipt() {
 
 async function addReceipt() {
     let form = document.getElementById('addReceipt');
-    form.addEventListener('submit', async(e) => {
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
         const querystring = location.search;
         const params = new URLSearchParams(querystring)
@@ -148,7 +148,7 @@ async function addReceipt() {
 async function updateReceipt() {
     let form = document.getElementById('updateReceipt')
 
-    form.addEventListener('submit', async(e) => {
+    form.addEventListener('submit', async (e) => {
         const querystring = location.search;
         const params = new URLSearchParams(querystring)
         let id = params.get("id");
@@ -189,7 +189,7 @@ async function updateReceipt() {
 
 async function deleteReceipt() {
     let form = document.getElementById('deleteReceipt')
-    form.addEventListener('submit', async(e) => {
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
         const querystring = location.search;
         const params = new URLSearchParams(querystring)
@@ -253,4 +253,18 @@ async function loadAllReceipts() {
 
         })
 
+}
+
+function clickableReceiptTable() {
+    var tbl = document.getElementById("tableAllReceipts");
+    if (tbl != null) {
+        for (var i = 0; i < tbl.rows.length; i++) {
+            for (var j = 0; j < tbl.rows[i].cells.length; j++)
+                tbl.rows[i].cells[j].onclick = function () { getval(this); };
+        }
+    }
+
+    function getval(cel) {
+        console.log(cel.innerHTML);
+    }
 }

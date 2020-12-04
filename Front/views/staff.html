@@ -33,7 +33,7 @@
                         <a class="nav-link" href="products.html">Productos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="receipts.html">Facturas</a>
+                        <a class="nav-link" href="allReceipts.html">Facturas</a>
                     </li>
                 </ul>
             </div>
@@ -55,7 +55,8 @@
                                 <h3 class="card-title text-center">Personal</h3>
                                 <p class="card-text text-center" id="nameStaff"><b>Nombre:</b> </p>
                                 <p class="card-text text-center" id="emailStaff"><b>Email:</b> </p>
-                                <p class="card-text text-center" id="namePositionStaff"><b>Nombre puesto:</b> </p>
+                                <p class="card-text text-center" id="telephoneStaff"><b>Teléfono: </b></p>
+                                <p class="card-text text-center"id="namePositionStaff"><b>Nombre puesto:</b> </p>
                                 <p class="card-text text-center" id="sectionPositionStaff"><b>Sección:</b> </p>
                                 <p class="card-text text-center" id="privilegePositionStaff"><b>Privilegio:</b> </p>
                             </div>
@@ -91,34 +92,44 @@
                                             <input type="text" class="form-control" id="personalNameInput">
                                         </div>
                                     </div>
-                                    <div class="form-group col-6">
-                                        <label for="inputNombrePuesto" class="text-center text-white">Nombre
-                                            Puesto</label>
-                                        <input type="text" class="form-control" id="inputNombrePuesto"
-                                            placeholder="Puesto">
+                                    <div class="form-row align-items-center">
+                                        <div class="form-group col-6">
+                                            <label for="inputNombrePuesto" class="text-center text-white">Nombre
+                                                Puesto</label>
+                                            <input type="text" class="form-control" id="inputNombrePuesto"
+                                                placeholder="Puesto">
+                                        </div>
+                                        <div class="form-group col-6">
+                                            <label for="seccionPersonalAdd" class="text-center text-white">Sección</label>
+                                            <select  id="seccionPersonalAdd" class="browser-default custom-select">
+                                                <option value="DIRECCION">Dirección</option>
+                                                <option value="COMERCIAL">Comercial</option>
+                                                <option value="PRODUCCION">Producción</option>
+                                                <option value="ADMINISTRACION">Administración</option>
+                                                <option value="FINANZAS">Finanzas</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                    <div class="form-group col-6">
-                                        <label for="seccionPersonal" class="text-center text-white">Sección</label>
-                                        <input type="text" class="form-control" id="inputNombrePuesto">
-                                    </div>
-                                    <div class="form-group col-4">
-                                        <label for="inputPassword" class="text-center text-white">Password</label>
-                                        <input type="password" class="form-control" id="inputPassword">
-                                    </div>
-                                    <div class="form-group col-4" class="text-center text-white">
-                                        <label for="inputTelefonoPersonal"
-                                            class="text-center text-white">Teléfono</label>
-                                        <input type="text" class="form-control" id="inputTelefonoPersonal">
-                                    </div>
-                                    <div class="form-group col-4" class="text-center text-white">
-                                        <label for="privilegioPersonal">Privilegio</label>
-                                        <select name="" id="privilegioPersonal" class="browser-default custom-select">
-                                            <option value="0">0 -> Admin</option>
-                                            <option value="1">1 -> Superusuario</option>
-                                            <option value="2">2 -> Supervisor</option>
-                                            <option value="3">3 -> Personal</option>
-                                            <option value="4">4 -> Invitado</option>
-                                        </select>
+                                    <div class="form-row">
+                                        <div class="form-group col-4">
+                                            <label for="inputPassword" class="text-center text-white">Password</label>
+                                            <input type="password" class="form-control" id="inputPassword">
+                                        </div>
+                                        <div class="form-group col-4" class="text-center text-white">
+                                            <label for="inputTelefonoPersonal"
+                                                class="text-center text-white">Teléfono</label>
+                                            <input type="text" class="form-control" id="inputTelefonoPersonal">
+                                        </div>
+                                        <div class="form-group col-4" class="text-center">
+                                            <label for="privilegioPersonal" class="text-white">Privilegio</label>
+                                            <select name="" id="privilegioPersonal" class="browser-default custom-select">
+                                                <option value="0">0 -> Admin</option>
+                                                <option value="1">1 -> Superusuario</option>
+                                                <option value="2">2 -> Supervisor</option>
+                                                <option value="3">3 -> Personal</option>
+                                                <option value="4">4 -> Invitado</option>
+                                            </select>
+                                        </div>
                                     </div>
                                     <div class="buttons row justify-content-around">
                                         <button type="submit" class="btn btn2 col-4" onclick="addStaff()">Agregar
@@ -140,34 +151,46 @@
                                             <input type="text" class="form-control" id="personalNameM">
                                         </div>
                                     </div>
-                                    <div class="form-group col-6">
-                                        <label for="inputTelefonoPersonalM"
-                                            class="text-white text-center">Teléfono</label>
-                                        <input type="text" class="form-control" id="inputTelefonoPersonalM">
+                                    <div class="form-row">
+                                        <div class="form-group col-6">
+                                            <label for="inputTelefonoPersonalM"
+                                                class="text-white text-center">Teléfono</label>
+                                            <input type="text" class="form-control" id="inputTelefonoPersonalM">
+                                        </div>
+                                        <div class="form-group col-6">
+                                            <label for="positionStaffM" class="text-center text-white">Nombre del
+                                                Puesto</label>
+                                            <input type="text" class="form-control" id="positionStaffM"
+                                                placeholder="Programador">
+                                        </div>
                                     </div>
-                                    <div class="form-group col-6">
-                                        <label for="positionStaffM" class="text-center text-white">Nombre del
-                                            Puesto</label>
-                                        <input type="text" class="form-control" id="positionStaffM"
-                                            placeholder="Programador">
+                                    <div class="form-row">
+                                        <div class="form-group col-6">
+                                            <label for="seccionPersonalM" class="text-center text-white">Sección</label>
+                                            <select  id="seccionPersonalM" class="browser-default custom-select">
+                                                <option value="DIRECCION">Dirección</option>
+                                                <option value="COMERCIAL">Comercial</option>
+                                                <option value="PRODUCCION">Producción</option>
+                                                <option value="ADMINISTRACION">Administración</option>
+                                                <option value="FINANZAS">Finanzas</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-6">
+                                            <label for="privilegioPersonalM"
+                                                class="text-center text-white">Privilegio</label>
+                                            <select name="" id="privilegioPersonalM" class="browser-default custom-select">
+                                                <option value="0">0 -> Admin</option>
+                                                <option value="1">1 -> Superusuario</option>
+                                                <option value="2">2 -> Supervisor</option>
+                                                <option value="3">3 -> Personal</option>
+                                                <option value="4">4 -> Invitado</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                    <div class="form-group col-6">
-                                        <label for="seccionPersonalM" class="text-center text-white">Sección</label>
-                                        <input type="text" class="form-control" id="seccionPersonalM">
+                                    <div class="row justify-content-center">
+                                        <a href="" class="btn btn1 col-4" type="submit" onclick="updateStaff()">Modificar
+                                            Personal</a>
                                     </div>
-                                    <div class="form-group col-6">
-                                        <label for="privilegioPersonalM"
-                                            class="text-center text-white">Privilegio</label>
-                                        <select name="" id="privilegioPersonalM" class="browser-default custom-select">
-                                            <option value="0">0 -> Admin</option>
-                                            <option value="1">1 -> Superusuario</option>
-                                            <option value="2">2 -> Supervisor</option>
-                                            <option value="3">3 -> Personal</option>
-                                            <option value="4">4 -> Invitado</option>
-                                        </select>
-                                    </div>
-                                    <a href="" class="btn btn-dark" type="submit" onclick="updateStaff()">Modificar
-                                        Personal</a>
                                 </form>
                             </div>
                             <div class="collapse my-3" id="CollapseExample3">
@@ -191,7 +214,7 @@
                                         </tbody>
                                     </table>
                                     <a href="" class="btn btn2 text-center" type="button" data-toggle="collapse" data-target="#collapseDelete" aria-expanded="false" aria-controls="collapseDelete">Borrar</a>
-                                <div class="requestDeleteHidden collapse text-center" id="collapseDelete">
+                                <div class="requestDeleteHidden collapse text-center my-4 ml-5" id="collapseDelete">
                                     <p>¿Seguro que quieres borrarlo?</p>
                                     <button class="btn btn1" onclick="deleteStaff()" type="submit">SI</button>
                                     <button class="btn btn1 collapse" id="collapseDelete" data-toggle="collapse" type="button">NO</button>

@@ -208,4 +208,64 @@ function deleteClient() {
 
 }
 
+async function loadAllClients() {
+    let url = 'http://localhost:8080/api/v1/clients';
+    let getInit = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    }
+    let table = document.getElementById('tableAllClients');
+    let tblBody = document.getElementById('bodyTableClients');
+    await fetch(url,getInit)
+    .then(response => response.json())
+    .then (response => {
+        response.forEach(r => {
+            let row = document.createElement('tr');
+
+            let celda1 = document.createElement('td');
+            celda1.innerHTML = r.id;
+            row.appendChild(celda1);
+
+            let celda2 = document.createElement('td');
+            celda2.innerHTML = r.fullName;
+            row.appendChild(celda2);
+            
+            let celda3 = document.createElement('td');
+            celda3.innerHTML = r.email;
+            row.appendChild(celda3);
+
+            let celda4 = document.createElement('td');
+            celda4.innerHTML = r.dni;
+            row.appendChild(celda4);
+
+            let celda5 = document.createElement('td');
+            celda5.innerHTML = r.iban;
+            row.appendChild(celda5);
+
+            let celda6 = document.createElement('td');
+            r.telephones.forEach(telephone => {
+                celda6.innerHTML = celda6.innerHTML + "\n" + telephone.number; 
+            });
+            row.appendChild(celda6);
+
+            let celda7 = document.createElement('td');
+            r.directions.forEach(dir => {
+                celda7.innerHTML = celda7.innerHTML + "\n" + dir.direction; 
+            });
+            row.appendChild(celda7);
+
+            let celda8 = document.getElementById('td');
+            r.sales.forEach(sale => {
+                celda8.innerHTML = celda8.innerHTML + "\n" + sale.receipt.receiptDate;
+            });
+            row.appendChild(celda8);
+        });
+        tblBody.appendChild(row);
+        
+    })
+}
+
 // <a href=""><li><i class="fas fa-clipboard mr-2"></i>Lorem ipsum dolor sit amet consectetur</li></a>
