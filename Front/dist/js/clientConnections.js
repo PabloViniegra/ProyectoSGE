@@ -257,15 +257,15 @@ async function loadAllClients() {
             });
             row.appendChild(celda7);
 
-            let celda8 = document.getElementById('td');
+            let celda8 = document.createElement('td');
             r.sales.forEach(sale => {
                 celda8.innerHTML = celda8.innerHTML + "\n" + sale.receipt.receiptDate;
             });
             row.appendChild(celda8);
+            tblBody.appendChild(row);
         });
-        tblBody.appendChild(row);
+
         
     })
 }
 
-// <a href=""><li><i class="fas fa-clipboard mr-2"></i>Lorem ipsum dolor sit amet consectetur</li></a>
