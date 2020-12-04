@@ -301,6 +301,11 @@ async function allSalesLoad() {
                 // });
                 // row.appendChild(celda8);
                 body.appendChild(row);
+                row.addEventListener("click",() => {
+                    let id = sale.id;
+                    location.href = 'products.html?id=' + id;
+                });
+                table.appendChild(tblBody);
             });
         })
 }

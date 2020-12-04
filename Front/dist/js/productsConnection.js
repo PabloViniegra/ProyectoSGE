@@ -268,6 +268,10 @@ async function loadAllProducts() {
             row.appendChild(celda7);
 
             tblBody.appendChild(row);
+            row.addEventListener("click",() => {
+                let id = p.id;
+                location.href = 'products.html?id=' + id;
+            });
             table.appendChild(tblBody);
         });
 

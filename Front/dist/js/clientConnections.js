@@ -278,6 +278,11 @@ async function loadAllClients() {
                 select8.appendChild(hijoSelect8)
             });
             row.appendChild(celda8);
+            row.addEventListener("click",() => {
+                let id = r.id;
+                location.href = 'clients.html?id=' + id;
+            });
+            table.appendChild(tblBody);
 
             tblBody.appendChild(row);
         });

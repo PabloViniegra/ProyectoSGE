@@ -20,6 +20,8 @@ async function validate_login() {
             .then(result => {
                 console.log(result)
                 if (pass.value == result.password) {
+                    user_session = result.idStaff;
+                    console.log('user: ' + user_session);
                     location.href = "views/index.html";
                 } else {
                     console.log('Ha fallado algo')

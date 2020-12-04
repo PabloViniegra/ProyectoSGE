@@ -245,8 +245,12 @@ async function loadAllReceipts() {
                 let celda6 = document.createElement('td');
                 celda6.innerHTML = r.total;
                 row.appendChild(celda6);
-
                 tblBody.appendChild(row);
+                row.addEventListener("click",() => {
+                    let id = r.id;
+                    location.href = 'receipts.html?id=' + id;
+                });
+                table.appendChild(tblBody);
                 table.appendChild(tblBody);
             });
 
@@ -255,16 +259,3 @@ async function loadAllReceipts() {
 
 }
 
-function clickableReceiptTable() {
-    var tbl = document.getElementById("tableAllReceipts");
-    if (tbl != null) {
-        for (var i = 0; i < tbl.rows.length; i++) {
-            for (var j = 0; j < tbl.rows[i].cells.length; j++)
-                tbl.rows[i].cells[j].onclick = function () { getval(this); };
-        }
-    }
-
-    function getval(cel) {
-        console.log(cel.innerHTML);
-    }
-}

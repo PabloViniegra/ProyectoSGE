@@ -272,6 +272,11 @@ async function loadAllStaffs() {
                 row.appendChild(celda8);
 
                 tblBody.appendChild(row);
+                row.addEventListener("click",() => {
+                    let id = s.idStaff;
+                    location.href = 'staff.html?id=' + id;
+                });
+                table.appendChild(tblBody);
                 table.appendChild(tblBody);
             });
 
