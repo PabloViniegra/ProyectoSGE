@@ -418,7 +418,7 @@ async function addSale() {
             }
         })
 
-    //location.href = 'salesOperation.html'
+    location.href = 'salesOperation.html'
 }
 
 async function cargarProductos(producto, saleLines) {
