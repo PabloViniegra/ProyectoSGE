@@ -1,10 +1,11 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron')
+const path = require("path");
 
-function createWindow () {
+function createWindow() {
     // Crea la ventana del navegador.
     const win = new BrowserWindow({
-        darkTheme:true,
-        fullscreen:true,
+        darkTheme: true,
+        fullscreen: true,
         webPreferences: {
             nodeIntegration: false,
             allowRunningInsecureContent: true,

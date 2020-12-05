@@ -11,7 +11,7 @@
 
 <!------ Include the above in your HEAD tag ---------->
 
-<body class="body-login">
+<body class="body-login" onload="loginButton()">
     <div class="sidenav">
         <div class="login-main-text my-5">
             <img src="./resources/logoTemporal.png">
@@ -30,7 +30,7 @@
                         <label>Contraseña</label>
                         <input type="password" class="form-control" placeholder="Contraseña" id="password" required>
                     </div>
-                    <button type="submit" class="btn btn-black" onclick="validate_login()">Acceder</button>
+                    <button type="submit" class="btn btn-black">Acceder</button>
                 </form>
                 <p id="debug" style="color: red; font-weight: bolder;"></p>
             </div>

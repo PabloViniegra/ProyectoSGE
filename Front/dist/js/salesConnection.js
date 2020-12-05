@@ -166,7 +166,7 @@ async function getAllStaffInaSelected() {
             let select = document.getElementById('personalName');
             response.forEach(c => {
                 let option = document.createElement('option');
-                option.setAttribute('value', c.id);
+                option.setAttribute('value', c.idStaff);
                 option.innerHTML = c.name;
                 select.appendChild(option);
             });
@@ -210,6 +210,10 @@ function addProductToTheCart() {
     button2.addEventListener('click', () => {
         applyDiscount();
     })
+    let button3 = document.getElementById('addSale');
+    button3.addEventListener('click', () => {
+        addSale();
+    })
 }
 
 function createProduct() {
@@ -226,6 +230,7 @@ function createProduct() {
     tr.appendChild(td1);
     let td2 = document.createElement('td')
     td2.innerHTML = quantity.value;
+    tr.setAttribute('id', select.value)
     tr.appendChild(td2);
     table.appendChild(tr);
     let optionnValue = Number(select.options[select.selectedIndex].getAttribute('sellPrice'))
@@ -295,13 +300,8 @@ async function allSalesLoad() {
                 });
                 row.appendChild(celda7);
 
-                // let celda8 = document.createElement('td');
-                // sale.saleLines.forEach(line => {
-                //     celda8.innerHTML = celda8.innerHTML + ' ' + line.quantity + '<br>';
-                // });
-                // row.appendChild(celda8);
                 body.appendChild(row);
-                row.addEventListener("click",() => {
+                row.addEventListener("click", () => {
                     let id = sale.id;
                     location.href = 'products.html?id=' + id;
                 });
@@ -324,4 +324,119 @@ async function giveMeClientName(id) {
         .then(response => {
             return response.fullName;
         })
+}
+
+async function addSale() {
+    let client = document.getElementById('clienteForSale');
+    let staffId = document.getElementById('personalName');
+    let current = new Date();
+    let fecha = current.getFullYear() + '-' + current.getMonth() + '-' + current.getDate() + ' ' + current.getHours() + ':' + current.getMinutes() + ':' + current.getSeconds();
+    let subtotal = document.getElementById('subtotal');
+    let descuento = document.getElementById('discount');
+    let iva = document.getElementById('iva');
+    let total = document.getElementById('total');
+    let tablaProductos = document.getElementById('productSale')
+
+    let urlStaff = 'http://localhost:8080/api/v1/staffs/' + staffId.value;
+    let getInit = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    }
+
+    let saleLines = [];
+
+    let hijos = tablaProductos.getElementsByTagName('tr')
+
+    for (let index = 0; index < hijos.length; index++) {
+        let producto = hijos[index];
+        cargarProductos(producto, saleLines);
+    }
+
+    let staff;
+
+    await fetch(urlStaff, getInit)
+        .then(response => response.json())
+        .then(response => staff = response)
+
+    let data = {
+        client: client.value,
+        staff: staff,
+        receipt: {
+            receiptDate: fecha,
+            discounts: descuento.value,
+            subtotal: subtotal.value,
+            iva: iva.value,
+            total: total.value
+        },
+        saleLines: saleLines
+    }
+
+    let url = 'http://localhost:8080/api/v1/sales';
+    let postInit = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(data)
+    }
+
+    await fetch(url, postInit)
+        .then(response => {
+            if (response.ok) {
+                saleLines.forEach(async product => {
+                    let url = 'http://localhost:8080/api/v1/products/' + product.idProduct.id;
+                    let getInit = {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        }
+                    }
+                    let body;
+                    await fetch(url, getInit)
+                        .then(response => response.json())
+                        .then(response => {
+                            body = { stock: response.stock - product.quantity }
+                        })
+                    let postInit = {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify(body)
+                    }
+                    await fetch(url, postInit)
+                        .then(response => {
+                            if (response.ok) { console.log('ok') }
+                        })
+                })
+            }
+        })
+
+    //location.href = 'salesOperation.html'
+}
+
+async function cargarProductos(producto, saleLines) {
+    let getInit = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    };
+    let urlProduct = 'http://localhost:8080/api/v1/products/' + producto.getAttribute('id');
+    let product;
+    await fetch(urlProduct, getInit)
+        .then(response => response.json())
+        .then(response => product = response)
+
+    saleLines.push({
+        idProduct: product,
+        quantity: producto.lastChild.innerHTML
+    })
 }
