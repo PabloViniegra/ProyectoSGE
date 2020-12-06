@@ -1,465 +1,467 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,300;0,400;0,500;0,600;1,100;1,200;1,300;1,400;1,500;1,600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,300;0,400;0,500;0,600;1,100;1,200;1,300;1,400;1,500;1,600&display=swap");
 
 /* VARIABLES CSS*/
 
 :root {
-    --color_body: #232427;
-    --color_caja: #2a2b2f;
-    --color_border_caja: #1e1f23;
-    --color_letra_content: rgba(255, 255, 255, 0.05);
-    --color_letrah3_content: rgba(255, 255, 255, 0.5);
-    --main_font: 'Poppins', sans-serif;
-    --color_corporative_first: #009e81;
-    --color_corporative_second: #00b594;
-    --color_corporative_third: #1C3D36;
-    --color_corporative_four: #01A862;
-    --color_corporative_five: #026340;
-    --color_light_gray: #F7F7F7;
-    --color_gray: #c8c8c8;
+  --color_body: #232427;
+  --color_caja: #2a2b2f;
+  --color_border_caja: #1e1f23;
+  --color_letra_content: rgba(255, 255, 255, 0.05);
+  --color_letrah3_content: rgba(255, 255, 255, 0.5);
+  --main_font: "Poppins", sans-serif;
+  --color_corporative_first: #009e81;
+  --color_corporative_second: #00b594;
+  --color_corporative_third: #1c3d36;
+  --color_corporative_four: #01a862;
+  --color_corporative_five: #026340;
+  --color_light_gray: #f7f7f7;
+  --color_gray: #c8c8c8;
 }
-
 
 /* ESTILOS UNIVERSALES*/
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: var(--main_font);
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: var(--main_font);
 }
 
 body {
-    min-height: 100vh;
-    background: var(--color_gray);
+  min-height: 100vh;
+  background: var(--color_gray);
 }
 
 .requestDeleteHidden {
-    background-color: var(--color_gray);
-    border-radius: 12px;
-    width: auto;
+  background-color: var(--color_gray);
+  border-radius: 12px;
+  width: auto;
 }
 
 .requestDeleteHidden p {
-    font-weight: bolder;
-    color: #000;
-    margin-top: 10px;
+  font-weight: bolder;
+  color: #000;
+  margin-top: 10px;
 }
 
 .show-content {
-    border-radius: 39px 39px 39px 39px;
-    background: #00b594;
-    background: linear-gradient(64deg,#00b594 0%, #01a862 80%);
-    box-shadow: 26px 11px 8px 5px rgba(0,0,0,0.79);
-
+  border-radius: 39px 39px 39px 39px;
+  background: #00b594;
+  background: linear-gradient(64deg, #00b594 0%, #01a862 80%);
+  box-shadow: 26px 11px 8px 5px rgba(0, 0, 0, 0.79);
 }
-
 
 /* ESTILOS DEL CONTENEDOR */
 
 .Mycard {
-    position: relative;
-    min-width: 320px;
-    height: 440px;
-    justify-content: center;
-    background-color: var(--color_caja);
-    box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.2), inset -5px -5px 15px rgba(255, 255, 255, 0.1), 5px 5px 15px rgba(0, 0, 0, 0.3), -5px -5px 15px rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    margin: 30px;
+  position: relative;
+  min-width: 320px;
+  height: 440px;
+  justify-content: center;
+  background-color: var(--color_caja);
+  box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.2),
+    inset -5px -5px 15px rgba(255, 255, 255, 0.1),
+    5px 5px 15px rgba(0, 0, 0, 0.3), -5px -5px 15px rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  margin: 30px;
 }
 
 .Mycard:before {
-    position: absolute;
-    content: '';
-    top: 0;
-    left: 0;
-    width: 50%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.1);
+  position: absolute;
+  content: "";
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .Mycard .box {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    right: 20px;
-    bottom: 20px;
-    background: var(--color_caja);
-    border: 2px solid var(--color_border_caja);
-    border-radius: 15px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-    transition: 0.5s;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
+  background: var(--color_caja);
+  border: 2px solid var(--color_border_caja);
+  border-radius: 15px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  transition: 0.5s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
 }
 
 .Mycard .box:before {
-    position: absolute;
-    content: '';
-    top: 0;
-    left: 0;
-    width: 50%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.05);
-    pointer-events: none;
+  position: absolute;
+  content: "";
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  pointer-events: none;
 }
 
 .Mycard .box:hover {
-    transform: translateY(-50px);
-    box-shadow: 0 40px 70px rgba(0, 0, 0, 0.5);
+  transform: translateY(-50px);
+  box-shadow: 0 40px 70px rgba(0, 0, 0, 0.5);
 }
 
 .Mycard .box .content {
-    padding: 20px;
-    text-align: center;
+  padding: 20px;
+  text-align: center;
 }
 
 .Mycard .box .content h2 {
-    position: absolute;
-    top: -10px;
-    right: 30px;
-    font-size: 8em;
-    color: var(--color_letra_content);
+  position: absolute;
+  top: -10px;
+  right: 30px;
+  font-size: 8em;
+  color: var(--color_letra_content);
 }
 
 .Mycard .box .content h3 {
-    font-size: 1.8em;
-    color: var(--color_letrah3_content);
-    z-index: 1;
-    transition: 0.5s;
+  font-size: 1.8em;
+  color: var(--color_letrah3_content);
+  z-index: 1;
+  transition: 0.5s;
 }
 
 .Mycard .box .content p {
-    font-size: 16px;
-    font-weight: 300;
-    color: var(--color_letrah3_content);
-    z-index: 1;
-    transition: 0.5s;
+  font-size: 16px;
+  font-weight: 300;
+  color: var(--color_letrah3_content);
+  z-index: 1;
+  transition: 0.5s;
 }
 
 .Mycard .box .content a {
-    position: relative;
-    display: inline-block;
-    padding: 8px 20px;
-    margin-top: 15px;
-    border-radius: 20px;
-    text-decoration: none;
-    font-weight: 400;
-    color: #000;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  position: relative;
+  display: inline-block;
+  padding: 8px 20px;
+  margin-top: 15px;
+  border-radius: 20px;
+  text-decoration: none;
+  font-weight: 400;
+  color: #000;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
 .btn1 {
-    background-color: var(--color_corporative_first);
+  background-color: var(--color_corporative_first);
 }
 
 .btn2 {
-    background-color: var(--color_corporative_second);
+  background-color: var(--color_corporative_second);
 }
 
 #logo {
-    width: 100%;
+  width: 100%;
 }
-
 
 /*ESTILOS DEL LOGIN*/
 
 .body-login {
-    font-family: "Lato", sans-serif;
-    display: contents;
-    justify-content: left;
-    flex-wrap: wrap;
+  font-family: "Lato", sans-serif;
+  display: contents;
+  justify-content: left;
+  flex-wrap: wrap;
 }
 
 .main-head {
-    height: 150px;
-    background: #FFF;
+  height: 150px;
+  background: #fff;
 }
 
 .sidenav {
-    height: 100%;
-    background-color: #000;
-    overflow-x: hidden;
-    text-align: center;
+  height: 100%;
+  background-color: #000;
+  overflow-x: hidden;
+  text-align: center;
 }
 
 .main {
-    padding: 0px 10px;
+  padding: 0px 10px;
 }
 
 .logo {
-    height: 150px;
-    width: 150px;
-    margin-bottom: 15%;
+  height: 150px;
+  width: 150px;
+  margin-bottom: 15%;
 }
 
 .login-main-text {
-    margin-top: 20%;
-    padding: 60px;
-    color: #fff;
+  margin-top: 20%;
+  padding: 60px;
+  color: #fff;
 }
 
 .login-main-text h2 {
-    font-weight: 300;
+  font-weight: 300;
 }
 
 .btn-black {
-    background-color: #000 !important;
-    color: #fff;
+  background-color: #000 !important;
+  color: #fff;
 }
 
 @media screen and (max-height: 450px) {
-    .sidenav {
-        padding-top: 15px;
-    }
+  .sidenav {
+    padding-top: 15px;
+  }
 }
 
 @media screen and (max-width: 450px) {
-    .login-form {
-        margin-top: 70%;
-    }
+  .login-form {
+    margin-top: 70%;
+  }
 }
 
 @media screen and (min-width: 768px) {
-    .main {
-        margin-left: 40%;
-    }
-    .sidenav {
-        width: 40%;
-        position: fixed;
-        z-index: 1;
-        top: 0;
-        left: 0;
-    }
-    .login-form {
-        margin-top: 70%;
-        padding-left: 30px;
-    }
+  .main {
+    margin-left: 40%;
+  }
+  .sidenav {
+    width: 40%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+  }
+  .login-form {
+    margin-top: 70%;
+    padding-left: 30px;
+  }
 }
 
 .login-main-text {
-    margin-top: 20%;
-    padding: 60px;
-    color: #fff;
+  margin-top: 20%;
+  padding: 60px;
+  color: #fff;
 }
 
 .login-main-text h2 {
-    font-weight: 300;
+  font-weight: 300;
 }
 
 .btn-black {
-    background-color: #000 !important;
-    color: #fff;
+  background-color: #000 !important;
+  color: #fff;
 }
-
 
 /* SALES.HTML INICIO */
 
 .aside {
-    padding: 0.5%;
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: 1em;
-    box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.2), inset -5px -5px 15px rgba(255, 255, 255, 0.1), 5px 5px 15px rgba(0, 0, 0, 0.3), -5px -5px 15px rgba(255, 255, 255, 0.1);
-    background-color: var(--color_corporative_third);
-    height: 100vh;
-    position: relative;
+  padding: 0.5%;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1em;
+  box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.2),
+    inset -5px -5px 15px rgba(255, 255, 255, 0.1),
+    5px 5px 15px rgba(0, 0, 0, 0.3), -5px -5px 15px rgba(255, 255, 255, 0.1);
+  background-color: var(--color_corporative_third);
+  height: 100vh;
+  position: relative;
 }
 
 .mainBlock {
-    background-color: var(--color_caja);
-    border-radius: 1em;
-    box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.2), inset -5px -5px 15px rgba(255, 255, 255, 0.1), 5px 5px 15px rgba(0, 0, 0, 0.3), -5px -5px 15px rgba(255, 255, 255, 0.1);
-    height: auto;
+  background-color: var(--color_caja);
+  border-radius: 1em;
+  box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.2),
+    inset -5px -5px 15px rgba(255, 255, 255, 0.1),
+    5px 5px 15px rgba(0, 0, 0, 0.3), -5px -5px 15px rgba(255, 255, 255, 0.1);
+  height: auto;
 }
 
 .navbar-nav li {
-    padding-left: 2em;
-    font-size: 28px;
+  padding-left: 2em;
+  font-size: 28px;
 }
 
 .h1main {
-    color: var(--color_corporative_first);
-    font-weight: 600;
-    text-align: center;
-    letter-spacing: -1px;
-    line-height: 1;
-    text-shadow: var(--color_corporative_second);
-    margin-bottom: 1em;
-    margin: 0 0.5em;
+  color: var(--color_corporative_first);
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: -1px;
+  line-height: 1;
+  text-shadow: var(--color_corporative_second);
+  margin-bottom: 1em;
+  margin: 0 0.5em;
 }
 
 #btnSellOperations:hover {
-    font-weight: bolder;
-    box-shadow: 2px 2px 0 var(--color_corporative_second);
-    font-size: 16px;
-    transition: 0.5s;
+  font-weight: bolder;
+  box-shadow: 2px 2px 0 var(--color_corporative_second);
+  font-size: 16px;
+  transition: 0.5s;
 }
 
 .myNavbar {
-    background-color: var(--color_caja);
-    box-shadow: 5px 5px 0 var(--color_border_caja);
+  background-color: var(--color_caja);
+  box-shadow: 5px 5px 0 var(--color_border_caja);
+}
+
+
+#tableAllProducts {
+    border-collapse: collapse;
+    width: 100%;
 }
 
 .aside li {
-    color: white;
-    text-decoration: none;
-    list-style: none;
-    margin-top: 1em;
-    text-align: center;
+  color: white;
+  text-decoration: none;
+  list-style: none;
+  margin-top: 1em;
+  text-align: center;
 }
 
-.aside>a {
-    position: relative;
-    display: inline-block;
-    padding: 8px 20px;
-    margin-top: 4em;
-    border-radius: 20px;
-    text-decoration: none;
-    font-weight: 400;
-    color: #000;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-    position: absolute;
-    left: 40%;
+.aside > a {
+  position: relative;
+  display: inline-block;
+  padding: 8px 20px;
+  margin-top: 4em;
+  border-radius: 20px;
+  text-decoration: none;
+  font-weight: 400;
+  color: #000;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  left: 40%;
 }
 
 .footer p {
-    color: white;
-    margin-top: 2em;
+  color: white;
+  margin-top: 2em;
 }
 
-.aside>a:hover {
-    font-weight: bolder;
-    box-shadow: 2px 2px 0 var(--color_corporative_second);
-    font-size: 16px;
-    transition: 0.5s;
+.aside > a:hover {
+  font-weight: bolder;
+  box-shadow: 2px 2px 0 var(--color_corporative_second);
+  font-size: 16px;
+  transition: 0.5s;
 }
 
 .aside ul {
-    margin: 0 1.5em;
+  margin: 0 1.5em;
 }
 
 .aside ul a:hover {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 .aside ul li:hover {
-    background-color: var(--color_corporative_first);
-    border-radius: 1em;
+  background-color: var(--color_corporative_first);
+  border-radius: 1em;
 }
 
 .card {
-    color: white;
-    background-color: var(--color_corporative_first);
-    box-shadow: 0 4px 8px 0 #aeaeae;
-    transition: 0.3s;
-    border-radius: 5px;
+  color: white;
+  background-color: var(--color_corporative_first);
+  box-shadow: 0 4px 8px 0 #aeaeae;
+  transition: 0.3s;
+  border-radius: 5px;
 }
 
 .card:hover {
-    background-color: var(--color_corporative_second);
-  }
+  background-color: var(--color_corporative_second);
+}
 
 .card img {
-    width: 60%;
+  width: 60%;
 }
 
 .card a {
-    display: inline-block;
-    padding: 8px 20px;
-    margin-top: 4em;
-    border-radius: 20px;
-    background-color: #8b8b8b;
-    text-decoration: none;
-    font-weight: 400;
-    color: #000;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  display: inline-block;
+  padding: 8px 20px;
+  margin-top: 4em;
+  border-radius: 20px;
+  background-color: #8b8b8b;
+  text-decoration: none;
+  font-weight: 400;
+  color: #000;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
 .card a:hover {
-    border: 1px solid black;
+  border: 1px solid black;
 }
 
 .collapse .card-body {
-    background-color: var(--color_caja);
+  background-color: var(--color_caja);
 }
 
-
 /* SALES.HTML FIN */
-
 
 /* INICIO SALESOPERATION.HTML*/
 
 .aside {
-    background-color: var(--color_border_caja);
-    border: 2px solid #8b8b8b;
+  background-color: var(--color_border_caja);
+  border: 2px solid #8b8b8b;
 }
 
 .aside form button:hover {
-    font-weight: bolder;
-    box-shadow: 2px 2px 0 var(--color_corporative_second);
-    font-size: 16px;
-    transition: 0.5s;
+  font-weight: bolder;
+  box-shadow: 2px 2px 0 var(--color_corporative_second);
+  font-size: 16px;
+  transition: 0.5s;
 }
 
 .buttons button:hover {
-    font-weight: bolder;
-    box-shadow: 2px 2px 0 var(--color_corporative_first);
-    font-size: 16px;
-    transition: 0.5s;
+  font-weight: bolder;
+  box-shadow: 2px 2px 0 var(--color_corporative_first);
+  font-size: 16px;
+  transition: 0.5s;
 }
 
 .table tr:hover {
-    background-color: var(--color_corporative_first);
+  background-color: var(--color_corporative_first);
 }
 
-
 /* FIN SALESOPERATION.HTML*/
-
 
 /* INICIO CLIENTS.HTML*/
 
 form button:hover {
-    font-weight: bolder;
-    box-shadow: 2px 2px 0 var(--color_corporative_first);
-    font-size: 16px;
-    transition: 0.5s;
+  font-weight: bolder;
+  box-shadow: 2px 2px 0 var(--color_corporative_first);
+  font-size: 16px;
+  transition: 0.5s;
 }
 
-.collapse>a:hover {
-    font-weight: bolder;
-    box-shadow: 2px 2px 0 var(--color_corporative_first);
-    font-size: 16px;
-    transition: 0.5s;
+.collapse > a:hover {
+  font-weight: bolder;
+  box-shadow: 2px 2px 0 var(--color_corporative_first);
+  font-size: 16px;
+  transition: 0.5s;
 }
 
 .client {
-    background-color: var(--color_corporative_second);
-    border-radius: 15px;
-    box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.2), inset -5px -5px 15px rgba(255, 255, 255, 0.1), 5px 5px 15px rgba(0, 0, 0, 0.3), -5px -5px 15px rgba(255, 255, 255, 0.1);
+  background-color: var(--color_corporative_second);
+  border-radius: 15px;
+  box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.2),
+    inset -5px -5px 15px rgba(255, 255, 255, 0.1),
+    5px 5px 15px rgba(0, 0, 0, 0.3), -5px -5px 15px rgba(255, 255, 255, 0.1);
 }
 
-.client>div {
-    text-align: center;
-    font-weight: 600;
+.client > div {
+  text-align: center;
+  font-weight: 600;
 }
-
 
 /* FIN CLIENTS.HTML*/
-
 
 /* ALLSTAFF.HTML*/
 
 .myPagination {
-    display: flex;
-    margin-left: 43%;
+  display: flex;
+  margin-left: 43%;
 }
 
 .paging {
-    color: #000;
-    font-size: 16px;
-    justify-content: center;
+  color: #000;
+  font-size: 16px;
+  justify-content: center;
 }
-
 
 /* ALLSTAFF.HTML*/
