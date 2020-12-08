@@ -387,40 +387,9 @@ async function addSale() {
     await fetch(url, postInit)
         .then(response => {
             if (response.ok) {
-                saleLines.forEach(async product => {
-                    let url = 'http://localhost:8080/api/v1/products/' + product.idProduct.id;
-                    let getInit = {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
-                        }
-                    }
-                    let body;
-                    let resta;
-                    await fetch(url, getInit)
-                        .then(response => response.json())
-                        .then(response => {
-                            resta = Number(response.stock) - Number(product.quantity)
-                        })
-                    body = { stock: resta }
-                    let postInit = {
-                        method: 'PATCH',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify(body)
-                    }
-                    await fetch(url, postInit)
-                        .then(response => {
-                            if (response.ok) { console.log('ok') }
-                        })
-                })
+                crearVenta(saleLines);
             }
         })
-
-    location.href = 'salesOperation.html'
 }
 
 async function cargarProductos(producto, saleLines) {
@@ -441,4 +410,44 @@ async function cargarProductos(producto, saleLines) {
         idProduct: product,
         quantity: producto.lastChild.innerHTML
     })
+}
+
+async function crearVenta(saleLines) {
+    const delay = ms => new Promise(res => setTimeout(res, ms));
+    saleLines.forEach(async product => {
+        let url = 'http://localhost:8080/api/v1/products/' + product.idProduct.id;
+        let getInit = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        }
+        let body;
+        let resta;
+        await fetch(url, getInit)
+            .then(response => response.json())
+            .then(response => {
+                resta = response.stock;
+            })
+        let restaValue = Number(resta)
+        let quantityValue = Number(product.quantity)
+        resta = restaValue - quantityValue;
+        body = { stock: resta }
+        console.log(body)
+        let postInit = {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(body)
+        }
+        await fetch(url, postInit)
+            .then(response => {
+                if (response.ok) { console.log('ok') }
+            })
+    })
+    await delay(500)
+    location.href = 'salesOperation.html'
 }
