@@ -81,11 +81,10 @@ async function loadStaff() {
             privilegeModificar.value = response.positionStaff.privilege;
 
             //Carga del dato en la celda de la tabla
-            let table = document.getElementById('tableStaff');
             let tblBody = document.getElementById('bodyTableStaff');
             let row = document.createElement('tr');
             let celda1 = document.createElement('td');
-            celda1.innerHTML = response.id;
+            celda1.innerHTML = response.idStaff;
             row.appendChild(celda1);
             let celda2 = document.createElement('td');
             celda2.innerHTML = response.name;
@@ -107,7 +106,6 @@ async function loadStaff() {
             row.appendChild(celda7);
 
             tblBody.appendChild(row);
-            table.appendChild(tblBody);
         })
 }
 
@@ -158,14 +156,15 @@ async function addStaff() {
     })
 }
 
-async function updateStaff() {
+function updateStaff() {
     let form = document.getElementById('updateStaff');
     form.addEventListener('submit', async(e) => {
+        const delay = ms => new Promise(res => setTimeout(res, ms));
+        e.preventDefault();
         const querystring = location.search;
         const params = new URLSearchParams(querystring)
         let id = params.get("id");
         if (id == undefined) id = 1
-        e.preventDefault();
         let name = document.getElementById('personalNameM');
         let email = document.getElementById('personalEmailM');
         let password = document.getElementById('inputPasswordM');
@@ -201,6 +200,7 @@ async function updateStaff() {
         await fetch(url, postInit)
             .then(response => console.log(response))
 
+        await delay(500)
         location.href = 'staff.html?id=' + id;
 
     })
@@ -272,15 +272,36 @@ async function loadAllStaffs() {
                 row.appendChild(celda8);
 
                 tblBody.appendChild(row);
-                row.addEventListener("click",() => {
+                row.addEventListener("click", () => {
                     let id = s.idStaff;
                     location.href = 'staff.html?id=' + id;
                 });
                 table.appendChild(tblBody);
-                table.appendChild(tblBody);
+
             });
 
 
         })
 
+}
+
+function filterTableStaff() {
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("tableAllStaffs");
+    tr = table.getElementsByTagName("tr");
+
+
+    for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[1];
+        if (td) {
+            txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
 }
