@@ -1,5 +1,3 @@
-let idProduct;
-
 async function loadPurchasesList() {
     let url = 'http://localhost:8080/api/v1/purchases'
     let getInit = {
@@ -20,7 +18,7 @@ async function loadPurchasesList() {
             }
             for (let i = 0; i < final; i++) {
                 let a = document.createElement('a');
-                let urlSupplier = 'purchases.html?id=' + response[i].id + '&idSupplier=' + response[i].supplier;
+                let urlSupplier = 'purchasesOperation.html?id=' + response[i].id + '&idSupplier=' + response[i].supplier;
                 a.setAttribute('href', urlSupplier);
 
                 let li = document.createElement('li');
@@ -33,7 +31,7 @@ async function loadPurchasesList() {
 
                 a.appendChild(li);
 
-                document.getElementById('LastSuppliersListList').appendChild(a);
+                document.getElementById('lastSupplierList').appendChild(a);
             }
         })
 }
@@ -99,7 +97,7 @@ async function loadPurchase() {
 
             let tBody = document.getElementById('products')
             response.purchaseLines.forEach(line => {
-
+                //line.idProduct
                 let tr = document.createElement('tr');
                 let id = document.createElement('td');
                 id.innerHTML = line.idProduct.id;
@@ -125,7 +123,7 @@ async function loadPurchase() {
                 tBody.appendChild(tr)
             });
         })
-    }
+}
 
 async function getAllSuppliersInaSelected() {
     let url = 'http://localhost:8080/api/v1/supplier';
@@ -150,7 +148,6 @@ async function getAllSuppliersInaSelected() {
         })
 }
 
-
 async function getAllStaffInaSelected() {
     let url = 'http://localhost:8080/api/v1/staffs';
     let getInit = {
@@ -167,7 +164,7 @@ async function getAllStaffInaSelected() {
             let select = document.getElementById('personalName');
             response.forEach(c => {
                 let option = document.createElement('option');
-                option.setAttribute('value', c.id);
+                option.setAttribute('value', c.idStaff);
                 option.innerHTML = c.name;
                 select.appendChild(option);
             });
@@ -191,15 +188,15 @@ async function getAllProductsInaSelected() {
             response.forEach(c => {
                 let option = document.createElement('option');
                 option.setAttribute('value', c.id);
-                option.setAttribute("buyPrice", c.buyPrice)
-                option.innerHTML = c.name + " - " + c.buyPrice + "€";
+                option.setAttribute('buyPrice', c.buyPrice)
+                option.innerHTML = c.name + ' - ' + c.buyPrice + '€';
                 select.appendChild(option);
             });
         })
 }
 
 function addProductToTheCart() {
-    let form = document.getElementById('formAdd');
+    let form = document.getElementById('formPurchase');
     form.addEventListener('submit', (e) => {
         e.preventDefault();
     })
@@ -211,14 +208,18 @@ function addProductToTheCart() {
     button2.addEventListener('click', () => {
         applyDiscount();
     })
+    let button3 = document.getElementById('addPurchase');
+    button3.addEventListener('click', () => {
+        addPurchase();
+    })
 }
 
 function createProduct() {
     let select = document.getElementById('productName')
-    let quantity = document.getElementById('countPurchase')
+    let quantity = document.getElementById('countSell')
     let table = document.getElementById('productPurchase')
-    let subtotal = document.getElementById('subTotalPurchase')
-    let count = document.getElementById('countPurchase')
+    let subtotal = document.getElementById('subtotal')
+    let count = document.getElementById('countSell')
     let total = document.getElementById('total')
     let iva = document.getElementById('iva')
     let tr = document.createElement('tr')
@@ -227,6 +228,7 @@ function createProduct() {
     tr.appendChild(td1);
     let td2 = document.createElement('td')
     td2.innerHTML = quantity.value;
+    tr.setAttribute('id', select.value)
     tr.appendChild(td2);
     table.appendChild(tr);
     let optionnValue = Number(select.options[select.selectedIndex].getAttribute('buyPrice'))
@@ -238,7 +240,7 @@ function createProduct() {
 }
 
 function applyDiscount() {
-    let subtotal = document.getElementById('subTotalPurchase')
+    let subtotal = document.getElementById('subtotal')
     let discount = document.getElementById('discount')
     let total = document.getElementById('total')
     let iva = document.getElementById('iva')
@@ -249,9 +251,90 @@ function applyDiscount() {
     total.value = total2 - (total2 * (discountValue / 100))
 }
 
-/*
-async function getInfoFromProduct() {
-    let url = 'http://localhost:8080/api/v1/products/' + idProduct;
+async function allPurchasesLoad() {
+    let url = 'http://localhost:8080/api/v1/purchases';
+    let getInit = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    }
+    let body = document.getElementById('bodyAllPurchasesTable');
+    await fetch(url, getInit)
+        .then(response => response.json())
+        .then(response => {
+            response.forEach(async purchase => {
+                let row = document.createElement('tr');
+
+                let celda1 = document.createElement('td');
+                celda1.innerHTML = purchase.id;
+                row.appendChild(celda1);
+
+                let celda2 = document.createElement('td');
+                celda2.innerHTML = await giveMeSupplierName(purchase.supplier); //Habría que sacar el nombre del proveedor
+                row.appendChild(celda2);
+
+                let celda3 = document.createElement('td');
+                celda3.innerHTML = purchase.staff.name;
+                row.appendChild(celda3);
+
+                let celda4 = document.createElement('td');
+                celda4.innerHTML = purchase.receipt.receiptDate;
+                row.appendChild(celda4);
+
+                let celda5 = document.createElement('td');
+                celda5.innerHTML = purchase.receipt.total;
+                row.appendChild(celda5);
+
+                let celda7 = document.createElement('td');
+                let select = document.createElement('select')
+                select.setAttribute('class', 'browser-default custom-select bg-dark text-white')
+                celda7.appendChild(select)
+                purchase.purchaseLines.forEach(line => {
+                    let hijoSelect = document.createElement('option')
+                    hijoSelect.innerHTML = line.idProduct.name + ' - ' + line.quantity + '<br>';
+                    select.appendChild(hijoSelect)
+                });
+                row.appendChild(celda7);
+
+                body.appendChild(row);
+                row.addEventListener("click", () => {
+                    let id = purchase.id;
+                    location.href = 'products.html?id=' + id;
+                });
+            });
+        })
+}
+
+async function giveMeSupplierName(id) {
+    let url = 'http://localhost:8080/api/v1/supplier/' + id;
+    let getInit = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    }
+    return await fetch(url, getInit)
+        .then(response => response.json())
+        .then(response => {
+            return response.fullName;
+        })
+}
+
+async function addPurchase() {
+    let supplier = document.getElementById('supplierForPurchase');
+    let staffId = document.getElementById('personalName');
+    let current = new Date();
+    let fecha = current.getFullYear() + '-' + current.getMonth() + '-' + current.getDate() + ' ' + current.getHours() + ':' + current.getMinutes() + ':' + current.getSeconds();
+    let subtotal = document.getElementById('subtotal');
+    let descuento = document.getElementById('discount');
+    let iva = document.getElementById('iva');
+    let total = document.getElementById('total');
+    let tablaProductos = document.getElementById('productPurchase')
+
+    let urlStaff = 'http://localhost:8080/api/v1/staffs/' + staffId.value;
     let getInit = {
         method: 'GET',
         headers: {
@@ -260,17 +343,118 @@ async function getInfoFromProduct() {
         }
     }
 
-    await fetch(url, getInit)
+    let purchaseLines = [];
+
+    let hijos = tablaProductos.getElementsByTagName('tr')
+
+    for (let index = 0; index < hijos.length; index++) {
+        let producto = hijos[index];
+        await cargarProductos(producto, purchaseLines);
+    }
+
+    let staff;
+
+    await fetch(urlStaff, getInit)
         .then(response => response.json())
+        .then(response => staff = response)
+
+    let data = {
+        supplier: supplier.value,
+        staff: staff,
+        receipt: {
+            receiptDate: fecha,
+            discounts: descuento.value,
+            subtotal: subtotal.value,
+            iva: iva.value,
+            total: total.value
+        },
+        purchaseLines: purchaseLines
+    }
+
+    let url = 'http://localhost:8080/api/v1/purchases';
+    let postInit = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(data)
+    }
+
+    await fetch(url, postInit)
         .then(response => {
-            let precioSinIva = response.sellPrice;
-            precioSinIva.innerHTML = precioSinIva.innerHTML
-            let subtotal = document.getElementById("subTotalPurchase")
-            let precioConIva = precioSinIva * 1.21;
-            let totalCompra = precioConIva * document.getElementById("countPurchase").value;
-            totalCompra.innerHTML = totalCompra.innerHTML + totalCompra
-            subtotal.innerHTML = precioSinIva * document.getElementById("countPurchase").value;
-            let total = document.getElementById("totalPurchase")
-            total.innerHTML = totalCompra
+            if (response.ok) {
+                purchaseLines.forEach(async product => {
+                    let url = 'http://localhost:8080/api/v1/products/' + product.idProduct.id;
+                    let getInit = {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        }
+                    }
+                    let body;
+                    await fetch(url, getInit)
+                        .then(response => response.json())
+                        .then(response => {
+                            body = { stock: response.stock - product.quantity }
+                        })
+                    let postInit = {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify(body)
+                    }
+                    await fetch(url, postInit)
+                        .then(response => {
+                            if (response.ok) { console.log('ok') }
+                        })
+                })
+            }
         })
-}*/
+
+    location.href = 'purchasesOperation.html'
+}
+
+async function cargarProductos(producto, purchaseLines) {
+    let getInit = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    };
+    let urlProduct = 'http://localhost:8080/api/v1/products/' + producto.getAttribute('id');
+    let product;
+    await fetch(urlProduct, getInit)
+        .then(response => response.json())
+        .then(response => product = response)
+
+    purchaseLines.push({
+        idProduct: product,
+        quantity: producto.lastChild.innerHTML
+    })
+}
+
+function filterTablePurchases() {
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("allPurchasesTable");
+    tr = table.getElementsByTagName("tr");
+
+
+    for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[1];
+        if (td) {
+            txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+}
