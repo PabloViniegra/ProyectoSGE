@@ -397,11 +397,13 @@ async function addSale() {
                         }
                     }
                     let body;
+                    let resta;
                     await fetch(url, getInit)
                         .then(response => response.json())
                         .then(response => {
-                            body = { stock: response.stock - product.quantity }
+                            resta = Number(response.stock) - Number(product.quantity)
                         })
+                    body = { stock: resta }
                     let postInit = {
                         method: 'PATCH',
                         headers: {
