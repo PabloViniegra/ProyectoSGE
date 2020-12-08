@@ -352,7 +352,7 @@ async function addSale() {
 
     for (let index = 0; index < hijos.length; index++) {
         let producto = hijos[index];
-        cargarProductos(producto, saleLines);
+        await cargarProductos(producto, saleLines);
     }
 
     let staff;
