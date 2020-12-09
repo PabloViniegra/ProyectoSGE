@@ -16,7 +16,7 @@ async function loadSupplier() {
         .then(response => {
             let deleteForm = document.getElementById('bodyDelete');
             let trDelete = document.createElement('tr')
-            //id - nombre - email - dni
+                //id - nombre - email - dni
             let tdId = document.createElement('td')
             tdId.innerHTML = response.id;
             trDelete.appendChild(tdId)
@@ -95,9 +95,9 @@ async function loadAllSuppliers() {
     }
     let table = document.getElementById('tableAllSuppliers');
     let tblBody = document.getElementById('bodyTableSuppliers');
-    await fetch(url,getInit)
+    await fetch(url, getInit)
         .then(response => response.json())
-        .then (response => {
+        .then(response => {
             response.forEach(r => {
                 let row = document.createElement('tr');
 
@@ -197,7 +197,7 @@ async function addSupplier() {
 
         await fetch(url, postInit)
             .then(response => response.json())
-            .then(respone => console.log(respone))
+            .then(response => id = response.id)
 
         location.href = 'suppliers.html?id=' + id;
     })

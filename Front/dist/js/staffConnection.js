@@ -135,7 +135,6 @@ async function addStaff() {
                 section: seccion.value,
                 privilege: privilegio.value
             }
-
         }
 
         let url = 'http://localhost:8080/api/v1/staffs'
@@ -159,7 +158,6 @@ async function addStaff() {
 function updateStaff() {
     let form = document.getElementById('updateStaff');
     form.addEventListener('submit', async(e) => {
-        const delay = ms => new Promise(res => setTimeout(res, ms));
         e.preventDefault();
         const querystring = location.search;
         const params = new URLSearchParams(querystring)
@@ -167,7 +165,7 @@ function updateStaff() {
         if (id == undefined) id = 1
         let name = document.getElementById('personalNameM');
         let email = document.getElementById('personalEmailM');
-        let password = document.getElementById('inputPasswordM');
+        let password = document.getElementById('inputPasswordM')
         let tel = document.getElementById('inputTelefonoPersonalM');
         let position = document.getElementById('positionStaffM');
         let seccion = document.getElementById('seccionPersonalM');
@@ -176,14 +174,13 @@ function updateStaff() {
         let data = {
             name: name.value,
             email: email.value,
-            password: password.value,
             telephone: tel.value,
+            password: password.value,
             positionStaff: {
                 name: position.value,
                 section: seccion.value,
-                privilege: privilegio.value
+                privilege: privilegio.selectedIndex
             }
-
         }
         console.log(data);
 
@@ -199,10 +196,7 @@ function updateStaff() {
 
         await fetch(url, postInit)
             .then(response => console.log(response))
-
-        await delay(500)
-        location.href = 'staff.html?id=' + id;
-
+            //.then(location.href = 'staff.html?id=' + id)
     })
 }
 
