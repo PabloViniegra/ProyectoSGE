@@ -81,11 +81,10 @@ async function loadStaff() {
             privilegeModificar.value = response.positionStaff.privilege;
 
             //Carga del dato en la celda de la tabla
-            let table = document.getElementById('tableStaff');
             let tblBody = document.getElementById('bodyTableStaff');
             let row = document.createElement('tr');
             let celda1 = document.createElement('td');
-            celda1.innerHTML = response.id;
+            celda1.innerHTML = response.idStaff;
             row.appendChild(celda1);
             let celda2 = document.createElement('td');
             celda2.innerHTML = response.name;
@@ -107,7 +106,6 @@ async function loadStaff() {
             row.appendChild(celda7);
 
             tblBody.appendChild(row);
-            table.appendChild(tblBody);
         })
 }
 
@@ -137,7 +135,6 @@ async function addStaff() {
                 section: seccion.value,
                 privilege: privilegio.value
             }
-
         }
 
         let url = 'http://localhost:8080/api/v1/staffs'
@@ -158,17 +155,17 @@ async function addStaff() {
     })
 }
 
-async function updateStaff() {
+function updateStaff() {
     let form = document.getElementById('updateStaff');
     form.addEventListener('submit', async(e) => {
+        e.preventDefault();
         const querystring = location.search;
         const params = new URLSearchParams(querystring)
         let id = params.get("id");
         if (id == undefined) id = 1
-        e.preventDefault();
         let name = document.getElementById('personalNameM');
         let email = document.getElementById('personalEmailM');
-        let password = document.getElementById('inputPasswordM');
+        let password = document.getElementById('inputPasswordM')
         let tel = document.getElementById('inputTelefonoPersonalM');
         let position = document.getElementById('positionStaffM');
         let seccion = document.getElementById('seccionPersonalM');
@@ -177,14 +174,13 @@ async function updateStaff() {
         let data = {
             name: name.value,
             email: email.value,
-            password: password.value,
             telephone: tel.value,
+            password: password.value,
             positionStaff: {
                 name: position.value,
                 section: seccion.value,
-                privilege: privilegio.value
+                privilege: privilegio.selectedIndex
             }
-
         }
         console.log(data);
 
@@ -200,9 +196,7 @@ async function updateStaff() {
 
         await fetch(url, postInit)
             .then(response => console.log(response))
-
-        location.href = 'staff.html?id=' + id;
-
+            //.then(location.href = 'staff.html?id=' + id)
     })
 }
 
@@ -272,12 +266,12 @@ async function loadAllStaffs() {
                 row.appendChild(celda8);
 
                 tblBody.appendChild(row);
-                row.addEventListener("click",() => {
+                row.addEventListener("click", () => {
                     let id = s.idStaff;
                     location.href = 'staff.html?id=' + id;
                 });
                 table.appendChild(tblBody);
-                
+
             });
 
 

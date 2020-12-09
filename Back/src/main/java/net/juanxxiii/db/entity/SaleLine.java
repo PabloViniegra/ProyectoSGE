@@ -19,7 +19,7 @@ public class SaleLine implements Serializable {
     @Column(name = "idventa")
     private int idSale;
 
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "idproducto", referencedColumnName = "idproducto")
     private Product idProduct;
 

@@ -24,7 +24,7 @@ public class Sale implements Serializable {
     private int client;
 
     @org.springframework.data.annotation.Transient
-    @ManyToOne(targetEntity = Staff.class, optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(targetEntity = Staff.class, optional = false)
     @JoinColumn(name = "idpersonal", referencedColumnName = "idpersonal")
     private Staff staff;
 

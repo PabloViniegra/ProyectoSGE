@@ -41,7 +41,7 @@ async function loadSale() {
     const params = new URLSearchParams(querystring)
     let id = params.get('id')
     let idClient = params.get('idClient');
-    if (id == undefined) id = 1
+    if (id == undefined) return -1
     if (idClient == undefined) idClient = 1;
     let urlCliente = 'http://localhost:8080/api/v1/clients/' + idClient;
     let getInit = {
@@ -51,7 +51,7 @@ async function loadSale() {
             'Accept': 'application/json'
         }
     }
-    await fetch(urlCliente, getInit)
+    let clientName = await fetch(urlCliente, getInit)
         .then(response => response.json())
         .then(response => {
             let name = document.getElementById('NombreCliente')
@@ -68,6 +68,7 @@ async function loadSale() {
             dire.innerHTML = dire.innerHTML + response.directions[0].direction;
             let button = document.getElementById('EnlaceCliente')
             button.setAttribute('href', 'clients.html?id=' + idClient)
+            return response.fullName;
         })
     let urlSale = 'http://localhost:8080/api/v1/sales/' + id;
     await fetch(urlSale, getInit)
@@ -124,6 +125,25 @@ async function loadSale() {
                 tr.appendChild(type);
                 tBody.appendChild(tr)
             });
+
+            let tableDeleteBody = document.getElementById('deleteTableSale')
+            let trDelete = document.createElement('tr')
+            let celda1 = document.createElement('td')
+            celda1.innerHTML = response.id
+            let celda2 = document.createElement('td')
+            celda2.innerHTML = clientName
+            let celda3 = document.createElement('td')
+            celda3.innerHTML = response.staff.name
+            let celda4 = document.createElement('td')
+            celda4.innerHTML = response.receipt.receiptDate
+            let celda5 = document.createElement('td')
+            celda5.innerHTML = response.receipt.total
+            trDelete.appendChild(celda1)
+            trDelete.appendChild(celda2)
+            trDelete.appendChild(celda3)
+            trDelete.appendChild(celda4)
+            trDelete.appendChild(celda5)
+            tableDeleteBody.appendChild(trDelete)
         })
 }
 
@@ -213,6 +233,10 @@ function addProductToTheCart() {
     let button3 = document.getElementById('addSale');
     button3.addEventListener('click', () => {
         addSale();
+    })
+    let button4 = document.getElementById('deleteSale');
+    button4.addEventListener('click', () => {
+        deleteSale();
     })
 }
 
@@ -386,38 +410,9 @@ async function addSale() {
     await fetch(url, postInit)
         .then(response => {
             if (response.ok) {
-                saleLines.forEach(async product => {
-                    let url = 'http://localhost:8080/api/v1/products/' + product.idProduct.id;
-                    let getInit = {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
-                        }
-                    }
-                    let body;
-                    await fetch(url, getInit)
-                        .then(response => response.json())
-                        .then(response => {
-                            body = { stock: response.stock - product.quantity }
-                        })
-                    let postInit = {
-                        method: 'PATCH',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify(body)
-                    }
-                    await fetch(url, postInit)
-                        .then(response => {
-                            if (response.ok) { console.log('ok') }
-                        })
-                })
+                crearVenta(saleLines);
             }
         })
-
-    location.href = 'salesOperation.html'
 }
 
 async function cargarProductos(producto, saleLines) {
@@ -440,8 +435,48 @@ async function cargarProductos(producto, saleLines) {
     })
 }
 
+async function crearVenta(saleLines) {
+    const delay = ms => new Promise(res => setTimeout(res, ms));
+    saleLines.forEach(async product => {
+        let url = 'http://localhost:8080/api/v1/products/' + product.idProduct.id;
+        let getInit = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        }
+        let body;
+        let resta;
+        await fetch(url, getInit)
+            .then(response => response.json())
+            .then(response => {
+                resta = response.stock;
+            })
+        let restaValue = Number(resta)
+        let quantityValue = Number(product.quantity)
+        resta = restaValue - quantityValue;
+        body = { stock: resta }
+        console.log(body)
+        let postInit = {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(body)
+        }
+        await fetch(url, postInit)
+            .then(response => {
+                if (response.ok) { console.log('ok') }
+            })
+    })
+    await delay(500)
+    location.href = 'salesOperation.html'
+}
+
 function filterTableSales() {
-    var input, filter, table, tr, td, i, txtValue;
+    let input, filter, table, tr, td, i, txtValue;
     input = document.getElementById("myInput");
     filter = input.value.toUpperCase();
     table = document.getElementById("allSalesTable");
@@ -459,4 +494,24 @@ function filterTableSales() {
             }
         }
     }
+}
+
+async function deleteSale() {
+    const querystring = location.search;
+    const params = new URLSearchParams(querystring)
+    let id = params.get('id')
+    if (id == undefined) id = 1
+    let url = 'http://localhost:8080/api/v1/sales/' + id;
+    let deleteInit = {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    }
+
+    await fetch(url, deleteInit)
+        .then(response => console.log(response))
+
+    location.href = 'salesOperation.html';
 }

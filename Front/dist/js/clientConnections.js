@@ -130,7 +130,7 @@ async function addClient() {
 
         await fetch(url, postInit)
             .then(response => response.json())
-            .then(response => console.log(response))
+            .then(response => id = response.id)
 
         location.href = 'clients.html?id=' + id;
     })
