@@ -222,6 +222,14 @@ async function loadAllReceipts() {
     }
     let table = document.getElementById('tableAllReceipts');
     let tblBody = document.getElementById('bodyTableReceipts');
+    let input = document.getElementById("myInput");
+    
+    const querystring = location.search;
+    const params = new URLSearchParams(querystring)
+    let date = params.get('date')
+    if (date != undefined){
+        input.value = date;    
+    } 
     await fetch(url, getInit)
         .then(response => response.json())
         .then(response => {

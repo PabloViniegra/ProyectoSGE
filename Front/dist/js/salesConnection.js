@@ -86,7 +86,7 @@ async function loadSale() {
             let date = document.getElementById('fechaVenta')
             date.innerHTML = date.innerHTML + response.receipt.receiptDate;
             let button = document.getElementById('enlaceRecibo')
-            button.setAttribute('href', 'receipts.html?id=' + idClient)
+            button.setAttribute('href', 'allReceipts.html?id=' + response.receipt.id + '&date=' + response.receipt.receiptDate)
 
             let idPersonal = document.getElementById('idStaff')
             idPersonal.innerHTML = idPersonal.innerHTML + response.staff.idStaff;
