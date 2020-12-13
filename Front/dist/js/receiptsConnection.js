@@ -10,14 +10,14 @@ async function loadLasReceipts() {
     await fetch(url, getInit)
         .then(response => response.json())
         .then(response => {
-            console.log(response)
             let final = 1;
             if (response.length > 20) {
-                final = 20;
+                final = response.length-20;
             } else {
-                final = response.length;
+                final = 0;
             }
-            for (let i = 0; i < final; i++) {
+            
+            for (let i = response.length-1; i >= final; i--) {
                 let a = document.createElement('a');
                 let urlReceipt = 'receipts.html?id=' + response[i].id;
                 a.setAttribute('href', urlReceipt);
@@ -52,55 +52,59 @@ async function loadReceipt() {
         }
     }
     await fetch(urlReceipt, getInit)
-        .then(response => response.json())
         .then(response => {
-            let fecha = document.getElementById('fechafactura')
-            fecha.innerHTML = response.receiptDate;
-            let discount = document.getElementById('discount')
-            discount.innerHTML = discount.innerHTML + ' ' + response.discounts;
-            let subtotal = document.getElementById('subtotal')
-            subtotal.innerHTML = subtotal.innerHTML + ' ' + response.subtotal;
-            let iva = document.getElementById('iva')
-            iva.innerHTML = iva.innerHTML + ' ' + response.iva;
-            let total = document.getElementById('total')
-            total.innerHTML = total.innerHTML + ' ' + response.total;
-
-            //Modificacion
-            let subtotalModificar = document.getElementById('inputSubtotalM')
-            subtotalModificar.value = response.subtotal;
-            let discountModificar = document.getElementById('inputDiscountM')
-            discountModificar.value = response.discounts;
-            let ivaModificar = document.getElementById('inputIvaM')
-            ivaModificar.value = response.iva;
-            let totalModificar = document.getElementById('inputTotalM')
-            totalModificar.value = response.total;
-
-            //Carga del dato en la celda de la tabla
-            let table = document.getElementById('tableReceiptsLoad');
-            let tblBody = document.getElementById('bodyTableReceipts');
-            let row = document.createElement('tr');
-            let celda1 = document.createElement('td');
-            celda1.innerHTML = response.id;
-            row.appendChild(celda1);
-            let celda2 = document.createElement('td');
-            celda2.innerHTML = response.receiptDate;
-            row.appendChild(celda2);
-            let celda3 = document.createElement('td');
-            celda3.innerHTML = response.subtotal;
-            row.appendChild(celda3);
-            let celda4 = document.createElement('td');
-            celda4.innerHTML = response.discounts;
-            row.appendChild(celda4);
-            let celda5 = document.createElement('td');
-            celda5.innerHTML = response.iva;
-            row.appendChild(celda5);
-            let celda6 = document.createElement('td');
-            celda6.innerHTML = response.total;
-            row.appendChild(celda6);
-
-            tblBody.appendChild(row);
-            table.appendChild(tblBody);
+            if (response.ok) {
+                response.json().then(response => {
+                    let fecha = document.getElementById('fechafactura')
+                    fecha.innerHTML = response.receiptDate;
+                    let discount = document.getElementById('discount')
+                    discount.innerHTML = discount.innerHTML + ' ' + response.discounts;
+                    let subtotal = document.getElementById('subtotal')
+                    subtotal.innerHTML = subtotal.innerHTML + ' ' + response.subtotal;
+                    let iva = document.getElementById('iva')
+                    iva.innerHTML = iva.innerHTML + ' ' + response.iva;
+                    let total = document.getElementById('total')
+                    total.innerHTML = total.innerHTML + ' ' + response.total;
+        
+                    //Modificacion
+                    let subtotalModificar = document.getElementById('inputSubtotalM')
+                    subtotalModificar.value = response.subtotal;
+                    let discountModificar = document.getElementById('inputDiscountM')
+                    discountModificar.value = response.discounts;
+                    let ivaModificar = document.getElementById('inputIvaM')
+                    ivaModificar.value = response.iva;
+                    let totalModificar = document.getElementById('inputTotalM')
+                    totalModificar.value = response.total;
+        
+                    //Carga del dato en la celda de la tabla
+                    let table = document.getElementById('tableReceiptsLoad');
+                    let tblBody = document.getElementById('bodyTableReceipts');
+                    let row = document.createElement('tr');
+                    let celda1 = document.createElement('td');
+                    celda1.innerHTML = response.id;
+                    row.appendChild(celda1);
+                    let celda2 = document.createElement('td');
+                    celda2.innerHTML = response.receiptDate;
+                    row.appendChild(celda2);
+                    let celda3 = document.createElement('td');
+                    celda3.innerHTML = response.subtotal;
+                    row.appendChild(celda3);
+                    let celda4 = document.createElement('td');
+                    celda4.innerHTML = response.discounts;
+                    row.appendChild(celda4);
+                    let celda5 = document.createElement('td');
+                    celda5.innerHTML = response.iva;
+                    row.appendChild(celda5);
+                    let celda6 = document.createElement('td');
+                    celda6.innerHTML = response.total;
+                    row.appendChild(celda6);
+        
+                    tblBody.appendChild(row);
+                    table.appendChild(tblBody);
+                })
+            }
         })
+        
 }
 
 async function addReceipt() {

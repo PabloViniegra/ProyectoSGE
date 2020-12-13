@@ -43,64 +43,69 @@ async function loadProduct() {
         }
     }
     await fetch(urlProducto, getInit)
-        .then(response => response.json())
         .then(response => {
-            let nameProduct = document.getElementById('nombreProducto');
-            nameProduct.innerHTML = response.name;
-            let idProduct = document.getElementById('idProducto')
-            idProduct.innerHTML = idProduct.innerHTML + response.id;
-            let tipo = document.getElementById('tipoProducto')
-            tipo.innerHTML = tipo.innerHTML + response.type;
-            let pvp = document.getElementById('pvpProducto')
-            pvp.innerHTML = pvp.innerHTML + response.sellPrice;
-            let pvr = document.getElementById('pvrProducto')
-            pvr.innerHTML = pvr.innerHTML + response.buyPrice;
-            let descripcion = document.getElementById('descripcionProducto')
-            descripcion.innerHTML = descripcion.innerHTML + response.description;
-            let stock = document.getElementById('stockProducto')
-            stock.innerHTML = stock.innerHTML + response.stock;
-
-            let nameModificar = document.getElementById('inputProduct')
-            nameModificar.value = response.name;
-            let descripcionModificar = document.getElementById('inputDescription')
-            descripcionModificar.value = response.description;
-            let tipoModificar = document.getElementById('inputTipo')
-            tipoModificar.value = response.type;
-            let pvpModificar = document.getElementById('inputPVP')
-            pvpModificar.value = response.sellPrice;
-            let pvrModificar = document.getElementById('inputPVR')
-            pvrModificar.value = response.buyPrice;
-            let stockModificar = document.getElementById('inputStock')
-            stockModificar.value = response.stock;
-
-
-            //Carga del dato en la celda de la tabla
-            let table = document.getElementById('tableProductsLoad');
-            let tblBody = document.getElementById('bodyTableProducts');
-            let row = document.createElement('tr');
-            let celda1 = document.createElement('td');
-            celda1.innerHTML = response.id;
-            row.appendChild(celda1);
-            let celda2 = document.createElement('td');
-            celda2.innerHTML = response.name;
-            row.appendChild(celda2);
-            let celda3 = document.createElement('td');
-            celda3.innerHTML = response.type;
-            row.appendChild(celda3);
-            let celda4 = document.createElement('td');
-            celda4.innerHTML = response.stock;
-            row.appendChild(celda4);
-            let celda5 = document.createElement('td');
-            celda5.innerHTML = response.sellPrice;
-            row.appendChild(celda5);
-            let celda6 = document.createElement('td');
-            celda6.innerHTML = response.buyPrice;
-            row.appendChild(celda6);
-
-            tblBody.appendChild(row);
-            table.appendChild(tblBody);
+            if (response.ok) {
+                response.json().then(response => {
+                    let nameProduct = document.getElementById('nombreProducto');
+                    nameProduct.innerHTML = response.name;
+                    let idProduct = document.getElementById('idProducto')
+                    idProduct.innerHTML = idProduct.innerHTML + response.id;
+                    let tipo = document.getElementById('tipoProducto')
+                    tipo.innerHTML = tipo.innerHTML + response.type;
+                    let pvp = document.getElementById('pvpProducto')
+                    pvp.innerHTML = pvp.innerHTML + response.sellPrice;
+                    let pvr = document.getElementById('pvrProducto')
+                    pvr.innerHTML = pvr.innerHTML + response.buyPrice;
+                    let descripcion = document.getElementById('descripcionProducto')
+                    descripcion.innerHTML = descripcion.innerHTML + response.description;
+                    let stock = document.getElementById('stockProducto')
+                    stock.innerHTML = stock.innerHTML + response.stock;
+        
+                    let nameModificar = document.getElementById('inputProduct')
+                    nameModificar.value = response.name;
+                    let descripcionModificar = document.getElementById('inputDescription')
+                    descripcionModificar.value = response.description;
+                    let tipoModificar = document.getElementById('inputTipo')
+                    tipoModificar.value = response.type;
+                    let pvpModificar = document.getElementById('inputPVP')
+                    pvpModificar.value = response.sellPrice;
+                    let pvrModificar = document.getElementById('inputPVR')
+                    pvrModificar.value = response.buyPrice;
+                    let stockModificar = document.getElementById('inputStock')
+                    stockModificar.value = response.stock;
+        
+        
+                    //Carga del dato en la celda de la tabla
+                    let table = document.getElementById('tableProductsLoad');
+                    let tblBody = document.getElementById('bodyTableProducts');
+                    let row = document.createElement('tr');
+                    let celda1 = document.createElement('td');
+                    celda1.innerHTML = response.id;
+                    row.appendChild(celda1);
+                    let celda2 = document.createElement('td');
+                    celda2.innerHTML = response.name;
+                    row.appendChild(celda2);
+                    let celda3 = document.createElement('td');
+                    celda3.innerHTML = response.type;
+                    row.appendChild(celda3);
+                    let celda4 = document.createElement('td');
+                    celda4.innerHTML = response.stock;
+                    row.appendChild(celda4);
+                    let celda5 = document.createElement('td');
+                    celda5.innerHTML = response.sellPrice;
+                    row.appendChild(celda5);
+                    let celda6 = document.createElement('td');
+                    celda6.innerHTML = response.buyPrice;
+                    row.appendChild(celda6);
+        
+                    tblBody.appendChild(row);
+                    table.appendChild(tblBody);
+        
+                })
+            }
 
         })
+        
 
 }
 

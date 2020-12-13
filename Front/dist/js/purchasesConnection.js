@@ -12,11 +12,12 @@ async function loadPurchasesList() {
         .then(response => {
             let final = 1;
             if (response.length > 20) {
-                final = 20;
+                final = response.length-20;
             } else {
-                final = response.length;
+                final = 0;
             }
-            for (let i = 0; i < final; i++) {
+            
+            for (let i = response.length-1; i >= final; i--) {
                 let a = document.createElement('a');
                 let urlSupplier = 'purchasesOperation.html?id=' + response[i].id + '&idSupplier=' + response[i].supplier;
                 a.setAttribute('href', urlSupplier);
@@ -41,7 +42,7 @@ async function loadPurchase() {
     const params = new URLSearchParams(querystring)
     let id = params.get('id')
     let idSupplier = params.get('idSupplier');
-    if (id == undefined) id = 1
+    if (id == undefined) id = 1;
     if (idSupplier == undefined) idSupplier = 1;
     let urlSupplier = 'http://localhost:8080/api/v1/supplier/' + idSupplier;
     let getInit = {
@@ -270,18 +271,34 @@ async function allPurchasesLoad() {
                 let celda1 = document.createElement('td');
                 celda1.innerHTML = purchase.id;
                 row.appendChild(celda1);
+                celda1.addEventListener("click", () => {
+                    let id = purchase.id;
+                    location.href = 'purchases.html?id=' + id;
+                });
 
                 let celda2 = document.createElement('td');
                 celda2.innerHTML = await giveMeSupplierName(purchase.supplier); //Habría que sacar el nombre del proveedor
                 row.appendChild(celda2);
+                celda2.addEventListener("click", () => {
+                    let id = purchase.supplier;;
+                    location.href = 'suppliers.html?id=' + id;
+                });
 
                 let celda3 = document.createElement('td');
                 celda3.innerHTML = purchase.staff.name;
                 row.appendChild(celda3);
+                celda3.addEventListener("click", () => {
+                    let id = purchase.staff.idStaff;
+                    location.href = 'staff.html?id=' + id;
+                });
 
                 let celda4 = document.createElement('td');
                 celda4.innerHTML = purchase.receipt.receiptDate;
                 row.appendChild(celda4);
+                hijoSelect.addEventListener("click", () => {
+                    let id = purchase.receipt.id;
+                    location.href = 'receipts.html?id=' + id;
+                });
 
                 let celda5 = document.createElement('td');
                 celda5.innerHTML = purchase.receipt.total;
@@ -295,14 +312,15 @@ async function allPurchasesLoad() {
                     let hijoSelect = document.createElement('option')
                     hijoSelect.innerHTML = line.idProduct.name + ' - ' + line.quantity + '<br>';
                     select.appendChild(hijoSelect)
+                    hijoSelect.addEventListener("click", () => {
+                        let id = line.idProduct.id;
+                        location.href = 'product.html?id=' + id;
+                    });
                 });
                 row.appendChild(celda7);
 
                 body.appendChild(row);
-                row.addEventListener("click", () => {
-                    let id = purchase.id;
-                    location.href = 'products.html?id=' + id;
-                });
+                
             });
         })
 }

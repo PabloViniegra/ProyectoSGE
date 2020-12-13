@@ -12,11 +12,12 @@ async function loadLastStaffs() {
         .then(response => {
             let final = 1;
             if (response.length > 20) {
-                final = 20;
+                final = response.length - 20;
             } else {
-                final = response.length;
+                final = 0;
             }
-            for (let i = 0; i < final; i++) {
+
+            for (let i = response.length - 1; i >= final; i--) {
                 let a = document.createElement('a');
                 let urlStaff = 'staff.html?id=' + response[i].idStaff;
                 a.setAttribute('href', urlStaff);
@@ -51,67 +52,71 @@ async function loadStaff() {
         }
     }
     await fetch(urlStaff, getInit)
-        .then(response => response.json())
         .then(response => {
-            let name = document.getElementById('nameStaff')
-            name.innerHTML = name.innerHTML + ' ' + response.name;
-            let email = document.getElementById('emailStaff')
-            email.innerHTML = email.innerHTML + ' ' + response.email;
-            let position = document.getElementById('namePositionStaff')
-            position.innerHTML = position.innerHTML + ' ' + response.positionStaff.name;
-            let tel = document.getElementById('telephoneStaff');
-            tel.innerHTML = tel.innerHTML + response.telephone;
-            let section = document.getElementById('sectionPositionStaff')
-            section.innerHTML = section.innerHTML + ' ' + response.positionStaff.section;
-            let privilege = document.getElementById('privilegePositionStaff')
-            privilege.innerHTML = privilege.innerHTML + ' ' + response.positionStaff.privilege;
+            if (response.ok) {
+                response.json().then(response => {
+                    let name = document.getElementById('nameStaff')
+                    name.innerHTML = name.innerHTML + ' ' + response.name;
+                    let email = document.getElementById('emailStaff')
+                    email.innerHTML = email.innerHTML + ' ' + response.email;
+                    let position = document.getElementById('namePositionStaff')
+                    position.innerHTML = position.innerHTML + ' ' + response.positionStaff.name;
+                    let tel = document.getElementById('telephoneStaff');
+                    tel.innerHTML = tel.innerHTML + response.telephone;
+                    let section = document.getElementById('sectionPositionStaff')
+                    section.innerHTML = section.innerHTML + ' ' + response.positionStaff.section;
+                    let privilege = document.getElementById('privilegePositionStaff')
+                    privilege.innerHTML = privilege.innerHTML + ' ' + response.positionStaff.privilege;
 
-            //Modificacion
-            let nameModificar = document.getElementById('personalNameM')
-            nameModificar.value = response.name;
-            let emailModificar = document.getElementById('personalEmailM')
-            emailModificar.value = response.email;
-            let telefonoModificar = document.getElementById('inputTelefonoPersonalM');
-            telefonoModificar.value = response.telephone;
-            let positionModificar = document.getElementById('positionStaffM')
-            positionModificar.value = response.positionStaff.name;
-            let sectionModificar = document.getElementById('seccionPersonalM')
-            sectionModificar.value = response.positionStaff.section;
-            let privilegeModificar = document.getElementById('privilegioPersonalM')
-            privilegeModificar.value = response.positionStaff.privilege;
+                    //Modificacion
+                    let nameModificar = document.getElementById('personalNameM')
+                    nameModificar.value = response.name;
+                    let emailModificar = document.getElementById('personalEmailM')
+                    emailModificar.value = response.email;
+                    let telefonoModificar = document.getElementById('inputTelefonoPersonalM');
+                    telefonoModificar.value = response.telephone;
+                    let positionModificar = document.getElementById('positionStaffM')
+                    positionModificar.value = response.positionStaff.name;
+                    let sectionModificar = document.getElementById('seccionPersonalM')
+                    sectionModificar.value = response.positionStaff.section;
+                    let privilegeModificar = document.getElementById('privilegioPersonalM')
+                    privilegeModificar.value = response.positionStaff.privilege;
 
-            //Carga del dato en la celda de la tabla
-            let tblBody = document.getElementById('bodyTableStaff');
-            let row = document.createElement('tr');
-            let celda1 = document.createElement('td');
-            celda1.innerHTML = response.idStaff;
-            row.appendChild(celda1);
-            let celda2 = document.createElement('td');
-            celda2.innerHTML = response.name;
-            row.appendChild(celda2);
-            let celda3 = document.createElement('td');
-            celda3.innerHTML = response.email;
-            row.appendChild(celda3);
-            let celda4 = document.createElement('td');
-            celda4.innerHTML = response.positionStaff.name;
-            row.appendChild(celda4);
-            let celda5 = document.createElement('td');
-            celda5.innerHTML = response.positionStaff.section;
-            row.appendChild(celda5);
-            let celda6 = document.createElement('td');
-            celda6.innerHTML = response.positionStaff.privilege;
-            row.appendChild(celda6);
-            let celda7 = document.createElement('td');
-            celda7.innerHTML = response.telephone;
-            row.appendChild(celda7);
+                    //Carga del dato en la celda de la tabla
+                    let tblBody = document.getElementById('bodyTableStaff');
+                    let row = document.createElement('tr');
+                    let celda1 = document.createElement('td');
+                    celda1.innerHTML = response.idStaff;
+                    row.appendChild(celda1);
+                    let celda2 = document.createElement('td');
+                    celda2.innerHTML = response.name;
+                    row.appendChild(celda2);
+                    let celda3 = document.createElement('td');
+                    celda3.innerHTML = response.email;
+                    row.appendChild(celda3);
+                    let celda4 = document.createElement('td');
+                    celda4.innerHTML = response.positionStaff.name;
+                    row.appendChild(celda4);
+                    let celda5 = document.createElement('td');
+                    celda5.innerHTML = response.positionStaff.section;
+                    row.appendChild(celda5);
+                    let celda6 = document.createElement('td');
+                    celda6.innerHTML = response.positionStaff.privilege;
+                    row.appendChild(celda6);
+                    let celda7 = document.createElement('td');
+                    celda7.innerHTML = response.telephone;
+                    row.appendChild(celda7);
 
-            tblBody.appendChild(row);
+                    tblBody.appendChild(row);
+                })
+
+            }
         })
-}
 
+}
 async function addStaff() {
     let form = document.getElementById('addStaff');
-    form.addEventListener('submit', async(e) => {
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
         const querystring = location.search;
         const params = new URLSearchParams(querystring)
@@ -157,7 +162,7 @@ async function addStaff() {
 
 function updateStaff() {
     let form = document.getElementById('updateStaff');
-    form.addEventListener('submit', async(e) => {
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
         const querystring = location.search;
         const params = new URLSearchParams(querystring)
@@ -196,13 +201,13 @@ function updateStaff() {
 
         await fetch(url, postInit)
             .then(response => console.log(response))
-            //.then(location.href = 'staff.html?id=' + id)
+        //.then(location.href = 'staff.html?id=' + id)
     })
 }
 
 async function deleteStaff() {
     let form = document.getElementById('deleteStaff')
-    form.addEventListener('submit', async(e) => {
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
         const querystring = location.search;
         const params = new URLSearchParams(querystring)

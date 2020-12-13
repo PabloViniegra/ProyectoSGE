@@ -19,7 +19,7 @@ public class PurchaseLine implements Serializable {
     @Column(name = "idcompra")
     private int idPurchase;
 
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "idproducto", referencedColumnName = "idproducto")
     private Product idProduct;
 

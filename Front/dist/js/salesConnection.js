@@ -12,11 +12,12 @@ async function loadSalesList() {
         .then(response => {
             let final = 1;
             if (response.length > 20) {
-                final = 20;
+                final = response.length-20;
             } else {
-                final = response.length;
+                final = 0;
             }
-            for (let i = 0; i < final; i++) {
+            
+            for (let i = response.length-1; i >= final; i--) {
                 let a = document.createElement('a');
                 let urlClient = 'salesOperation.html?id=' + response[i].id + '&idClient=' + response[i].client;
                 a.setAttribute('href', urlClient);
@@ -41,7 +42,7 @@ async function loadSale() {
     const params = new URLSearchParams(querystring)
     let id = params.get('id')
     let idClient = params.get('idClient');
-    if (id == undefined) return -1
+    if (id == undefined) id = 1;
     if (idClient == undefined) idClient = 1;
     let urlCliente = 'http://localhost:8080/api/v1/clients/' + idClient;
     let getInit = {
@@ -72,79 +73,86 @@ async function loadSale() {
         })
     let urlSale = 'http://localhost:8080/api/v1/sales/' + id;
     await fetch(urlSale, getInit)
-        .then(response => response.json())
         .then(response => {
-            console.log(response)
-
-            let discount = document.getElementById('descuentoVenta')
-            discount.innerHTML = discount.innerHTML + response.receipt.discounts;
-            let iva = document.getElementById('ivaVenta')
-            iva.innerHTML = iva.innerHTML + response.receipt.iva + '%';
-            let subtotal = document.getElementById('subtotalVenta')
-            subtotal.innerHTML = subtotal.innerHTML + response.receipt.subtotal;
-            let total = document.getElementById('totalVenta')
-            total.innerHTML = total.innerHTML + response.receipt.total;
-            let date = document.getElementById('fechaVenta')
-            date.innerHTML = date.innerHTML + response.receipt.receiptDate;
-            let button = document.getElementById('enlaceRecibo')
-            button.setAttribute('href', 'allReceipts.html?id=' + response.receipt.id + '&date=' + response.receipt.receiptDate)
-
-            let idPersonal = document.getElementById('idStaff')
-            idPersonal.innerHTML = idPersonal.innerHTML + response.staff.idStaff;
-            let nameStaff = document.getElementById('nameStaff')
-            nameStaff.innerHTML = nameStaff.innerHTML + response.staff.name;
-            let possitionStaff = document.getElementById('possitionStaff')
-            possitionStaff.innerHTML = possitionStaff.innerHTML + response.staff.positionStaff.name;
-            let emailStaff = document.getElementById('emailStaff')
-            emailStaff.innerHTML = emailStaff.innerHTML + response.staff.email;
-
-            let tBody = document.getElementById('products')
-            response.saleLines.forEach(line => {
-                //line.idProduct
-                let tr = document.createElement('tr');
-                let id = document.createElement('td');
-                id.innerHTML = line.idProduct.id;
-                tr.appendChild(id);
-                let name = document.createElement('td');
-                name.innerHTML = line.idProduct.name;
-                tr.appendChild(name);
-                let description = document.createElement('td');
-                description.innerHTML = line.idProduct.description;
-                tr.appendChild(description);
-                let sellPrice = document.createElement('td');
-                sellPrice.innerHTML = line.idProduct.sellPrice;
-                tr.appendChild(sellPrice);
-                let buyPrice = document.createElement('td');
-                buyPrice.innerHTML = line.idProduct.buyPrice;
-                tr.appendChild(buyPrice);
-                let quantity = document.createElement('td');
-                quantity.innerHTML = line.quantity;
-                tr.appendChild(quantity);
-                let type = document.createElement('td');
-                type.innerHTML = line.idProduct.type;
-                tr.appendChild(type);
-                tBody.appendChild(tr)
-            });
-
-            let tableDeleteBody = document.getElementById('deleteTableSale')
-            let trDelete = document.createElement('tr')
-            let celda1 = document.createElement('td')
-            celda1.innerHTML = response.id
-            let celda2 = document.createElement('td')
-            celda2.innerHTML = clientName
-            let celda3 = document.createElement('td')
-            celda3.innerHTML = response.staff.name
-            let celda4 = document.createElement('td')
-            celda4.innerHTML = response.receipt.receiptDate
-            let celda5 = document.createElement('td')
-            celda5.innerHTML = response.receipt.total
-            trDelete.appendChild(celda1)
-            trDelete.appendChild(celda2)
-            trDelete.appendChild(celda3)
-            trDelete.appendChild(celda4)
-            trDelete.appendChild(celda5)
-            tableDeleteBody.appendChild(trDelete)
+            if (response.ok) {
+                response.json().then(response => {
+                    console.log(response)
+        
+                    let discount = document.getElementById('descuentoVenta')
+                    discount.innerHTML = discount.innerHTML + response.receipt.discounts;
+                    let iva = document.getElementById('ivaVenta')
+                    iva.innerHTML = iva.innerHTML + response.receipt.iva + '%';
+                    let subtotal = document.getElementById('subtotalVenta')
+                    subtotal.innerHTML = subtotal.innerHTML + response.receipt.subtotal;
+                    let total = document.getElementById('totalVenta')
+                    total.innerHTML = total.innerHTML + response.receipt.total;
+                    let date = document.getElementById('fechaVenta')
+                    date.innerHTML = date.innerHTML + response.receipt.receiptDate;
+                    let button = document.getElementById('enlaceRecibo')
+                    button.setAttribute('href', 'allReceipts.html?id=' + response.receipt.id + '&date=' + response.receipt.receiptDate)
+        
+                    let idPersonal = document.getElementById('idStaff')
+                    idPersonal.innerHTML = idPersonal.innerHTML + response.staff.idStaff;
+                    let nameStaff = document.getElementById('nameStaff')
+                    nameStaff.innerHTML = nameStaff.innerHTML + response.staff.name;
+                    let possitionStaff = document.getElementById('possitionStaff')
+                    possitionStaff.innerHTML = possitionStaff.innerHTML + response.staff.positionStaff.name;
+                    let emailStaff = document.getElementById('emailStaff')
+                    emailStaff.innerHTML = emailStaff.innerHTML + response.staff.email;
+                    let buttonStaff = document.getElementById('enlaceStaff')
+                    buttonStaff.setAttribute('href', 'staff.html?id=' + response.staff.idStaff)
+                
+        
+                    let tBody = document.getElementById('products')
+                    response.saleLines.forEach(line => {
+                        //line.idProduct
+                        let tr = document.createElement('tr');
+                        let id = document.createElement('td');
+                        id.innerHTML = line.idProduct.id;
+                        tr.appendChild(id);
+                        let name = document.createElement('td');
+                        name.innerHTML = line.idProduct.name;
+                        tr.appendChild(name);
+                        let description = document.createElement('td');
+                        description.innerHTML = line.idProduct.description;
+                        tr.appendChild(description);
+                        let sellPrice = document.createElement('td');
+                        sellPrice.innerHTML = line.idProduct.sellPrice;
+                        tr.appendChild(sellPrice);
+                        let buyPrice = document.createElement('td');
+                        buyPrice.innerHTML = line.idProduct.buyPrice;
+                        tr.appendChild(buyPrice);
+                        let quantity = document.createElement('td');
+                        quantity.innerHTML = line.quantity;
+                        tr.appendChild(quantity);
+                        let type = document.createElement('td');
+                        type.innerHTML = line.idProduct.type;
+                        tr.appendChild(type);
+                        tBody.appendChild(tr)
+                    });
+        
+                    let tableDeleteBody = document.getElementById('deleteTableSale')
+                    let trDelete = document.createElement('tr')
+                    let celda1 = document.createElement('td')
+                    celda1.innerHTML = response.id
+                    let celda2 = document.createElement('td')
+                    celda2.innerHTML = clientName
+                    let celda3 = document.createElement('td')
+                    celda3.innerHTML = response.staff.name
+                    let celda4 = document.createElement('td')
+                    celda4.innerHTML = response.receipt.receiptDate
+                    let celda5 = document.createElement('td')
+                    celda5.innerHTML = response.receipt.total
+                    trDelete.appendChild(celda1)
+                    trDelete.appendChild(celda2)
+                    trDelete.appendChild(celda3)
+                    trDelete.appendChild(celda4)
+                    trDelete.appendChild(celda5)
+                    tableDeleteBody.appendChild(trDelete)
+                })
+            }
         })
+        
 }
 
 async function getAllClientsInaSelected() {
@@ -296,18 +304,34 @@ async function allSalesLoad() {
                 let celda1 = document.createElement('td');
                 celda1.innerHTML = sale.id;
                 row.appendChild(celda1);
+                celda1.addEventListener("click", () => {
+                    let id = sale.id;
+                    location.href = 'sales.html?id=' + id;
+                });
 
                 let celda2 = document.createElement('td');
-                celda2.innerHTML = await giveMeClientName(sale.client); //Habría que sacar el nombre del Cliente
+                celda2.innerHTML = await giveMeClientName(sale.client); 
                 row.appendChild(celda2);
+                celda2.addEventListener("click", () => {
+                    let id = sale.client;
+                    location.href = 'clients.html?id=' + id;
+                });
 
                 let celda3 = document.createElement('td');
                 celda3.innerHTML = sale.staff.name;
                 row.appendChild(celda3);
+                celda3.addEventListener("click", () => {
+                    let id =sale.staff.idStaff;
+                    location.href = 'staff.html?id=' + id;
+                });
 
                 let celda4 = document.createElement('td');
                 celda4.innerHTML = sale.receipt.receiptDate;
                 row.appendChild(celda4);
+                celda4.addEventListener("click", () => {
+                    let id = sale.receipt.id;
+                    location.href = 'receipts.html?id=' + id;
+                });
 
                 let celda5 = document.createElement('td');
                 celda5.innerHTML = sale.receipt.total;
@@ -320,15 +344,16 @@ async function allSalesLoad() {
                 sale.saleLines.forEach(line => {
                     let hijoSelect = document.createElement('option')
                     hijoSelect.innerHTML = line.idProduct.name + ' - ' + line.quantity + '<br>';
+                    hijoSelect.addEventListener("click", () => {
+                        let id = line.idProduct.id;
+                        location.href = 'products.html?id=' + id;
+                    });
                     select.appendChild(hijoSelect)
                 });
                 row.appendChild(celda7);
 
                 body.appendChild(row);
-                row.addEventListener("click", () => {
-                    let id = sale.id;
-                    location.href = 'products.html?id=' + id;
-                });
+                
             });
         })
 }
