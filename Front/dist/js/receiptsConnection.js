@@ -1,4 +1,4 @@
-async function loadLasReceipts() {
+async function loadLastReceipts() {
     let url = 'http://localhost:8080/api/v1/receipts'
     let getInit = {
         method: 'GET',
@@ -25,7 +25,7 @@ async function loadLasReceipts() {
                 let li = document.createElement('li');
 
                 let ii = document.createElement('i');
-                ii.setAttribute('class', 'fas fa-adress-card mr-2');
+                ii.setAttribute('class', 'fas fa-clipboard mr-2');
                 li.appendChild(ii);
 
                 li.innerHTML = li.innerHTML + ' ' + response[i].id + ' - ' + response[i].receiptDate;

@@ -52,7 +52,7 @@ async function loadPurchase() {
             'Accept': 'application/json'
         }
     }
-    await fetch(urlSupplier, getInit)
+    let supplierName = await fetch(urlSupplier, getInit)
         .then(response => response.json())
         .then(response => {
             let name = document.getElementById('NombreProveedor')
@@ -67,6 +67,7 @@ async function loadPurchase() {
             dire.innerHTML = dire.innerHTML + response.directions[0].direction;
             let button = document.getElementById('EnlaceProveedor')
             button.setAttribute('href', 'suppliers.html?id=' + idSupplier)
+            return response.fullName;
         })
     let urlPurchase = 'http://localhost:8080/api/v1/purchases/' + id;
     await fetch(urlPurchase, getInit)
@@ -85,7 +86,7 @@ async function loadPurchase() {
             let date = document.getElementById('fechaCompra')
             date.innerHTML = date.innerHTML + response.receipt.receiptDate;
             let button = document.getElementById('enlaceRecibo')
-            button.setAttribute('href', 'receipts.html?id=' + idSupplier)
+            button.setAttribute('href', 'allreceipts.html?id=' + response.receipt.id + '&date=' + response.receipt.receiptDate)
 
             let idPersonal = document.getElementById('idStaff')
             idPersonal.innerHTML = idPersonal.innerHTML + response.staff.idStaff;
@@ -95,6 +96,9 @@ async function loadPurchase() {
             possitionStaff.innerHTML = possitionStaff.innerHTML + response.staff.positionStaff.name;
             let emailStaff = document.getElementById('emailStaff')
             emailStaff.innerHTML = emailStaff.innerHTML + response.staff.email;
+            let buttonStaff = document.getElementById('enlaceStaff')
+            buttonStaff.setAttribute('href', 'staff.html?id=' + response.staff.idStaff)
+
 
             let tBody = document.getElementById('products')
             response.purchaseLines.forEach(line => {
@@ -123,6 +127,24 @@ async function loadPurchase() {
                 tr.appendChild(type);
                 tBody.appendChild(tr)
             });
+            let tableDeleteBody = document.getElementById('deleteTablePurchase')
+            let trDelete = document.createElement('tr')
+            let celda1 = document.createElement('td')
+            celda1.innerHTML = response.id
+            let celda2 = document.createElement('td')
+            celda2.innerHTML = supplierName
+            let celda3 = document.createElement('td')
+            celda3.innerHTML = response.staff.name
+            let celda4 = document.createElement('td')
+            celda4.innerHTML = response.receipt.receiptDate
+            let celda5 = document.createElement('td')
+            celda5.innerHTML = response.receipt.total
+            trDelete.appendChild(celda1)
+            trDelete.appendChild(celda2)
+            trDelete.appendChild(celda3)
+            trDelete.appendChild(celda4)
+            trDelete.appendChild(celda5)
+            tableDeleteBody.appendChild(trDelete)
         })
 }
 
@@ -212,6 +234,11 @@ function addProductToTheCart() {
     let button3 = document.getElementById('addPurchase');
     button3.addEventListener('click', () => {
         addPurchase();
+
+    })
+    let button4 = document.getElementById('deletePurchase');
+    button4.addEventListener('click', () => {
+        deletePurchase();
     })
 }
 
@@ -295,7 +322,7 @@ async function allPurchasesLoad() {
                 let celda4 = document.createElement('td');
                 celda4.innerHTML = purchase.receipt.receiptDate;
                 row.appendChild(celda4);
-                hijoSelect.addEventListener("click", () => {
+                celda4.addEventListener("click", () => {
                     let id = purchase.receipt.id;
                     location.href = 'receipts.html?id=' + id;
                 });
@@ -402,34 +429,7 @@ async function addPurchase() {
     await fetch(url, postInit)
         .then(response => {
             if (response.ok) {
-                purchaseLines.forEach(async product => {
-                    let url = 'http://localhost:8080/api/v1/products/' + product.idProduct.id;
-                    let getInit = {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
-                        }
-                    }
-                    let body;
-                    await fetch(url, getInit)
-                        .then(response => response.json())
-                        .then(response => {
-                            body = { stock: response.stock - product.quantity }
-                        })
-                    let postInit = {
-                        method: 'PATCH',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify(body)
-                    }
-                    await fetch(url, postInit)
-                        .then(response => {
-                            if (response.ok) { console.log('ok') }
-                        })
-                })
+                crearCompra(purchaseLines);
             }
         })
 
@@ -456,6 +456,46 @@ async function cargarProductos(producto, purchaseLines) {
     })
 }
 
+async function crearCompra(purchaseLines) {
+    const delay = ms => new Promise(res => setTimeout(res, ms));
+    purchaseLines.forEach(async product => {
+        let url = 'http://localhost:8080/api/v1/products/' + product.idProduct.id;
+        let getInit = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        }
+        let body;
+        let suma;
+        await fetch(url, getInit)
+            .then(response => response.json())
+            .then(response => {
+                suma = response.stock;
+            })
+        let sumaValue = Number(suma)
+        let quantityValue = Number(product.quantity)
+        suma = sumaValue + quantityValue;
+        body = { stock: suma }
+        console.log(body)
+        let postInit = {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(body)
+        }
+        await fetch(url, postInit)
+            .then(response => {
+                if (response.ok) { console.log('ok') }
+            })
+    })
+    await delay(500)
+    location.href = 'purchasesOperation.html'
+}
+
 function filterTablePurchases() {
     var input, filter, table, tr, td, i, txtValue;
     input = document.getElementById("myInput");
@@ -475,4 +515,24 @@ function filterTablePurchases() {
             }
         }
     }
+}
+
+    async function deletePurchase() {
+        const querystring = location.search;
+        const params = new URLSearchParams(querystring)
+        let id = params.get('id')
+        if (id == undefined) id = 1
+        let url = 'http://localhost:8080/api/v1/purchases/' + id;
+        let deleteInit = {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        }
+
+        await fetch(url, deleteInit)
+            .then(response => console.log(response))
+
+        location.href = 'purchasesOperation.html';
 }
