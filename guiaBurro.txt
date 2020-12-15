@@ -1,0 +1,66 @@
+1- Abrimos IntelliJ
+2- Abrimos la consola SQL de la conexion a la BBDD
+3- Insertamos una tabla nueva
+4- Comprobamos las claves foraneas
+5- Creamos una entidad
+	5.1- Tiene que tener las siguientes etiquetas
+		@Getter
+		@Setter
+		@Entity
+		@Table(name = "nombreTabla")
+	5.2- Tiene que tener un id con las siguientes anotaciones
+		@Id
+    		@GeneratedValue(strategy = GenerationType.IDENTITY)
+	5.3- A parte de esto, todas las columnas tienen que tener un identificador (el id tambien por dios)
+		@Column(name = "nombreColumna")
+	5.4- Una vez tenemos todas las columnas de nuestra tabla, comprobamos las claves foraneas
+		5.4.1- Si tiene una relacion 1-1 crearemos un objeto de la entidad que queramos traer, y pondremos la siguiente anotacion
+			@OneToOne(cascade = CascadeType.ALL)
+   			@JoinColumn(name = "nombre de la columna que tiene la clave foranea", referencedColumnName = "clave primaria de la tabla que queremos traer")
+		5.4.2- Si tiene una relacion 1-N siendo 1 la entidad que estamos creando, crearemos una LISTA de entidades que vayamos a traer, con la siguiente anotacion
+			@OneToMany(targetEntity = ENTIDAD_QUE_TRAEMOS.class, mappedBy = "ATRIBUTO de la entidad que va a guardar la clave foranea",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+			NOTA: para esto tendremos que ir a la entidad que vamos a traer, y añadir el parametro que va a recoger la clave foranea. NO ES RECOMENDABLE USAR ESTE METODO, INTENTAR EVITAR ESTAS RELACIONES
+		5.4.3- Si tiene una relacion N-1 siendo N la entidad que estamos creando, crearemos un atributo de la entidad que vamos a traer con las siguientes anotaciones
+			@ManyToOne(optional = false)
+    			@JoinColumn(name = "columna de nuestra tabla que recoge la clave foranea", referencedColumnName = "columna de la tabla que queremos traer que tiene el ID")
+6- Creamos el repositorio, una interfaz que extiende JPARepository<TuEntidad, Integer>
+	6.1- Tendrá que tener la anotacion @Repository
+7- Creamos un objeto de nuestro repositorio en el query service y lo metemos en el constructor
+8- Creamos los metodos para guardar, modificar y eliminar
+	8.1- Para crear:
+		8.1.1- Si no tuviera ningun tipo de relacion, llamamos al objeto del repositorio y usamos el metodo save()
+		8.1.2- Si tiene una relacion 1-1 o una relacion N-1 solo tendremos que comprobar si existe ya en nuestra base de datos antes de guardar la nueva entidad, y guardarlas si no es asi.
+			EJ:	if (newSale.getReceipt() != null) {
+           				 Receipt receipt = receiptRepository.findById(newSale.getReceipt().getId()).orElse(receiptRepository.save(newSale.getReceipt()));
+           				 newSale.setReceipt(receipt);
+        			}
+			Comprobamos que no viene nulo, llamamos a su repositorio, lo buscamos por ID, y si no existe lo guardamos. Una vez guardado ya tiene id, por lo que podemos setearlo en el objeto
+			newSale que es la entidad que queremos guardar
+		8.1.3- Si tiene una relacion 1-N 
+			8.1.3.1- Sacamos la lista a un objeto. 
+			EJ:	List<SaleLines> lines = null;
+				if(!newSale.getSaleLines().isEmpty()){
+					lines = newSale.getSaleLines();
+				}
+			8.1.3.2- Guardamos la entidad en la BBDD con NuevaEntidad objeto =  objetoRepositorio.save(nuevoObjeto);
+			8.1.3.3- La lista que hemos sacado la recorremos y le damos el id que acabamos de obtener al guardar el objeto.
+			EJ:	if (lines != null) {
+           				 lines.forEach(line -> {
+               					 line.setIdSale(id);
+               					 saleLineRepository.save(line);
+        				  });
+       				 }
+	8.2- Para modificar:
+		8.2.1- Lo buscamos con findById y lo mapeamos
+		8.2.2- actualizamos cada una de las relaciones por separado
+			8.2.2.1- Si tiene una relacion 1-1 o N-1 buscaremos si la entidad que nos trae el objeto recibido en la peticion existe en el repo, si no, lo guardamos, y por ultimo actualizamos con 				un update el campo necesario en la tabla. Para mas info ver updateSaleReceipt o updateSaleStaff
+			8.2.2.2- Si tiene una relacion 1-N tendremos que recorrer la lista que nos trae el objeto y vemos cuales faltan en la que hemos encontrado en la BBDD, insertando todas aquellas que 
+			faltan. Luego recorremos las que tenemos en la BBDD eliminando todas aquellas que no estan en la nueva lista. Para mas info ver updateSale (el atributo SaleLines)
+		8.2.3- Devolvemos el nuevo objeto actualizado (tendremos que crear un update de todos los campos basicos y llamarlo)
+	NO HAGAIS PATCH, NO ES NECESARIO
+	8.3- Para eliminar:
+		8.3.1- Funciona exactamente igual que todos, copais un delete de cualquier otra entidad y lo adaptais
+9-Creamos el mapeado de la api en el Controller, sin mas
+10- Paso opcional - Redockerizar siguiendo el readme.md
+11- Crear la interfaz, copiad la de cliente o cualquiera de esas, la modificais y listo
+12- No se me ocurren mas pasos	
