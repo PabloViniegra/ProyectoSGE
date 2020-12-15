@@ -28,6 +28,7 @@ public class QueryService {
     private final PurchaseLineRepository purchaseLineRepository;
     private final SupplierTelephoneRepository supplierTelephoneRepository;
     private final SupplierDirectionRepository supplierDirectionRepository;
+    private final PopulationRepository populationRepository;
 
 
     @Autowired
@@ -44,7 +45,8 @@ public class QueryService {
                         SupplierTelephoneRepository supplierTelephoneRepository,
                         SupplierDirectionRepository supplierDirectionRepository,
                         PurchaseRepository purchaseRepository,
-                        PurchaseLineRepository purchaseLineRepository) {
+                        PurchaseLineRepository purchaseLineRepository,
+                        PopulationRepository populationRepository) {
         this.clientRepository = clientRepository;
         this.supplierRepository = supplierRepository;
         this.staffRepository = staffRepository;
@@ -59,9 +61,11 @@ public class QueryService {
         this.supplierDirectionRepository = supplierDirectionRepository;
         this.purchaseRepository = purchaseRepository;
         this.purchaseLineRepository = purchaseLineRepository;
+        this.populationRepository = populationRepository;
     }
 
     //Client queryList
+    @Transactional
     public Client saveClient(Client newClient) {
         List<ClientTelephone> telephones = null;
         List<ClientDirection> directions = null;
@@ -78,7 +82,11 @@ public class QueryService {
             sales = newClient.getSales();
             newClient.setSales(null);
         }
-        clientRepository.save(newClient);
+        if (newClient.getPopulation() != null){
+            Population population = populationRepository.findById(newClient.getPopulation().getIdPopulation()).orElse(savePopulation(newClient.getPopulation()));
+            newClient.setPopulation(population);
+        }
+            clientRepository.save(newClient);
         int id = clientRepository.lastId();
         if (telephones != null) {
             telephones.forEach(telephone -> {
@@ -154,6 +162,10 @@ public class QueryService {
                             deleteSale(sale.getId());
                         }
                     });
+                    if (!client.getPopulation().equals(newClient.getPopulation())) {
+                        Population population = populationRepository.findById(newClient.getPopulation().getIdPopulation()).orElse(savePopulation(newClient.getPopulation()));
+                        clientRepository.updatePopulation(population.getIdPopulation(), id);
+                    }
                     return clientRepository.updateClient(newClient.getFullName(), newClient.getDni(), newClient.getEmail(), newClient.getIban(), id);
                 })
                 .orElse(-1);
@@ -804,6 +816,7 @@ public class QueryService {
                                 .findById(id)
                                 .orElse(null)));
     }
+
     public Staff getStaffByEmail(String email) {
         staffRepository.findByEmail(email)
                 .forEach(e -> log.info(e.toString()));
@@ -814,5 +827,30 @@ public class QueryService {
 
     public List<PositionStaff> getPossitionStaffList() {
         return positionStaffRepository.findAll();
+    }
+
+    //Population querys
+    public Population savePopulation(Population newPopulation) {
+        return populationRepository.save(newPopulation);
+    }
+
+    public List<Population> getPopulations() {
+        return populationRepository.findAll();
+    }
+
+    public Population getPopulation(int id) {
+        return populationRepository.findById(id).orElse(null);
+    }
+
+    public int updatePopulation(Population population, int id) {
+        return populationRepository.updateProduct(population.getPopulation(), population.getProvince(), id);
+    }
+
+    public void deletePopulation(int id) {
+        populationRepository
+                .delete(Objects
+                        .requireNonNull(populationRepository
+                                .findById(id)
+                                .orElse(null)));
     }
 }

@@ -44,4 +44,9 @@ public class Client implements Serializable {
 
     @OneToMany(targetEntity = Sale.class, mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Sale> sales;
+
+    @org.springframework.data.annotation.Transient
+    @ManyToOne(targetEntity = Population.class, optional = false)
+    @JoinColumn(name = "codigo_postal", referencedColumnName = "codigo_postal")
+    private Population population;
 }

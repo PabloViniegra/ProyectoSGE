@@ -397,4 +397,46 @@ public class Controller {
     public List<PositionStaff> getPossitionStaffList(){
         return queryService.getPossitionStaffList();
     }
+
+    //Population Mapping
+    @PostMapping("/populations")
+    public ResponseEntity<?> newPopulation(@RequestBody Population newPopulation) {
+        Population population = queryService.savePopulation(newPopulation);
+        if (population != null) {
+            return ResponseEntity.ok(population);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/populations")
+    public ResponseEntity<List<Population>> getPopulationList() {
+        return ResponseEntity.ok(queryService.getPopulations());
+    }
+
+    @GetMapping("/populations/{id}")
+    public ResponseEntity<?> getPopulation(@PathVariable("id") int id) {
+        Population population = queryService.getPopulation(id);
+        if (population != null) {
+            return ResponseEntity.ok(population);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/populations/{id}")
+    public ResponseEntity<?> updatePopulation(@RequestBody Population newPopulation, @PathVariable("id") int id) {
+        int population = queryService.updatePopulation(newPopulation, id);
+        if (population != -1) {
+            return ResponseEntity.ok("Population updated");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/populations/{id}")
+    public ResponseEntity<?> deletePopulation(@PathVariable("id") int id) {
+        queryService.deletePopulation(id);
+        return ResponseEntity.ok("Population deleted");
+    }
 }
