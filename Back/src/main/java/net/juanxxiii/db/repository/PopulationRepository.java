@@ -13,5 +13,5 @@ public interface PopulationRepository extends JpaRepository<Population, Integer>
     @Transactional
     @Modifying
     @Query("UPDATE Population p SET p.population=:population, p.province=:province WHERE p.idPopulation=:idPopulation")
-    int updateProduct(@Param("population")String population, @Param("province")String province, @Param("idPopulation")int idPopulation);
+    int updatePopulation(@Param("population")String population, @Param("province")String province, @Param("idPopulation")int idPopulation);
 }

@@ -843,7 +843,7 @@ public class QueryService {
     }
 
     public int updatePopulation(Population population, int id) {
-        return populationRepository.updateProduct(population.getPopulation(), population.getProvince(), id);
+        return populationRepository.updatePopulation(population.getPopulation(), population.getProvince(), id);
     }
 
     public void deletePopulation(int id) {

@@ -17,7 +17,7 @@ async function loadClient() {
                 response.json().then(response => {
                     let deleteForm = document.getElementById('bodyDelete');
                     let trDelete = document.createElement('tr')
-                    //id - nombre - email - dni
+                        //id - nombre - email - dni
                     let tdId = document.createElement('td')
                     tdId.innerHTML = response.id;
                     trDelete.appendChild(tdId)
@@ -96,7 +96,7 @@ async function loadClient() {
 async function addClient() {
     let form = document.getElementById('addClient')
 
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', async(e) => {
         e.preventDefault();
         const querystring = location.search;
         const params = new URLSearchParams(querystring)
@@ -108,6 +108,27 @@ async function addClient() {
         let dni = document.getElementById('inputDNI')
         let telephone = document.getElementById('inputTelephone')
         let direction = document.getElementById('inputDirection')
+        let select = document.getElementById('productName')
+        let codPostal2;
+        let population2;
+        let province2;
+
+        let url2 = 'http://localhost:8080/api/v1/populations/' + select.options[select.selectedIndex].value;
+        let getInit = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        }
+
+        await fetch(url2, getInit)
+            .then(response => response.json())
+            .then(response => {
+                codPostal2 = response.idPopulation,
+                    population2 = response.population,
+                    province2 = response.province
+            })
 
         let data = {
             fullName: name.value,
@@ -120,7 +141,12 @@ async function addClient() {
             directions: [{
                 direction: direction.value
             }],
-            sales: []
+            sales: [],
+            population: {
+                idPopulation: codPostal2,
+                population: population2,
+                province: province2
+            }
         }
 
         let url = 'http://localhost:8080/api/v1/clients';
@@ -144,7 +170,7 @@ async function addClient() {
 async function updateClient() {
     let form = document.getElementById('updateClient')
 
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', async(e) => {
         const querystring = location.search;
         const params = new URLSearchParams(querystring)
         let id = params.get("id");
@@ -192,7 +218,7 @@ async function updateClient() {
 
 function deleteClient() {
     let form = document.getElementById('deleteClient')
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', async(e) => {
         const querystring = location.search;
         const params = new URLSearchParams(querystring)
         let id = params.get("id");
@@ -315,4 +341,27 @@ function filterTableClients() {
             }
         }
     }
+}
+
+async function getAllPopulationsInASelect() {
+    let url = 'http://localhost:8080/api/v1/populations';
+    let getInit = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    }
+
+    await fetch(url, getInit)
+        .then(response => response.json())
+        .then(response => {
+            let select = document.getElementById('population');
+            response.forEach(c => {
+                let option = document.createElement('option');
+                option.setAttribute('value', c.idPopulation)
+                option.innerHTML = c.population;
+                select.appendChild(option);
+            });
+        })
 }
