@@ -189,10 +189,10 @@ async function updateProduct() {
             type: tipoGlobal,
             stock: stock.value
         }
-
+        
         console.log(data)
 
-        let url = 'http://localhost:8080/api/v1/products' + id;
+        let url = 'http://localhost:8080/api/v1/products/' + id;
         let postInit = {
             method: 'PUT',
             headers: {
@@ -208,7 +208,7 @@ async function updateProduct() {
         location.href = 'products.html?id=' + id;
     })
 }
-//TODO: Hacer que deleteProduct() funcione, no hace nada
+
 function deleteProduct() {
     let form = document.getElementById('deleteProduct')
     form.addEventListener('submit', async (e) => {

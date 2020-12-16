@@ -202,6 +202,7 @@ function updateStaff() {
         await fetch(url, postInit)
             .then(response => console.log(response))
         //.then(location.href = 'staff.html?id=' + id)
+        location.href = 'staff.html?id=' + id
     })
 }
 
