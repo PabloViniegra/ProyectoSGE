@@ -21,6 +21,7 @@ public class Client implements Serializable {
         this.telephones = null;
         this.directions = null;
         this.sales = null;
+        this.poblation = null;
     }
 
     @Id
@@ -44,4 +45,9 @@ public class Client implements Serializable {
 
     @OneToMany(targetEntity = Sale.class, mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Sale> sales;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "poblaciones", referencedColumnName = "codigopostal")
+    private Poblation poblation;
+
 }
