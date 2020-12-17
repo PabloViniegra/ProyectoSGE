@@ -295,7 +295,7 @@ async function allPurchasesLoad() {
                 let celda4 = document.createElement('td');
                 celda4.innerHTML = purchase.receipt.receiptDate;
                 row.appendChild(celda4);
-                hijoSelect.addEventListener("click", () => {
+                celda4.addEventListener("click", () => {
                     let id = purchase.receipt.id;
                     location.href = 'receipts.html?id=' + id;
                 });
