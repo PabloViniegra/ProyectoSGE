@@ -28,7 +28,6 @@ public class QueryService {
     private final PurchaseLineRepository purchaseLineRepository;
     private final SupplierTelephoneRepository supplierTelephoneRepository;
     private final SupplierDirectionRepository supplierDirectionRepository;
-    private final PoblationRepository poblationRepository;
 
 
     @Autowired
@@ -60,7 +59,7 @@ public class QueryService {
         this.supplierDirectionRepository = supplierDirectionRepository;
         this.purchaseRepository = purchaseRepository;
         this.purchaseLineRepository = purchaseLineRepository;
-        this.poblationRepository = poblationRepository;
+
     }
 
     //Client queryList
