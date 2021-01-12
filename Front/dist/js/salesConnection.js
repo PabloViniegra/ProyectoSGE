@@ -1,3 +1,13 @@
+let client;
+$('#clienteForSale').on('change',function () {
+    client = $('#clienteForSale').val();
+});
+
+let staffid;
+$('#personalName').on('change',function () {
+    staffid = $('#personalName').val();
+});
+
 async function loadSalesList() {
     let url = 'http://localhost:8080/api/v1/sales'
     let getInit = {
@@ -176,6 +186,7 @@ async function getAllClientsInaSelected() {
                 select.appendChild(option);
             });
         })
+        $('.selectpicker').selectpicker('refresh');
 }
 
 async function getAllStaffInaSelected() {
@@ -191,14 +202,21 @@ async function getAllStaffInaSelected() {
     await fetch(url, getInit)
         .then(response => response.json())
         .then(response => {
+            let first = true;
             let select = document.getElementById('personalName');
             response.forEach(c => {
+                if (first) {
+                    $('#personalName').selectpicker('val', c.idStaff );
+                    first = false;
+                }
+            
                 let option = document.createElement('option');
                 option.setAttribute('value', c.idStaff);
                 option.innerHTML = c.name;
                 select.appendChild(option);
             });
         })
+        $('.selectpicker').selectpicker('refresh');
 }
 
 async function getAllProductsInaSelected() {
@@ -375,17 +393,17 @@ async function giveMeClientName(id) {
 }
 
 async function addSale() {
-    let client = document.getElementById('clienteForSale');
-    let staffId = document.getElementById('personalName');
+    
+    
     let current = new Date();
-    let fecha = current.getFullYear() + '-' + current.getMonth() + '-' + current.getDate() + ' ' + current.getHours() + ':' + current.getMinutes() + ':' + current.getSeconds();
+    let fecha = current.getFullYear() + '-' + (current.getMonth() + 1) + '-' + current.getDate() + ' ' + current.getHours() + ':' + current.getMinutes() + ':' + current.getSeconds();
     let subtotal = document.getElementById('subtotal');
     let descuento = document.getElementById('discount');
     let iva = document.getElementById('iva');
     let total = document.getElementById('total');
     let tablaProductos = document.getElementById('productSale')
 
-    let urlStaff = 'http://localhost:8080/api/v1/staffs/' + staffId.value;
+    let urlStaff = 'http://localhost:8080/api/v1/staffs/' + Number(staffid);
     let getInit = {
         method: 'GET',
         headers: {
@@ -393,7 +411,7 @@ async function addSale() {
             'Accept': 'application/json'
         }
     }
-
+    
     let saleLines = [];
 
     let hijos = tablaProductos.getElementsByTagName('tr')
@@ -410,7 +428,7 @@ async function addSale() {
         .then(response => staff = response)
 
     let data = {
-        client: client.value,
+        client: Number(client),
         staff: staff,
         receipt: {
             receiptDate: fecha,
@@ -421,7 +439,7 @@ async function addSale() {
         },
         saleLines: saleLines
     }
-
+    console.log(data);
     let url = 'http://localhost:8080/api/v1/sales';
     let postInit = {
         method: 'POST',
