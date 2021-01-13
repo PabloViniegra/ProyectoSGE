@@ -1,12 +1,6 @@
-let client;
-$('#clienteForSale').on('change',function () {
-    client = $('#clienteForSale').val();
-});
 
-let staffid;
-$('#personalName').on('change',function () {
-    staffid = $('#personalName').val();
-});
+
+
 
 async function loadSalesList() {
     let url = 'http://localhost:8080/api/v1/sales'
@@ -22,12 +16,12 @@ async function loadSalesList() {
         .then(response => {
             let final = 1;
             if (response.length > 20) {
-                final = response.length-20;
+                final = response.length - 20;
             } else {
                 final = 0;
             }
-            
-            for (let i = response.length-1; i >= final; i--) {
+
+            for (let i = response.length - 1; i >= final; i--) {
                 let a = document.createElement('a');
                 let urlClient = 'salesOperation.html?id=' + response[i].id + '&idClient=' + response[i].client;
                 a.setAttribute('href', urlClient);
@@ -87,7 +81,7 @@ async function loadSale() {
             if (response.ok) {
                 response.json().then(response => {
                     console.log(response)
-        
+
                     let discount = document.getElementById('descuentoVenta')
                     discount.innerHTML = discount.innerHTML + response.receipt.discounts;
                     let iva = document.getElementById('ivaVenta')
@@ -100,7 +94,7 @@ async function loadSale() {
                     date.innerHTML = date.innerHTML + response.receipt.receiptDate;
                     let button = document.getElementById('enlaceRecibo')
                     button.setAttribute('href', 'allReceipts.html?id=' + response.receipt.id + '&date=' + response.receipt.receiptDate)
-        
+
                     let idPersonal = document.getElementById('idStaff')
                     idPersonal.innerHTML = idPersonal.innerHTML + response.staff.idStaff;
                     let nameStaff = document.getElementById('nameStaff')
@@ -110,9 +104,12 @@ async function loadSale() {
                     let emailStaff = document.getElementById('emailStaff')
                     emailStaff.innerHTML = emailStaff.innerHTML + response.staff.email;
                     let buttonStaff = document.getElementById('enlaceStaff')
-                    buttonStaff.setAttribute('href', 'staff.html?id=' + response.staff.idStaff)
-                
-        
+                    buttonStaff.setAttribute('href', 'staff.html?id=' + response.staff.idStaff);
+                    let sectionStaff = document.getElementById('sectionStaff')
+                    sectionStaff.innerHTML = sectionStaff.innerHTML + response.staff.positionStaff.section;
+                    let privilegeStaff = document.getElementById('privilegeStaff')
+                    privilegeStaff.innerHTML = privilegeStaff.innerHTML + response.staff.positionStaff.privilege;
+
                     let tBody = document.getElementById('products')
                     response.saleLines.forEach(line => {
                         //line.idProduct
@@ -140,7 +137,7 @@ async function loadSale() {
                         tr.appendChild(type);
                         tBody.appendChild(tr)
                     });
-        
+
                     let tableDeleteBody = document.getElementById('deleteTableSale')
                     let trDelete = document.createElement('tr')
                     let celda1 = document.createElement('td')
@@ -162,7 +159,7 @@ async function loadSale() {
                 })
             }
         })
-        
+
 }
 
 async function getAllClientsInaSelected() {
@@ -178,15 +175,25 @@ async function getAllClientsInaSelected() {
     await fetch(url, getInit)
         .then(response => response.json())
         .then(response => {
+            let firstClient = true;
             let select = document.getElementById('clienteForSale');
             response.forEach(c => {
                 let option = document.createElement('option');
                 option.setAttribute('value', c.id);
                 option.innerHTML = c.fullName;
+                option.setAttribute('data-content',"<span class='label label-success'>" + c.fullName + "</span>")
                 select.appendChild(option);
+                
+                if (firstClient) {
+                    $('#clienteForSale').val(c.id);
+                    $('.selectpicker').selectpicker('render');
+                    console.log( 'id: '+ c.id)
+                    firstClient = false;
+                }
+                
             });
         })
-        $('.selectpicker').selectpicker('refresh');
+    $('.selectpicker').selectpicker('refresh');
 }
 
 async function getAllStaffInaSelected() {
@@ -202,21 +209,21 @@ async function getAllStaffInaSelected() {
     await fetch(url, getInit)
         .then(response => response.json())
         .then(response => {
-            let first = true;
+            let firstStaff = true;
             let select = document.getElementById('personalName');
             response.forEach(c => {
-                if (first) {
-                    $('#personalName').selectpicker('val', c.idStaff );
-                    first = false;
+                if (firstStaff) {
+                    $('#personalName').selectpicker('val', c.idStaff);
+                    firstStaff = false;
                 }
-            
+
                 let option = document.createElement('option');
                 option.setAttribute('value', c.idStaff);
                 option.innerHTML = c.name;
                 select.appendChild(option);
             });
         })
-        $('.selectpicker').selectpicker('refresh');
+    $('.selectpicker').selectpicker('refresh');
 }
 
 async function getAllProductsInaSelected() {
@@ -234,6 +241,11 @@ async function getAllProductsInaSelected() {
         .then(response => {
             let select = document.getElementById('productName');
             response.forEach(c => {
+                let fistProduct = true;
+                if (fistProduct) {
+                    $('#productName').selectpicker('val', c.id);
+                    fistProduct = false;
+                }
                 let option = document.createElement('option');
                 option.setAttribute('value', c.id);
                 option.setAttribute('sellPrice', c.sellPrice)
@@ -241,6 +253,7 @@ async function getAllProductsInaSelected() {
                 select.appendChild(option);
             });
         })
+        $('.selectpicker').selectpicker('refresh');
 }
 
 function addProductToTheCart() {
@@ -267,7 +280,12 @@ function addProductToTheCart() {
 }
 
 function createProduct() {
-    let select = document.getElementById('productName')
+
+    let productid = $('#productName').val();
+    let productText = $('#productName option:selected').text();
+    let productPrice = $('#productName option:selected').attr('sellPrice');
+
+
     let quantity = document.getElementById('countSell')
     let table = document.getElementById('productSale')
     let subtotal = document.getElementById('subtotal')
@@ -276,14 +294,16 @@ function createProduct() {
     let iva = document.getElementById('iva')
     let tr = document.createElement('tr')
     let td1 = document.createElement('td')
-    td1.innerHTML = select.options[select.selectedIndex].text;
+    console.log('Texto: ' + productText);
+    console.log('Precio: ' + productPrice);
+    td1.innerHTML = productText;
     tr.appendChild(td1);
     let td2 = document.createElement('td')
     td2.innerHTML = quantity.value;
-    tr.setAttribute('id', select.value)
+    tr.setAttribute('id', productid)
     tr.appendChild(td2);
     table.appendChild(tr);
-    let optionnValue = Number(select.options[select.selectedIndex].getAttribute('sellPrice'))
+    let optionnValue = Number(productPrice)
     let actualValue = Number(subtotal.value)
     let countQuantity = Number(count.value)
     subtotal.value = actualValue + (optionnValue * countQuantity);
@@ -328,7 +348,7 @@ async function allSalesLoad() {
                 });
 
                 let celda2 = document.createElement('td');
-                celda2.innerHTML = await giveMeClientName(sale.client); 
+                celda2.innerHTML = await giveMeClientName(sale.client);
                 row.appendChild(celda2);
                 celda2.addEventListener("click", () => {
                     let id = sale.client;
@@ -339,7 +359,7 @@ async function allSalesLoad() {
                 celda3.innerHTML = sale.staff.name;
                 row.appendChild(celda3);
                 celda3.addEventListener("click", () => {
-                    let id =sale.staff.idStaff;
+                    let id = sale.staff.idStaff;
                     location.href = 'staff.html?id=' + id;
                 });
 
@@ -371,7 +391,7 @@ async function allSalesLoad() {
                 row.appendChild(celda7);
 
                 body.appendChild(row);
-                
+
             });
         })
 }
@@ -393,8 +413,9 @@ async function giveMeClientName(id) {
 }
 
 async function addSale() {
-    
-    
+    let client = $('#clienteForSale').val();
+    let staffid = $('#personalName').val();
+
     let current = new Date();
     let fecha = current.getFullYear() + '-' + (current.getMonth() + 1) + '-' + current.getDate() + ' ' + current.getHours() + ':' + current.getMinutes() + ':' + current.getSeconds();
     let subtotal = document.getElementById('subtotal');
@@ -411,7 +432,7 @@ async function addSale() {
             'Accept': 'application/json'
         }
     }
-    
+
     let saleLines = [];
 
     let hijos = tablaProductos.getElementsByTagName('tr')
