@@ -398,4 +398,12 @@ public class Controller {
         return queryService.getPossitionStaffList();
     }
 
+    //Sampling Mapping
+    @GetMapping("/sampling")
+    public List<Sampling> getSamplingList() {
+        return queryService.getAllSampling();
+    }
+
+
+
 }

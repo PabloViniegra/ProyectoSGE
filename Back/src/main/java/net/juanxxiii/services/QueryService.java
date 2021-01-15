@@ -28,6 +28,7 @@ public class QueryService {
     private final PurchaseLineRepository purchaseLineRepository;
     private final SupplierTelephoneRepository supplierTelephoneRepository;
     private final SupplierDirectionRepository supplierDirectionRepository;
+    private final SamplingRepository samplingRepository;
 
 
     @Autowired
@@ -44,7 +45,8 @@ public class QueryService {
                         SupplierTelephoneRepository supplierTelephoneRepository,
                         SupplierDirectionRepository supplierDirectionRepository,
                         PurchaseRepository purchaseRepository,
-                        PurchaseLineRepository purchaseLineRepository) {
+                        PurchaseLineRepository purchaseLineRepository,
+                        SamplingRepository samplingRepository) {
         this.clientRepository = clientRepository;
         this.supplierRepository = supplierRepository;
         this.staffRepository = staffRepository;
@@ -59,6 +61,7 @@ public class QueryService {
         this.supplierDirectionRepository = supplierDirectionRepository;
         this.purchaseRepository = purchaseRepository;
         this.purchaseLineRepository = purchaseLineRepository;
+        this.samplingRepository = samplingRepository;
 
     }
 
@@ -817,4 +820,7 @@ public class QueryService {
         return positionStaffRepository.findAll();
     }
 
+    public List<Sampling> getAllSampling() {
+        return samplingRepository.findAll();
+    }
 }
