@@ -394,7 +394,7 @@ public class Controller {
     }
 
     @GetMapping("/possitionStaff")
-    public List<PositionStaff> getPossitionStaffList(){
+    public List<PositionStaff> getPossitionStaffList() {
         return queryService.getPossitionStaffList();
     }
 
@@ -404,6 +404,88 @@ public class Controller {
         return queryService.getAllSampling();
     }
 
+    @GetMapping("/sampling/{id}")
+    public ResponseEntity<?> getSampling(@PathVariable("id") int id) {
+        Sampling sampling = queryService.getSampling(id);
+        if (sampling != null) {
+            return ResponseEntity.ok(sampling);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
+    @PostMapping("/sampling")
+    public ResponseEntity<?> newSampling(@RequestBody Sampling newSampling) {
+        Sampling sampling = queryService.saveSampling(newSampling);
+        if (sampling != null) {
+            return ResponseEntity.ok(sampling);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/sampling/{id}")
+    public ResponseEntity<?> updateSampling(@RequestBody Sampling newsampling, @PathVariable("id") int id) {
+        int samplingRequest = queryService.updateSampling(newsampling, id);
+        if (samplingRequest != -1) {
+            return ResponseEntity.ok("Purchase updated");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/sampling/{id}")
+    public ResponseEntity<?> deleteSampling(@PathVariable("id") int id) {
+        queryService.deleteSampling(id);
+        return ResponseEntity.ok("sampling deleted");
+    }
+
+    //DetailSampling Mapping
+    @GetMapping("/detailsampling")
+    public List<DetailSampling> getDetailSamplingList() {
+        return queryService.getDetailSamplingList();
+    }
+
+    @GetMapping("/detailsampling/{id}")
+    public ResponseEntity<?> getDetailSampling(@PathVariable("id") int id) {
+        DetailSampling detailSampling = queryService.getDetailSampling(id);
+        if (detailSampling != null) {
+            return ResponseEntity.ok(detailSampling);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/detailsampling/{id}")
+    public ResponseEntity<?> deleteDetailSampling(@PathVariable("id") int id) {
+        queryService.deleteDetailSampling(id);
+        return ResponseEntity.ok("detail sampling deleted");
+    }
+
+    //Production Mapping
+
+    @GetMapping("/production")
+    public List<Production> getListProduction() {
+        return queryService.getListProduction();
+    }
+
+    @GetMapping("/production/{id}")
+    public ResponseEntity<?> getProduction(@PathVariable("id") int id) {
+        Production production = queryService.getProduction(id);
+        if (production != null) {
+            return ResponseEntity.ok(production);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/production/{id}")
+    public ResponseEntity<?> deleteProduction(@PathVariable("id") int id) {
+        queryService.deleteProduction(id);
+        return ResponseEntity.ok("production order deleted");
+    }
 
 }
+
+
+
