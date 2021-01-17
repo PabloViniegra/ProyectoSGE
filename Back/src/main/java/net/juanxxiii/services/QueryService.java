@@ -903,4 +903,20 @@ public class QueryService {
                                 .findById(id)
                                 .orElse(null)));
     }
+
+    public Production saveProduction(Production newproduction) {
+        if (newproduction.getClient() != null) {
+            Client client = clientRepository.findById(newproduction.getClient().getId()).orElse(clientRepository.save(newproduction.getClient()));
+            newproduction.setClient(client);
+        }
+        if (newproduction.getSampling() != null) {
+            Sampling sampling = samplingRepository.findById(newproduction.getSampling().getId()).orElse(samplingRepository.save(newproduction.getSampling()));
+            newproduction.setSampling(sampling);
+        }
+        return productionRepository.save(newproduction);
+    }
+
+    public int updateStatus(String status, int id) {
+        return productionRepository.updateStatus(status,id);
+    }
 }

@@ -479,6 +479,27 @@ public class Controller {
         }
     }
 
+    @PostMapping("/production")
+    public ResponseEntity<?> newProdcution(@RequestBody Production newproduction) {
+        Production production = queryService.saveProduction(newproduction);
+        if (production != null) {
+            return ResponseEntity.ok(production);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PatchMapping("/production/{id}")
+    public ResponseEntity<?> partialUpdateStatus(@RequestBody String status, @PathVariable("id") int id) {
+        int request = queryService.updateStatus(status,id);
+        if (request != -1) {
+            return ResponseEntity.ok("Production order updated");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
     @DeleteMapping("/production/{id}")
     public ResponseEntity<?> deleteProduction(@PathVariable("id") int id) {
         queryService.deleteProduction(id);
