@@ -814,6 +814,7 @@ public class QueryService {
                                 .findById(id)
                                 .orElse(null)));
     }
+
     public Staff getStaffByEmail(String email) {
         staffRepository.findByEmail(email)
                 .forEach(e -> log.info(e.toString()));
@@ -858,7 +859,7 @@ public class QueryService {
                         Product product = productRepository.findById(newsampling.getProduct().getId()).orElse(productRepository.save(newsampling.getProduct()));
                         newsampling.setProduct(product);
                     }
-                    
+
                     return samplingRepository.updateSampling(newsampling.getName(), id);
                 })
                 .orElse(-1);
@@ -917,6 +918,27 @@ public class QueryService {
     }
 
     public int updateStatus(String status, int id) {
-        return productionRepository.updateStatus(status,id);
+        return productionRepository.findById(id).map(prod -> {
+            if (status != null) {
+                productionRepository.updateStatus(status, id);
+
+            }
+            return 1;
+        }).orElse(-1);
+    }
+
+    public int updateProduction(Production newProduction, int id) {
+        return productionRepository.findById(id).map(prod -> {
+            if (!newProduction.getClient().equals(prod.getClient())) {
+                Client client = clientRepository.findById(newProduction.getClient().getId()).orElse(clientRepository.save(newProduction.getClient()));
+                productionRepository.updateClient(client.getId(),id);
+            }
+            if (!newProduction.getSampling().equals(prod.getStatus())) {
+                Sampling sampling = samplingRepository.findById(newProduction.getSampling().getId()).orElse(samplingRepository.save(newProduction.getSampling()));
+                productionRepository.updateClient(sampling.getId(),id);
+            }
+            //TODO:actualizar resto de campos de produccion
+            return 1;
+        }).orElse(-1);
     }
 }

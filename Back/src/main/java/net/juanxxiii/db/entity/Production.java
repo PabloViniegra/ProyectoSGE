@@ -23,7 +23,7 @@ public class Production {
     private String status;
 
     @Column(name = "fechasolicitud")
-    private LocalDate date;
+    private String date;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "idcliente",referencedColumnName = "idcliente")

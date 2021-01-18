@@ -499,6 +499,16 @@ public class Controller {
         }
     }
 
+    @PutMapping("/production/{id}")
+
+    public ResponseEntity<?> updateProduction(@RequestBody Production newProduction, @PathVariable("id") int id) {
+        int request = queryService.updateProduction(newProduction,id);
+        if (request != -1) {
+            return ResponseEntity.ok("Production order updated");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
     @DeleteMapping("/production/{id}")
     public ResponseEntity<?> deleteProduction(@PathVariable("id") int id) {

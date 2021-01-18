@@ -20,10 +20,9 @@ public class DetailSampling {
     @Column(name = "cantidad")
     private int quantity;
 
-    @OneToOne(optional = false)
-    @JoinColumn(name = "idescandallo", referencedColumnName = "idescandallo")
-    private Sampling sampling;
+    @OneToMany(targetEntity = Sampling.class, mappedBy = "id",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Sampling> sampling;
 
-    @OneToMany(targetEntity = Product.class, mappedBy = "idproducto", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(targetEntity = Product.class, mappedBy = "id", fetch = FetchType.LAZY)
     private List<Product> products;
 }
