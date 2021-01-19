@@ -28,6 +28,9 @@ public class QueryService {
     private final PurchaseLineRepository purchaseLineRepository;
     private final SupplierTelephoneRepository supplierTelephoneRepository;
     private final SupplierDirectionRepository supplierDirectionRepository;
+    private final SamplingRepository samplingRepository;
+    private final DetailSamplingRepository detailSamplingRepository;
+    private final ProductionRepository productionRepository;
 
 
     @Autowired
@@ -44,7 +47,10 @@ public class QueryService {
                         SupplierTelephoneRepository supplierTelephoneRepository,
                         SupplierDirectionRepository supplierDirectionRepository,
                         PurchaseRepository purchaseRepository,
-                        PurchaseLineRepository purchaseLineRepository) {
+                        PurchaseLineRepository purchaseLineRepository,
+                        SamplingRepository samplingRepository,
+                        DetailSamplingRepository detailSamplingRepository,
+                        ProductionRepository productionRepository) {
         this.clientRepository = clientRepository;
         this.supplierRepository = supplierRepository;
         this.staffRepository = staffRepository;
@@ -59,6 +65,9 @@ public class QueryService {
         this.supplierDirectionRepository = supplierDirectionRepository;
         this.purchaseRepository = purchaseRepository;
         this.purchaseLineRepository = purchaseLineRepository;
+        this.samplingRepository = samplingRepository;
+        this.detailSamplingRepository = detailSamplingRepository;
+        this.productionRepository = productionRepository;
 
     }
 
@@ -805,6 +814,7 @@ public class QueryService {
                                 .findById(id)
                                 .orElse(null)));
     }
+
     public Staff getStaffByEmail(String email) {
         staffRepository.findByEmail(email)
                 .forEach(e -> log.info(e.toString()));
@@ -817,4 +827,118 @@ public class QueryService {
         return positionStaffRepository.findAll();
     }
 
+    public List<Sampling> getAllSampling() {
+        return samplingRepository.findAll();
+    }
+
+    public Sampling getSampling(int id) {
+        return samplingRepository.findById(id).orElse(null);
+    }
+
+
+    public Sampling saveSampling(Sampling newSampling) {
+        if (newSampling.getStaff() != null) {
+            Staff staff = staffRepository.findById(newSampling.getStaff().getIdStaff()).orElse(staffRepository.save(newSampling.getStaff()));
+            newSampling.setStaff(staff);
+        }
+        if (newSampling.getProduct() != null) {
+            Product product = productRepository.findById(newSampling.getProduct().getId()).orElse(productRepository.save(newSampling.getProduct()));
+            newSampling.setProduct(product);
+        }
+        return samplingRepository.save(newSampling);
+    }
+
+    public int updateSampling(Sampling newsampling, int id) {
+        return samplingRepository.findById(id)
+                .map(sampling -> {
+                    if (newsampling.getStaff() != null) {
+                        Staff staff = staffRepository.findById(newsampling.getStaff().getIdStaff()).orElse(staffRepository.save(newsampling.getStaff()));
+                        newsampling.setStaff(staff);
+                    }
+                    if (newsampling.getProduct() != null) {
+                        Product product = productRepository.findById(newsampling.getProduct().getId()).orElse(productRepository.save(newsampling.getProduct()));
+                        newsampling.setProduct(product);
+                    }
+
+                    return samplingRepository.updateSampling(newsampling.getName(), id);
+                })
+                .orElse(-1);
+    }
+
+    public void deleteSampling(int id) {
+        samplingRepository
+                .delete(Objects
+                        .requireNonNull(samplingRepository
+                                .findById(id)
+                                .orElse(null)));
+    }
+
+    public List<DetailSampling> getDetailSamplingList() {
+        return detailSamplingRepository.findAll();
+    }
+
+    public DetailSampling getDetailSampling(int id) {
+        return detailSamplingRepository.findById(id).orElse(null);
+    }
+
+    public void deleteDetailSampling(int id) {
+        detailSamplingRepository
+                .delete(Objects
+                        .requireNonNull(detailSamplingRepository
+                                .findById(id)
+                                .orElse(null)));
+    }
+
+    public List<Production> getListProduction() {
+        return productionRepository.findAll();
+    }
+
+    public Production getProduction(int id) {
+        return productionRepository.findById(id).orElse(null);
+    }
+
+    public void deleteProduction(int id) {
+        productionRepository
+                .delete(Objects
+                        .requireNonNull(productionRepository
+                                .findById(id)
+                                .orElse(null)));
+    }
+
+    public Production saveProduction(Production newproduction) {
+        if (newproduction.getClient() != null) {
+            Client client = clientRepository.findById(newproduction.getClient().getId()).orElse(clientRepository.save(newproduction.getClient()));
+            newproduction.setClient(client);
+        }
+        if (newproduction.getSampling() != null) {
+            Sampling sampling = samplingRepository.findById(newproduction.getSampling().getId()).orElse(samplingRepository.save(newproduction.getSampling()));
+            newproduction.setSampling(sampling);
+        }
+        return productionRepository.save(newproduction);
+    }
+
+    public int updateStatus(String status, int id) {
+        return productionRepository.findById(id).map(prod -> {
+            if (status != null) {
+                productionRepository.updateStatus(status, id);
+
+            }
+            return 1;
+        }).orElse(-1);
+    }
+
+    public int updateProduction(Production newProduction, int id) {
+        return productionRepository.findById(id).map(prod -> {
+            if (!newProduction.getClient().equals(prod.getClient())) {
+                Client client = clientRepository.findById(newProduction.getClient().getId()).orElse(clientRepository.save(newProduction.getClient()));
+                productionRepository.updateClient(client.getId(),id);
+            }
+            if (!newProduction.getSampling().equals(prod.getStatus())) {
+                Sampling sampling = samplingRepository.findById(newProduction.getSampling().getId()).orElse(samplingRepository.save(newProduction.getSampling()));
+                productionRepository.updateClient(sampling.getId(),id);
+            }
+            //TODO:actualizar resto de campos de produccion
+            return 1;
+        }).orElse(-1);
+    }
 }

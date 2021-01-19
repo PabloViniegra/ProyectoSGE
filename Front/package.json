@@ -16,6 +16,7 @@
     "@popperjs/core": "^2.5.4",
     "ajax": "0.0.4",
     "bootstrap-select": "^1.13.18",
-    "node-notifier": "^8.0.0"
+    "node-notifier": "^8.0.0",
+    "popper": "^1.0.1"
   }
 }

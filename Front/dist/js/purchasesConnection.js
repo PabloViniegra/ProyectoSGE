@@ -1,3 +1,4 @@
+
 async function loadPurchasesList() {
     let url = 'http://localhost:8080/api/v1/purchases'
     let getInit = {
@@ -372,7 +373,7 @@ async function addPurchase() {
     let supplier = document.getElementById('supplierForPurchase');
     let staffId = document.getElementById('personalName');
     let current = new Date();
-    let fecha = current.getFullYear() + '-' + current.getMonth() + '-' + current.getDate() + ' ' + current.getHours() + ':' + current.getMinutes() + ':' + current.getSeconds();
+    let fecha = current.getFullYear() + '-' + (current.getMonth() + 1) + '-' + current.getDate() + ' ' + current.getHours() + ':' + current.getMinutes() + ':' + current.getSeconds();
     let subtotal = document.getElementById('subtotal');
     let descuento = document.getElementById('discount');
     let iva = document.getElementById('iva');
