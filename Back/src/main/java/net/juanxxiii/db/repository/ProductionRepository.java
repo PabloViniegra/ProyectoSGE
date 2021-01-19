@@ -27,4 +27,9 @@ public interface ProductionRepository extends JpaRepository<Production,Integer> 
     @Modifying
     @Query(value = "UPDATE produccion SET idEscandallo=:idsampling WHERE idProduccion=:id",nativeQuery = true)
     int updateSampling(@Param("idsampling") int sampling, @Param("id") int id);
+
+    @Transient
+    @Modifying
+    @Query(value = "UPDATE produccion SET cantidad=:quantity,estado=:status,fechaSolicitud=:date WHERE idProduccion=:id",nativeQuery = true)
+    int updateProduction(@Param("quantity") int quantity, @Param("status") String status, @Param("date") String date, @Param("id") int id);
 }

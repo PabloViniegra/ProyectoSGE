@@ -937,7 +937,8 @@ public class QueryService {
                 Sampling sampling = samplingRepository.findById(newProduction.getSampling().getId()).orElse(samplingRepository.save(newProduction.getSampling()));
                 productionRepository.updateClient(sampling.getId(),id);
             }
-            //TODO:actualizar resto de campos de produccion
+
+            productionRepository.updateProduction(newProduction.getQuantity(),newProduction.getStatus(),newProduction.getDate(),id);
             return 1;
         }).orElse(-1);
     }

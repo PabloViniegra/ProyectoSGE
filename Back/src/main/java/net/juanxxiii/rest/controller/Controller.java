@@ -500,7 +500,6 @@ public class Controller {
     }
 
     @PutMapping("/production/{id}")
-
     public ResponseEntity<?> updateProduction(@RequestBody Production newProduction, @PathVariable("id") int id) {
         int request = queryService.updateProduction(newProduction,id);
         if (request != -1) {
