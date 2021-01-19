@@ -15,4 +15,14 @@ public interface SamplingRepository extends JpaRepository<Sampling, Integer> {
     @Transactional
     @Query(value = "UPDATE escandallos SET nombre=:name WHERE idEscandallo=:id",nativeQuery = true)
     int updateSampling(@Param("name") String name, @Param("id") int id);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE escandallos SET idPersonal=:idstaff WHERE idEscandallo=:id",nativeQuery = true)
+    int updateStaff(@Param("idstaff") int idStaff, @Param("id") int id);
+
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE escandallos SET idProducto=:idproducto WHERE idEscandallo=:id",nativeQuery = true)
+    int updateProduct(@Param("idproducto") int id, @Param("id") int id1);
 }

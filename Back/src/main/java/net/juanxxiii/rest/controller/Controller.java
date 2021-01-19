@@ -456,6 +456,26 @@ public class Controller {
         }
     }
 
+    @PostMapping("/detailsampling")
+    public ResponseEntity<?> newDetailSampling(@RequestBody DetailSampling newDetail) {
+        DetailSampling detailSampling = queryService.saveDetailSampling(newDetail);
+        if (detailSampling != null) {
+            return ResponseEntity.ok(detailSampling);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/detailsampling/{id}")
+    public ResponseEntity<?> updateDetailSampling(@RequestBody DetailSampling newDetail,@PathVariable("id") int id) {
+        int request = queryService.updateDetailSampling(newDetail,id);
+        if (request != -1) {
+            return ResponseEntity.ok("Purchase updated");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @DeleteMapping("/detailsampling/{id}")
     public ResponseEntity<?> deleteDetailSampling(@PathVariable("id") int id) {
         queryService.deleteDetailSampling(id);
@@ -490,8 +510,8 @@ public class Controller {
     }
 
     @PatchMapping("/production/{id}")
-    public ResponseEntity<?> partialUpdateStatus(@RequestBody String status, @PathVariable("id") int id) {
-        int request = queryService.updateStatus(status,id);
+    public ResponseEntity<?> partialUpdateStatus(@RequestBody Production newProduction, @PathVariable("id") int id) {
+        int request = queryService.updateStatus(newProduction.getStatus(),id);
         if (request != -1) {
             return ResponseEntity.ok("Production order updated");
         } else {

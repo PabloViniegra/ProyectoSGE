@@ -845,19 +845,24 @@ public class QueryService {
             Product product = productRepository.findById(newSampling.getProduct().getId()).orElse(productRepository.save(newSampling.getProduct()));
             newSampling.setProduct(product);
         }
-        return samplingRepository.save(newSampling);
+
+         return samplingRepository.save(newSampling);
+
+
     }
 
     public int updateSampling(Sampling newsampling, int id) {
+
         return samplingRepository.findById(id)
                 .map(sampling -> {
-                    if (newsampling.getStaff() != null) {
+
+                    if (!newsampling.getStaff().equals(sampling.getStaff())) {
                         Staff staff = staffRepository.findById(newsampling.getStaff().getIdStaff()).orElse(staffRepository.save(newsampling.getStaff()));
-                        newsampling.setStaff(staff);
+                        samplingRepository.updateStaff(staff.getIdStaff(),id);
                     }
-                    if (newsampling.getProduct() != null) {
+                    if (newsampling.getProduct().equals(sampling.getProduct())) {
                         Product product = productRepository.findById(newsampling.getProduct().getId()).orElse(productRepository.save(newsampling.getProduct()));
-                        newsampling.setProduct(product);
+                        samplingRepository.updateProduct(product.getId(),id);
                     }
 
                     return samplingRepository.updateSampling(newsampling.getName(), id);
@@ -941,5 +946,32 @@ public class QueryService {
             productionRepository.updateProduction(newProduction.getQuantity(),newProduction.getStatus(),newProduction.getDate(),id);
             return 1;
         }).orElse(-1);
+    }
+
+    public DetailSampling saveDetailSampling(DetailSampling newDetail) {
+        if (newDetail.getSampling() != null) {
+            Sampling sampling = samplingRepository.findById(newDetail.getSampling().getId()).orElse(saveSampling(newDetail.getSampling()));
+            newDetail.setSampling(sampling);
+        }
+        if (newDetail.getProduct() != null) {
+            Product product = productRepository.findById(newDetail.getProduct().getId()).orElse(saveProduct(newDetail.getProduct()));
+            newDetail.setProduct(product);
+        }
+        return detailSamplingRepository.save(newDetail);
+    }
+
+    public int updateDetailSampling(DetailSampling newDetail, int id) {
+        return detailSamplingRepository.findById(id).map(det -> {
+            if (!newDetail.getSampling().equals(det.getSampling())) {
+                 Sampling sampling = samplingRepository.findById(newDetail.getSampling().getId()).orElse(saveSampling(newDetail.getSampling()));
+                 detailSamplingRepository.updateSampling(sampling.getId(),id);
+            }
+            if (!newDetail.getProduct().equals(det.getProduct())) {
+                Product product = productRepository.findById(newDetail.getProduct().getId()).orElse(saveProduct(newDetail.getProduct()));
+                detailSamplingRepository.updateProduct(product.getId(),id);
+            }
+            return detailSamplingRepository.updateDetailSampling(newDetail.getQuantity(),id);
+        }).orElse(-1);
+
     }
 }
