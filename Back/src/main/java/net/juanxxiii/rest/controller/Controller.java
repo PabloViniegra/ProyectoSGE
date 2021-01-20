@@ -499,6 +499,11 @@ public class Controller {
         }
     }
 
+    @GetMapping("/production/process")
+    public List<Production> getProductionInProcess() {
+        return queryService.getProductionProcessList();
+    }
+
     @PostMapping("/production")
     public ResponseEntity<?> newProdcution(@RequestBody Production newproduction) {
         Production production = queryService.saveProduction(newproduction);

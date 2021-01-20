@@ -4,9 +4,11 @@ import lombok.extern.java.Log;
 import net.juanxxiii.db.entity.*;
 import net.juanxxiii.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Objects;
 
@@ -898,6 +900,10 @@ public class QueryService {
         return productionRepository.findAll();
     }
 
+    public List<Production> getProductionProcessList() {
+        return productionRepository.getProductionInProcess();
+    }
+
     public Production getProduction(int id) {
         return productionRepository.findById(id).orElse(null);
     }
@@ -974,4 +980,6 @@ public class QueryService {
         }).orElse(-1);
 
     }
+
+
 }
