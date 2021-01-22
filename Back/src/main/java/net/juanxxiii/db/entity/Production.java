@@ -30,6 +30,10 @@ public class Production {
     private Client client;
 
     @ManyToOne(optional = false)
+    @JoinColumn(name = "idpersonal",referencedColumnName = "idpersonal")
+    private Staff staff;
+
+    @ManyToOne(optional = false)
     @JoinColumn(name = "idescandallo",referencedColumnName = "idescandallo")
     private Sampling sampling;
 }
