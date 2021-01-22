@@ -87,6 +87,7 @@
                                                 <div class="card card-body text-center align-items-stretch"
                                                     style="height: 100%;">
                                                     <h3 class="h1main py-3 text-white">ORDEN DE PRODUCCIÓN</h3>
+                                                    <p class="lead" id="personalProduccion"><b>Personal: </b></p>
                                                     <p class="lead" id="fechaProduccion"><b>Fecha: </b></p>
                                                     <p class="lead" id="cantidadProduccion"><b>Cantidad: </b></p>
                                                     <p class="lead" id="estadoProduccion"><b>Estado: </b></p>
@@ -110,6 +111,7 @@
                                                         <tr>
                                                             <th scope="col">ID</th>
                                                             <th scope="col">Cantidad</th>
+                                                            <th scope="col">Personal</th>
                                                             <th scope="col">Escandallo</th>
                                                             <th scope="col">Producto</th>
                                                         </tr>
@@ -158,13 +160,13 @@
 
                                                         </select>
                                                     </div>
-                                                    <div class="form-group col-6">
+                                                    <div class="form-group col-4">
                                                         <label for="quantityForProduction" class="text-white-50 text-white">Cantidad</label>
                                                         <input type="number" class="form-control" id="quantityForProduction" min="0"
                                                             value="">
                                                     </div>
                                                     
-                                                    <div class="form-group col-6">
+                                                    <div class="form-group col-4">
                                                         <label for="statusForProduction"
                                                             class="text-white-50 text-center">Estado</label>
                                                         <select id="statusForProduction"
@@ -172,6 +174,15 @@
                                                             <option value="SOLICITADO">Solicitado</option>
                                                             <option value="EN PROCESO" disabled>En Proceso</option>
                                                             <option value="TRAMITADO" disabled>Tramitado</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group col-4">
+                                                        <label for="staffForProduction"
+                                                            class="text-white-50 text-center">Personal</label>
+                                                        <select id="staffForProduction"
+                                                            class="browser-default custom-select form-control selectpicker"
+                                                            data-width="100%" data-live-search="true">
+
                                                         </select>
                                                     </div>
                                                     
@@ -228,13 +239,13 @@
 
                                                         </select>
                                                     </div>
-                                                    <div class="form-group col-6">
+                                                    <div class="form-group col-4">
                                                         <label for="updateQuantityProduction" class="text-white-50 text-white">Cantidad</label>
                                                         <input type="number" class="form-control" id="updateQuantityProduction" min="0"
                                                             value="" >
                                                     </div>
                                                     
-                                                    <div class="form-group col-6">
+                                                    <div class="form-group col-4">
                                                         <label for="updateStatusProduction"
                                                             class="text-white-50 text-center">Estado</label>
                                                         <select id="updateStatusProduction"
@@ -244,8 +255,15 @@
                                                             <option value="TRAMITADO">Tramitado</option>
                                                         </select>
                                                     </div>
-                                                    
-                                                    
+                                                    <div class="form-group col-4">
+                                                        <label for="updateStaffProduction"
+                                                            class="text-white-50 text-center">Personal</label>
+                                                        <select id="updateStaffProduction"
+                                                            class="browser-default custom-select form-control selectpicker"
+                                                            data-width="100%" data-live-search="true" disabled>
+
+                                                        </select>
+                                                    </div>
                                                     <div class="col-12 row justify-content-center">
                                                         <button type="submit" class="btn btn2 col-4"
                                                             id="modifyProduction">Modificar Orden de Producción</button>
