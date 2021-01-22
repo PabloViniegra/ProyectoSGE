@@ -108,7 +108,7 @@ async function addClient() {
         let dni = document.getElementById('inputDNI')
         let telephone = document.getElementById('inputTelephone')
         let direction = document.getElementById('inputDirection')
-        let select = document.getElementById('productName')
+        let select = document.getElementById('population')
         let codPostal2;
         let population2;
         let province2;
