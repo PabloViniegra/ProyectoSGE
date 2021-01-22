@@ -32,7 +32,7 @@ public class Purchase implements Serializable{
     @JoinColumn(name = "idfactura", referencedColumnName = "idfactura")
     private Receipt receipt;
 
-    @OneToMany(targetEntity = PurchaseLine.class, mappedBy = "idPurchase", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(targetEntity = PurchaseLine.class, mappedBy = "idPurchase", fetch = FetchType.LAZY)
     private List<PurchaseLine> purchaseLines;
 
     @Override

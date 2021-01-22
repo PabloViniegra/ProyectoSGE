@@ -7,17 +7,22 @@
     <title>Operaciones de Ventas</title>
     <meta name="description" content="Operaciones de ventas ERP" />
     <link rel="stylesheet" href="../assets/bootstrap-4.5.3-dist/css/bootstrap.min.css" />
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
     <link rel="stylesheet" href="../dist/css/styles.css" />
+    <script src="https://kit.fontawesome.com/5a795d2b95.js" crossorigin="anonymous"></script>
 </head>
-<!--TODO: Hacer el nuevo planning   -->
 
-<body onload="getAllClientsInaSelected(); getAllStaffInaSelected(); getAllProductsInaSelected(); loadSalesList(); loadSale(); addProductToTheCart()">
+
+<body
+    onload="getAllClientsInaSelected(); getAllStaffInaSelected(); getAllProductsInaSelected(); loadSalesList(); loadSale(); addProductToTheCart()">
     <div class="container-fluid">
         <nav class="navbar navbar-expand-md navbar-dark myNavbar">
             <a class="navbar-brand" href="../index.html">
                 <img src="../resources/logoTemporal.png" alt="" class="w-50" />
             </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse pr-5" id="navbarNavDropdown">
@@ -37,6 +42,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="allReceipts.html">Facturas</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="goBack()"><i class="fas fa-arrow-circle-left"></i></a>
+                    </li>
                 </ul>
             </div>
         </nav>
@@ -51,20 +59,24 @@
             <div class="col-8 row justify-content-center my-3">
                 <div class=" col-12 row align-items-stretch">
                     <!--Accordion wrapper-->
-                    <div class="accordion md-accordion accordion-3 z-depth-1-half col-12" id="accordionEx194" role="tablist" aria-multiselectable="true">
+                    <div class="accordion md-accordion accordion-3 z-depth-1-half col-12" id="accordionEx194"
+                        role="tablist" aria-multiselectable="true">
 
                         <!-- Accordion card -->
                         <div class="card row justify-content-center">
 
                             <!-- Card header -->
-                            <div class="card-header row justify-content-center align-items-center" role="tab" id="heading4">
-                                <a data-toggle="collapse" data-parent="#accordionEx194" href="#collapse4" aria-expanded="true" aria-controls="collapse4" class="btn btn-dark">
+                            <div class="card-header row justify-content-center align-items-center" role="tab"
+                                id="heading4">
+                                <a data-toggle="collapse" data-parent="#accordionEx194" href="#collapse4"
+                                    aria-expanded="true" aria-controls="collapse4" class="btn btn-dark">
                                     Detalles de la venta
                                 </a>
                             </div>
 
                             <!-- Card body -->
-                            <div id="collapse4" class="collapse show" role="tabpanel" aria-labelledby="heading4" data-parent="#accordionEx194">
+                            <div id="collapse4" class="collapse show" role="tabpanel" aria-labelledby="heading4"
+                                data-parent="#accordionEx194">
                                 <div class="card-body pt-0 bg-secondary">
                                     <div class="row justify-content-between align-items-center">
                                         <div class="col-4 align-items-stretch my-5" style="height:100%;">
@@ -72,17 +84,21 @@
                                                 <div class="card-body text-center" style="height: 100%;">
                                                     <h3 class="h1main py-3 text-white">CLIENTE</h3>
                                                     <p class="card-text text-center lead" id="NombreCliente">
-                                                        <b>Nombre:</b> </p>
+                                                        <b>Nombre:</b>
+                                                    </p>
                                                     <p class="card-text text-center lead" id="DniCliente"><b>DNI:</b>
                                                     </p>
                                                     <p class="card-text text-center lead" id="DireccionCliente">
-                                                        <b>Dirección:</b> </p>
+                                                        <b>Dirección:</b>
+                                                    </p>
                                                     <p class="card-text text-center lead" id="TelefonoCliente">
-                                                        <b>Teléfono:</b> </p>
+                                                        <b>Teléfono:</b>
+                                                    </p>
                                                     <p class="card-text text-center lead" id="IbanCliente"><b>IBAN:</b>
                                                     </p>
                                                     <p class="card-text text-center lead" id="EmailCliente">
-                                                        <b>Email:</b> </p>
+                                                        <b>Email:</b>
+                                                    </p>
                                                     <a class="btn btn-dark btn-lg my-n2" id="EnlaceCliente">Ir al
                                                         cliente</a>
                                                 </div>
@@ -90,7 +106,8 @@
                                         </div>
                                         <div class="col-4" style="height:100%;margin-bottom: 0;">
                                             <div class="card" style="height: 100%;">
-                                                <div class="card card-body text-center align-items-stretch" style="height: 100%;">
+                                                <div class="card card-body text-center align-items-stretch"
+                                                    style="height: 100%;">
                                                     <h3 class="h1main py-3 text-white">FACTURA</h3>
                                                     <p class="lead" id="descuentoVenta"><b>Descuento </b></p>
                                                     <p class="lead" id="subtotalVenta"><b>Subtotal </b></p>
@@ -100,13 +117,15 @@
                                                     <p class="lead"></p>
                                                     <p class="lead"></p>
                                                     <p class="lead"></p>
-                                                    <a class="btn btn-dark btn-lg my-n2" id="enlaceRecibo" role="button">Ir a la factura</a>
+                                                    <a class="btn btn-dark btn-lg my-n2" id="enlaceRecibo"
+                                                        role="button">Ir a la factura</a>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-4" style="height:100%;">
                                             <div class="card" style="height: 100%;">
-                                                <div class="card card-body text-center align-items-stretch" style="height: 100%;">
+                                                <div class="card card-body text-center align-items-stretch"
+                                                    style="height: 100%;">
                                                     <h3 class="h1main py-3 text-white">PERSONAL</h3>
                                                     <p class="lead" id="idStaff"><b>ID: </b> </p>
                                                     <p class="lead" id="nameStaff"><b>Nombre: </b></p>
@@ -148,67 +167,91 @@
                         <div class="card row justify-content-center">
 
                             <!-- Card header -->
-                            <div class="card-header row justify-content-center align-items-center" role="tab" id="heading5">
-                                <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx194" href="#collapse5" aria-expanded="false" aria-controls="collapse5" class="btn btn-dark">
+                            <div class="card-header row justify-content-center align-items-center" role="tab"
+                                id="heading5">
+                                <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx194"
+                                    href="#collapse5" aria-expanded="false" aria-controls="collapse5"
+                                    class="btn btn-dark">
                                     Añadir venta
                                 </a>
                             </div>
 
                             <!-- Card body -->
-                            <div id="collapse5" class="collapse" role="tabpanel" aria-labelledby="heading5" data-parent="#accordionEx194">
+                            <div id="collapse5" class="collapse" role="tabpanel" aria-labelledby="heading5"
+                                data-parent="#accordionEx194">
                                 <div class="card-body pt-0 row justify-content-center bg-secondary">
                                     <div class="col-12">
                                         <div>
                                             <form class="my-4 ml-2" id="formSale">
                                                 <div class="form-row">
                                                     <div class="form-group col-6">
-                                                        <label for="clienteForSale" class="text-white-50 text-center">Cliente</label>
-                                                        <select id="clienteForSale" class="browser-default custom-select form-control" data-width="100%">
+                                                        <label for="clienteForSale"
+                                                            class="text-white-50 text-center">Cliente</label>
+                                                        <select id="clienteForSale" class="selectpicker"
+                                                            data-width="100%" data-live-search="true">
 
                                                         </select>
                                                     </div>
                                                     <div class="form-group col-6">
-                                                        <label for="personalName" class="text-white-50 text-center">Personal</label>
-                                                        <select id="personalName" class="browser-default custom-select form-control" data-width="100%">
+                                                        <label for="personalName"
+                                                            class="text-white-50 text-center">Personal</label>
+                                                        <select id="personalName"
+                                                            class="browser-default custom-select form-control selectpicker"
+                                                            data-width="100%" data-live-search="true">
 
                                                         </select>
                                                     </div>
                                                     <div class="form-group col-6">
                                                         <label for="iva" class="text-white-50 text-white">Iva</label>
-                                                        <input type="number" class="form-control" id="iva" min="1" value="21">
+                                                        <input type="number" class="form-control" id="iva" min="1"
+                                                            value="21">
                                                     </div>
                                                     <div class="form-group col-6">
-                                                        <label for="subtotal" class="text-white-50 text-white">Subtotal</label>
-                                                        <input type="number" class="form-control" id="subtotal" value="0" readonly>
+                                                        <label for="subtotal"
+                                                            class="text-white-50 text-white">Subtotal</label>
+                                                        <input type="number" class="form-control" id="subtotal"
+                                                            value="0" readonly>
                                                     </div>
                                                     <div class="form-group col-6">
-                                                        <label for="products" class="text-white-50 text-center">Productos</label>
-                                                        <select id="productName" class="browser-default custom-select form-control">
-    
+                                                        <label for="productName"
+                                                            class="text-white-50 text-center">Productos</label>
+                                                        <select id="productName"
+                                                            class="browser-default custom-select form-control selectpicker"
+                                                            data-live-search="true">
+
                                                         </select>
                                                     </div>
                                                     <div class="form-group col-6">
-                                                        <label for="countSell" class="text-white-50 text-white">Cantidad</label>
-                                                        <input type="number" class="form-control" id="countSell" value="1">
+                                                        <label for="countSell"
+                                                            class="text-white-50 text-white">Cantidad</label>
+                                                        <input type="number" class="form-control" id="countSell"
+                                                            value="1">
                                                     </div>
                                                     <div class="form-group col-6">
-                                                        <label for="discount" class="text-white-50 text-white">Descuento</label>
-                                                        <input type="number" class="form-control" id="discount" min="0" max="100" value="0">
+                                                        <label for="discount"
+                                                            class="text-white-50 text-white">Descuento</label>
+                                                        <input type="number" class="form-control" id="discount" min="0"
+                                                            max="100" value="0">
                                                     </div>
                                                     <div class="form-group col-6">
-                                                        <label for="total" class="text-white-50 text-white">Total</label>
-                                                        <input type="number" class="form-control" id="total" value="0" readonly>
+                                                        <label for="total"
+                                                            class="text-white-50 text-white">Total</label>
+                                                        <input type="number" class="form-control" id="total" value="0"
+                                                            readonly>
                                                     </div>
                                                     <hr class="col-12">
                                                     <div class="col-6 row justify-content-center">
-                                                        <button class="btn btn-dark" type="submit" id="addProduct">Añadir Producto</button>
+                                                        <button class="btn btn-dark" type="submit"
+                                                            id="addProduct">Añadir Producto</button>
                                                     </div>
                                                     <div class="col-6 row justify-content-center">
-                                                        <button class="btn btn-dark" type="submit" id="applyDiscount">Aplicar Descuento</button>
+                                                        <button class="btn btn-dark" type="submit"
+                                                            id="applyDiscount">Aplicar Descuento</button>
                                                     </div>
                                                     <hr class="col-12">
                                                     <div class="col-12 row justify-content-center">
-                                                        <button type="submit" class="btn btn2 col-4" id="addSale">Agregar
+                                                        <button type="submit" class="btn btn2 col-4"
+                                                            id="addSale">Agregar
                                                             Venta</button>
                                                     </div>
                                                     <hr class="col-12">
@@ -233,14 +276,18 @@
                         <div class="card row justify-content-center">
 
                             <!-- Card header -->
-                            <div class="card-header row justify-content-center align-items-center" role="tab" id="heading7">
-                                <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx194" href="#collapse7" aria-expanded="false" aria-controls="collapse7" class="btn btn-dark">
+                            <div class="card-header row justify-content-center align-items-center" role="tab"
+                                id="heading7">
+                                <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx194"
+                                    href="#collapse7" aria-expanded="false" aria-controls="collapse7"
+                                    class="btn btn-dark">
                                     Borrar Venta
                                 </a>
                             </div>
 
                             <!-- Card body -->
-                            <div id="collapse7" class="collapse" role="tabpanel" aria-labelledby="heading7" data-parent="#accordionEx194">
+                            <div id="collapse7" class="collapse" role="tabpanel" aria-labelledby="heading7"
+                                data-parent="#accordionEx194">
                                 <div class="card-body pt-0 row justify-content-center bg-secondary">
                                     <div>
                                         <!-- <div> -->
@@ -279,10 +326,24 @@
             </div>
         </footer>
     </div>
-    <script src="../dist/js/salesConnection.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"
+        integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh"
+        crossorigin="anonymous"></script>
     <script src="../assets/bootstrap-4.5.3-dist/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+    <script src="../dist/js/salesConnection.js"></script>
+
+
 </body>
 
 </html>

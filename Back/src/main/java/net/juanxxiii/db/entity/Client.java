@@ -49,4 +49,5 @@ public class Client implements Serializable {
     @ManyToOne(targetEntity = Population.class, optional = false)
     @JoinColumn(name = "codigo_postal", referencedColumnName = "codigo_postal")
     private Population population;
+
 }

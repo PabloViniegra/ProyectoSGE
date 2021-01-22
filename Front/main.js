@@ -11,6 +11,7 @@ function createWindow() {
             allowRunningInsecureContent: true,
             worldSafeExecuteJavaScript: true,
             contextIsolation: true
+            
         }
     })
 
@@ -19,6 +20,7 @@ function createWindow() {
 
     // Abre las herramientas de desarrollo (DevTools).
     win.webContents.openDevTools()
+
 }
 
 // Este método se llamará cuando Electron haya finalizado
