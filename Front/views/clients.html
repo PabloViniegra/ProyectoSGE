@@ -10,7 +10,7 @@
     <script src="https://kit.fontawesome.com/5a795d2b95.js" crossorigin="anonymous"></script>
 </head>
 
-<body onload="loadClient()">
+<body onload="loadClient(); getAllPopulationsInASelect()">
     <div class="container-fluid">
         <nav class="navbar navbar-expand-md navbar-dark myNavbar">
             <a class="navbar-brand" href="../index.html">
@@ -36,6 +36,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="allReceipts.html">Facturas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="population.html">Poblacion</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" onclick="goBack()"><i class="fas fa-arrow-circle-left"></i></a>
@@ -101,13 +104,19 @@
                                 <input type="text" class="form-control" id="inputDNI">
                             </div>
                             <div class="form-row">
-                                <div class="form-group col-6">
+                                <div class="form-group col-4">
                                     <label for="inputTelephone">Teléfono</label>
                                     <input type="text" class="form-control" id="inputTelephone">
                                 </div>
-                                <div class="form-group col-6">
+                                <div class="form-group col-4">
                                     <label for="inputDirection">Dirección</label>
                                     <input type="text" class="form-control" id="inputDirection">
+                                </div>
+                                <div class="form-group col-4">
+                                    <label for="population" class="text-white-50 text-center">Poblacion</label>
+                                    <select id="population" class="browser-default custom-select form-control" data-width="100%">
+
+                                    </select>
                                 </div>
                             </div>
                             <button type="submit" class="btn btn2" onclick="addClient()">Añadir</button>
@@ -173,16 +182,23 @@
                 </div>
             </div>
         </section>
-        </div>
-        <script>
-            function goBack() {
-              window.history.back();
-            }
-            </script>
-        <script src="../dist/js/clientConnections.js"></script>
-        <script src="../assets/bootstrap-4.5.3-dist/js/bootstrap.min.js"></script>
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+        <<<<<<< HEAD </div>
+            <script src="../dist/js/clientConnections.js"></script>
+            <script src="../assets/bootstrap-4.5.3-dist/js/bootstrap.min.js"></script>
+            <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+            =======
+    </div>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+    <script src="../dist/js/clientConnections.js"></script>
+    <script src="../assets/bootstrap-4.5.3-dist/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+    >>>>>>> origin/develop
 </body>
 
 </html>

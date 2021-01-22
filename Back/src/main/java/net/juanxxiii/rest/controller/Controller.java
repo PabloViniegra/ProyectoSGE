@@ -398,6 +398,17 @@ public class Controller {
         return queryService.getPossitionStaffList();
     }
 
+    //Population Mapping
+    @PostMapping("/populations")
+    public ResponseEntity<?> newPopulation(@RequestBody Population newPopulation) {
+        Population population = queryService.savePopulation(newPopulation);
+        if (population != null) {
+            return ResponseEntity.ok(population);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     //Sampling Mapping
     @GetMapping("/sampling")
     public List<Sampling> getSamplingList() {
@@ -434,6 +445,21 @@ public class Controller {
         }
     }
 
+    @GetMapping("/populations")
+    public ResponseEntity<List<Population>> getPopulationList() {
+        return ResponseEntity.ok(queryService.getPopulations());
+    }
+
+    @GetMapping("/populations/{id}")
+    public ResponseEntity<?> getPopulation(@PathVariable("id") int id) {
+        Population population = queryService.getPopulation(id);
+        if (population != null) {
+            return ResponseEntity.ok(population);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @DeleteMapping("/sampling/{id}")
     public ResponseEntity<?> deleteSampling(@PathVariable("id") int id) {
         queryService.deleteSampling(id);
@@ -454,6 +480,43 @@ public class Controller {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @PostMapping("/detailsampling")
+    public ResponseEntity<?> newDetailSampling(@RequestBody DetailSampling newDetail) {
+        DetailSampling detailSampling = queryService.saveDetailSampling(newDetail);
+        if (detailSampling != null) {
+            return ResponseEntity.ok(detailSampling);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/populations/{id}")
+    public ResponseEntity<?> updatePopulation(@RequestBody Population newPopulation, @PathVariable("id") int id) {
+        int population = queryService.updatePopulation(newPopulation, id);
+        if (population != -1) {
+            return ResponseEntity.ok("Population updated");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/detailsampling/{id}")
+    public ResponseEntity<?> updateDetailSampling(@RequestBody DetailSampling newDetail,
+                                                  @PathVariable("id") int id) {
+        int request = queryService.updateDetailSampling(newDetail, id);
+        if (request != -1) {
+            return ResponseEntity.ok("Purchase updated");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/populations/{id}")
+    public ResponseEntity<?> deletePopulation(@PathVariable("id") int id) {
+        queryService.deletePopulation(id);
+        return ResponseEntity.ok("Population deleted");
     }
 
     @DeleteMapping("/detailsampling/{id}")
@@ -479,6 +542,11 @@ public class Controller {
         }
     }
 
+    @GetMapping("/production/process")
+    public List<Production> getProductionInProcess() {
+        return queryService.getProductionProcessList();
+    }
+
     @PostMapping("/production")
     public ResponseEntity<?> newProdcution(@RequestBody Production newproduction) {
         Production production = queryService.saveProduction(newproduction);
@@ -490,8 +558,9 @@ public class Controller {
     }
 
     @PatchMapping("/production/{id}")
-    public ResponseEntity<?> partialUpdateStatus(@RequestBody String status, @PathVariable("id") int id) {
-        int request = queryService.updateStatus(status,id);
+    public ResponseEntity<?> partialUpdateStatus(@RequestBody Production newProduction,
+                                                 @PathVariable("id") int id) {
+        int request = queryService.updateStatus(newProduction.getStatus(), id);
         if (request != -1) {
             return ResponseEntity.ok("Production order updated");
         } else {
@@ -500,9 +569,8 @@ public class Controller {
     }
 
     @PutMapping("/production/{id}")
-
     public ResponseEntity<?> updateProduction(@RequestBody Production newProduction, @PathVariable("id") int id) {
-        int request = queryService.updateProduction(newProduction,id);
+        int request = queryService.updateProduction(newProduction, id);
         if (request != -1) {
             return ResponseEntity.ok("Production order updated");
         } else {

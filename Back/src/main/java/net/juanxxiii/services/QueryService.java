@@ -28,6 +28,7 @@ public class QueryService {
     private final PurchaseLineRepository purchaseLineRepository;
     private final SupplierTelephoneRepository supplierTelephoneRepository;
     private final SupplierDirectionRepository supplierDirectionRepository;
+    private final PopulationRepository populationRepository;
     private final SamplingRepository samplingRepository;
     private final DetailSamplingRepository detailSamplingRepository;
     private final ProductionRepository productionRepository;
@@ -48,6 +49,7 @@ public class QueryService {
                         SupplierDirectionRepository supplierDirectionRepository,
                         PurchaseRepository purchaseRepository,
                         PurchaseLineRepository purchaseLineRepository,
+                        PopulationRepository populationRepository,
                         SamplingRepository samplingRepository,
                         DetailSamplingRepository detailSamplingRepository,
                         ProductionRepository productionRepository) {
@@ -65,13 +67,14 @@ public class QueryService {
         this.supplierDirectionRepository = supplierDirectionRepository;
         this.purchaseRepository = purchaseRepository;
         this.purchaseLineRepository = purchaseLineRepository;
+        this.populationRepository = populationRepository;
         this.samplingRepository = samplingRepository;
         this.detailSamplingRepository = detailSamplingRepository;
         this.productionRepository = productionRepository;
-
     }
 
     //Client queryList
+    @Transactional
     public Client saveClient(Client newClient) {
         List<ClientTelephone> telephones = null;
         List<ClientDirection> directions = null;
@@ -87,6 +90,10 @@ public class QueryService {
         if (!newClient.getSales().isEmpty()) {
             sales = newClient.getSales();
             newClient.setSales(null);
+        }
+        if (newClient.getPopulation() != null) {
+            Population population = populationRepository.findById(newClient.getPopulation().getIdPopulation()).orElse(savePopulation(newClient.getPopulation()));
+            newClient.setPopulation(population);
         }
         clientRepository.save(newClient);
         int id = clientRepository.lastId();
@@ -164,6 +171,10 @@ public class QueryService {
                             deleteSale(sale.getId());
                         }
                     });
+                    if (!client.getPopulation().equals(newClient.getPopulation())) {
+                        Population population = populationRepository.findById(newClient.getPopulation().getIdPopulation()).orElse(savePopulation(newClient.getPopulation()));
+                        clientRepository.updatePopulation(population.getIdPopulation(), id);
+                    }
                     return clientRepository.updateClient(newClient.getFullName(), newClient.getDni(), newClient.getEmail(), newClient.getIban(), id);
                 })
                 .orElse(-1);
@@ -827,6 +838,31 @@ public class QueryService {
         return positionStaffRepository.findAll();
     }
 
+    //Population querys
+    public Population savePopulation(Population newPopulation) {
+        return populationRepository.save(newPopulation);
+    }
+
+    public List<Population> getPopulations() {
+        return populationRepository.findAll();
+    }
+
+    public Population getPopulation(int id) {
+        return populationRepository.findById(id).orElse(null);
+    }
+
+    public int updatePopulation(Population population, int id) {
+        return populationRepository.updatePopulation(population.getPopulation(), population.getProvince(), id);
+    }
+
+    public void deletePopulation(int id) {
+        populationRepository
+                .delete(Objects
+                        .requireNonNull(populationRepository
+                                .findById(id)
+                                .orElse(null)));
+    }
+
     public List<Sampling> getAllSampling() {
         return samplingRepository.findAll();
     }
@@ -845,19 +881,24 @@ public class QueryService {
             Product product = productRepository.findById(newSampling.getProduct().getId()).orElse(productRepository.save(newSampling.getProduct()));
             newSampling.setProduct(product);
         }
+
         return samplingRepository.save(newSampling);
+
+
     }
 
     public int updateSampling(Sampling newsampling, int id) {
+
         return samplingRepository.findById(id)
                 .map(sampling -> {
-                    if (newsampling.getStaff() != null) {
+
+                    if (!newsampling.getStaff().equals(sampling.getStaff())) {
                         Staff staff = staffRepository.findById(newsampling.getStaff().getIdStaff()).orElse(staffRepository.save(newsampling.getStaff()));
-                        newsampling.setStaff(staff);
+                        samplingRepository.updateStaff(staff.getIdStaff(), id);
                     }
-                    if (newsampling.getProduct() != null) {
+                    if (newsampling.getProduct().equals(sampling.getProduct())) {
                         Product product = productRepository.findById(newsampling.getProduct().getId()).orElse(productRepository.save(newsampling.getProduct()));
-                        newsampling.setProduct(product);
+                        samplingRepository.updateProduct(product.getId(), id);
                     }
 
                     return samplingRepository.updateSampling(newsampling.getName(), id);
@@ -891,6 +932,10 @@ public class QueryService {
 
     public List<Production> getListProduction() {
         return productionRepository.findAll();
+    }
+
+    public List<Production> getProductionProcessList() {
+        return productionRepository.getProductionInProcess();
     }
 
     public Production getProduction(int id) {
@@ -931,14 +976,42 @@ public class QueryService {
         return productionRepository.findById(id).map(prod -> {
             if (!newProduction.getClient().equals(prod.getClient())) {
                 Client client = clientRepository.findById(newProduction.getClient().getId()).orElse(clientRepository.save(newProduction.getClient()));
-                productionRepository.updateClient(client.getId(),id);
+                productionRepository.updateClient(client.getId(), id);
             }
             if (!newProduction.getSampling().equals(prod.getStatus())) {
                 Sampling sampling = samplingRepository.findById(newProduction.getSampling().getId()).orElse(samplingRepository.save(newProduction.getSampling()));
-                productionRepository.updateClient(sampling.getId(),id);
+                productionRepository.updateClient(sampling.getId(), id);
             }
-            //TODO:actualizar resto de campos de produccion
+
+            productionRepository.updateProduction(newProduction.getQuantity(), newProduction.getStatus(), newProduction.getDate(), id);
             return 1;
         }).orElse(-1);
+    }
+
+    public DetailSampling saveDetailSampling(DetailSampling newDetail) {
+        if (newDetail.getSampling() != null) {
+            Sampling sampling = samplingRepository.findById(newDetail.getSampling().getId()).orElse(saveSampling(newDetail.getSampling()));
+            newDetail.setSampling(sampling);
+        }
+        if (newDetail.getProduct() != null) {
+            Product product = productRepository.findById(newDetail.getProduct().getId()).orElse(saveProduct(newDetail.getProduct()));
+            newDetail.setProduct(product);
+        }
+        return detailSamplingRepository.save(newDetail);
+    }
+
+    public int updateDetailSampling(DetailSampling newDetail, int id) {
+        return detailSamplingRepository.findById(id).map(det -> {
+            if (!newDetail.getSampling().equals(det.getSampling())) {
+                Sampling sampling = samplingRepository.findById(newDetail.getSampling().getId()).orElse(saveSampling(newDetail.getSampling()));
+                detailSamplingRepository.updateSampling(sampling.getId(), id);
+            }
+            if (!newDetail.getProduct().equals(det.getProduct())) {
+                Product product = productRepository.findById(newDetail.getProduct().getId()).orElse(saveProduct(newDetail.getProduct()));
+                detailSamplingRepository.updateProduct(product.getId(), id);
+            }
+            return detailSamplingRepository.updateDetailSampling(newDetail.getQuantity(), id);
+        }).orElse(-1);
+
     }
 }

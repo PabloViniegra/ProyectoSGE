@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,10 +20,12 @@ public class Sampling {
     private String name;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "idpersonal",referencedColumnName = "idpersonal")
+    @JoinColumn(name = "idpersonal", referencedColumnName = "idpersonal")
     private Staff staff;
 
     @OneToOne(optional = false)
-    @JoinColumn(name = "idproducto",referencedColumnName = "idproducto")
+    @JoinColumn(name = "idproducto", referencedColumnName = "idproducto")
     private Product product;
+
+
 }
