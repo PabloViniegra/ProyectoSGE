@@ -1,3 +1,5 @@
+let idStaffM;
+let idProductM;
 
 async function loadSampling() {
     const querystring = location.search;
@@ -52,8 +54,11 @@ async function loadSampling() {
                     let stockEscandalloCarta = document.getElementById('stockProducto')
                     stockEscandalloCarta.innerHTML = stockEscandalloCarta.innerHTML + response.product.stock;
 
-                    //TODO: LLevar los datos a los campos de actualización
-
+                    idStaffM = response.staff.idStaff;
+                    idProductM = response.product.id;
+                    document.getElementById('inputSamplingM').value = response.name;
+                    document.getElementById('inputStaffM').value = response.staff.name;
+                    document.getElementById('inputProductM').value = response.product.name;
                 })
             }
         })
@@ -175,6 +180,7 @@ async function getAllStaffInASelect() {
         .then(response => {
             let firstSampling = true;
             let select = document.getElementById('inputStaffA');
+            
             response.forEach(c => {
                 let option = document.createElement('option');
                 option.setAttribute('value', c.idStaff)
@@ -191,4 +197,135 @@ async function getAllStaffInASelect() {
             });
         })
     $('.selectpicker').selectpicker('refresh');
+}
+
+async function getAllProductsInASelected() {
+    let url = 'http://localhost:8080/api/v1/products';
+    let getInit = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    }
+    await fetch(url, getInit)
+        .then(response => response.json())
+        .then(response => {
+            let firstProduct = true;
+            let select = document.getElementById('inputProductA');
+            response.forEach(c => {
+                console.log(c.id + c.name);
+                let option = document.createElement('option');
+                option.setAttribute('value', c.id)
+                option.innerHTML = c.name;
+                select.appendChild(option);
+
+                if (firstProduct) {
+                    $('#inputProductA').val(c.id);
+                    $('.selectpicker').selectpicker('render');
+                    firstProduct = false;
+
+                }
+            });
+        })
+    $('.selectpicker').selectpicker('refresh');
+}
+
+async function addSampling() {
+    let form = document.getElementById('addSampling');
+
+    form.addEventListener('submit', async(e) => {
+        e.preventDefault();
+        const querystring = location.search;
+        const params = new URLSearchParams(querystring)
+        let id = params.get("id");
+        if (id == undefined) id = 1
+        let name = document.getElementById('inputSamplingA');
+        let staff = $('#inputStaffA').val();
+        let product = $('#inputProductA').val();
+
+        let data = {
+            name: name.value,
+            staff: staff,
+            product: product
+        }
+
+        let url = 'http://localhost:8080/api/v1/sampling';
+        let postInit = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }
+
+        await fetch(url, postInit)
+            .then(response => response.json())
+            .then(response => id = response.id)
+
+        location.href = 'sampling.html?id=' + id;
+    })
+
+    
+}
+
+async function updateSampling() {
+    let form = document.getElementById('updateSampling');
+
+    form.addEventListener('submit', async(e) => {
+        const querystring = location.search;
+        const params = new URLSearchParams(querystring)
+        let id = params.get("id");
+        if (id == undefined) id = 1
+        e.preventDefault();
+        let name = document.getElementById('inputSamplingM')
+        let staff = document.getElementById('inputStaffM')
+        let product = document.getElementById('inputProductM')
+
+        let data = {
+            name: name.value,
+            staff: idStaffM,
+            product: idProductM
+        }
+
+        console.log(data)
+
+        let url = 'http://localhost:8080/api/v1/sampling/' + id;
+        let putInit = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }
+
+        await fetch(url, putInit)
+            .then(response => console.log(response))
+
+        location.href = 'sampling.html?id=' + id;
+    })
+}
+
+function deleteSampling() {
+    let form = document.getElementById('deleteSampling');
+    form.addEventListener('submit', async(e) => {
+        const querystring = location.search;
+        const params = new URLSearchParams(querystring)
+        let id = params.get("id");
+        let url = 'http://localhost:8080/api/v1/sampling/' + id;
+        let deleteInit = {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        }
+
+        await fetch(url, deleteInit)
+            .then(response => console.log(response))
+
+        location.href = 'sampling.html';
+    })
 }
