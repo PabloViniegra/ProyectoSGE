@@ -180,7 +180,7 @@ async function getAllStaffInASelect() {
         .then(response => {
             let firstSampling = true;
             let select = document.getElementById('inputStaffA');
-            
+
             response.forEach(c => {
                 let option = document.createElement('option');
                 option.setAttribute('value', c.idStaff)
@@ -233,8 +233,9 @@ async function getAllProductsInASelected() {
 
 async function addSampling() {
     let form = document.getElementById('addSampling');
-
-    form.addEventListener('submit', async(e) => {
+    let product = document.getElementById('inputProductM')
+    let cantidad = document.getElementById('inputDetalleCantidad')
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
         const querystring = location.search;
         const params = new URLSearchParams(querystring)
@@ -267,13 +268,14 @@ async function addSampling() {
         location.href = 'sampling.html?id=' + id;
     })
 
-    
+
 }
+
+
 
 async function updateSampling() {
     let form = document.getElementById('updateSampling');
-
-    form.addEventListener('submit', async(e) => {
+    form.addEventListener('submit', async (e) => {
         const querystring = location.search;
         const params = new URLSearchParams(querystring)
         let id = params.get("id");
@@ -310,7 +312,7 @@ async function updateSampling() {
 
 function deleteSampling() {
     let form = document.getElementById('deleteSampling');
-    form.addEventListener('submit', async(e) => {
+    form.addEventListener('submit', async (e) => {
         const querystring = location.search;
         const params = new URLSearchParams(querystring)
         let id = params.get("id");
