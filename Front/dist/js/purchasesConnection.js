@@ -13,12 +13,12 @@ async function loadPurchasesList() {
         .then(response => {
             let final = 1;
             if (response.length > 20) {
-                final = response.length-20;
+                final = response.length - 20;
             } else {
                 final = 0;
             }
-            
-            for (let i = response.length-1; i >= final; i--) {
+
+            for (let i = response.length - 1; i >= final; i--) {
                 let a = document.createElement('a');
                 let urlSupplier = 'purchasesOperation.html?id=' + response[i].id + '&idSupplier=' + response[i].supplier;
                 a.setAttribute('href', urlSupplier);
@@ -68,86 +68,89 @@ async function loadPurchase() {
             dire.innerHTML = dire.innerHTML + response.directions[0].direction;
             let button = document.getElementById('EnlaceProveedor')
             button.setAttribute('href', 'suppliers.html?id=' + idSupplier)
-            return response.fullName;
         })
     let urlPurchase = 'http://localhost:8080/api/v1/purchases/' + id;
     await fetch(urlPurchase, getInit)
-        .then(response => response.json())
         .then(response => {
-            console.log(response)
+            if (response.ok){
+                response.json().then(response => {
+                    console.log(response)
 
-            let discount = document.getElementById('descuentoCompra')
-            discount.innerHTML = discount.innerHTML + response.receipt.discounts;
-            let iva = document.getElementById('ivaCompra')
-            iva.innerHTML = iva.innerHTML + response.receipt.iva + '%';
-            let subtotal = document.getElementById('subtotalCompra')
-            subtotal.innerHTML = subtotal.innerHTML + response.receipt.subtotal;
-            let total = document.getElementById('totalCompra')
-            total.innerHTML = total.innerHTML + response.receipt.total;
-            let date = document.getElementById('fechaCompra')
-            date.innerHTML = date.innerHTML + response.receipt.receiptDate;
-            let button = document.getElementById('enlaceRecibo')
-            button.setAttribute('href', 'allreceipts.html?id=' + response.receipt.id + '&date=' + response.receipt.receiptDate)
+                    let discount = document.getElementById('descuentoCompra')
+                    discount.innerHTML = discount.innerHTML + response.receipt.discounts;
+                    let iva = document.getElementById('ivaCompra')
+                    iva.innerHTML = iva.innerHTML + response.receipt.iva + '%';
+                    let subtotal = document.getElementById('subtotalCompra')
+                    subtotal.innerHTML = subtotal.innerHTML + response.receipt.subtotal;
+                    let total = document.getElementById('totalCompra')
+                    total.innerHTML = total.innerHTML + response.receipt.total;
+                    let date = document.getElementById('fechaCompra')
+                    date.innerHTML = date.innerHTML + response.receipt.receiptDate;
+                    let button = document.getElementById('enlaceRecibo')
+                    button.setAttribute('href', 'allreceipts.html?id=' + response.receipt.id + '&date=' + response.receipt.receiptDate)
 
-            let idPersonal = document.getElementById('idStaff')
-            idPersonal.innerHTML = idPersonal.innerHTML + response.staff.idStaff;
-            let nameStaff = document.getElementById('nameStaff')
-            nameStaff.innerHTML = nameStaff.innerHTML + response.staff.name;
-            let possitionStaff = document.getElementById('possitionStaff')
-            possitionStaff.innerHTML = possitionStaff.innerHTML + response.staff.positionStaff.name;
-            let emailStaff = document.getElementById('emailStaff')
-            emailStaff.innerHTML = emailStaff.innerHTML + response.staff.email;
-            let buttonStaff = document.getElementById('enlaceStaff')
-            buttonStaff.setAttribute('href', 'staff.html?id=' + response.staff.idStaff)
+                    let idPersonal = document.getElementById('idStaff')
+                    idPersonal.innerHTML = idPersonal.innerHTML + response.staff.idStaff;
+                    let nameStaff = document.getElementById('nameStaff')
+                    nameStaff.innerHTML = nameStaff.innerHTML + response.staff.name;
+                    let possitionStaff = document.getElementById('possitionStaff')
+                    possitionStaff.innerHTML = possitionStaff.innerHTML + response.staff.positionStaff.name;
+                    let emailStaff = document.getElementById('emailStaff')
+                    emailStaff.innerHTML = emailStaff.innerHTML + response.staff.email;
+                    let buttonStaff = document.getElementById('enlaceStaff')
+                    buttonStaff.setAttribute('href', 'staff.html?id=' + response.staff.idStaff)
 
 
-            let tBody = document.getElementById('products')
-            response.purchaseLines.forEach(line => {
-                //line.idProduct
-                let tr = document.createElement('tr');
-                let id = document.createElement('td');
-                id.innerHTML = line.idProduct.id;
-                tr.appendChild(id);
-                let name = document.createElement('td');
-                name.innerHTML = line.idProduct.name;
-                tr.appendChild(name);
-                let description = document.createElement('td');
-                description.innerHTML = line.idProduct.description;
-                tr.appendChild(description);
-                let sellPrice = document.createElement('td');
-                sellPrice.innerHTML = line.idProduct.sellPrice;
-                tr.appendChild(sellPrice);
-                let buyPrice = document.createElement('td');
-                buyPrice.innerHTML = line.idProduct.buyPrice;
-                tr.appendChild(buyPrice);
-                let quantity = document.createElement('td');
-                quantity.innerHTML = line.quantity;
-                tr.appendChild(quantity);
-                let type = document.createElement('td');
-                type.innerHTML = line.idProduct.type;
-                tr.appendChild(type);
-                tBody.appendChild(tr)
-            });
-            let tableDeleteBody = document.getElementById('deleteTablePurchase')
-            let trDelete = document.createElement('tr')
-            let celda1 = document.createElement('td')
-            celda1.innerHTML = response.id
-            let celda2 = document.createElement('td')
-            celda2.innerHTML = supplierName
-            let celda3 = document.createElement('td')
-            celda3.innerHTML = response.staff.name
-            let celda4 = document.createElement('td')
-            celda4.innerHTML = response.receipt.receiptDate
-            let celda5 = document.createElement('td')
-            celda5.innerHTML = response.receipt.total
-            trDelete.appendChild(celda1)
-            trDelete.appendChild(celda2)
-            trDelete.appendChild(celda3)
-            trDelete.appendChild(celda4)
-            trDelete.appendChild(celda5)
-            tableDeleteBody.appendChild(trDelete)
+                    let tBody = document.getElementById('products')
+                    response.purchaseLines.forEach(line => {
+                        //line.idProduct
+                        let tr = document.createElement('tr');
+                        let id = document.createElement('td');
+                        id.innerHTML = line.idProduct.id;
+                        tr.appendChild(id);
+                        let name = document.createElement('td');
+                        name.innerHTML = line.idProduct.name;
+                        tr.appendChild(name);
+                        let description = document.createElement('td');
+                        description.innerHTML = line.idProduct.description;
+                        tr.appendChild(description);
+                        let sellPrice = document.createElement('td');
+                        sellPrice.innerHTML = line.idProduct.sellPrice;
+                        tr.appendChild(sellPrice);
+                        let buyPrice = document.createElement('td');
+                        buyPrice.innerHTML = line.idProduct.buyPrice;
+                        tr.appendChild(buyPrice);
+                        let quantity = document.createElement('td');
+                        quantity.innerHTML = line.quantity;
+                        tr.appendChild(quantity);
+                        let type = document.createElement('td');
+                        type.innerHTML = line.idProduct.type;
+                        tr.appendChild(type);
+                        tBody.appendChild(tr)
+                    });
+                    let tableDeleteBody = document.getElementById('deleteTablePurchase')
+                    let trDelete = document.createElement('tr')
+                    let celda1 = document.createElement('td')
+                    celda1.innerHTML = response.id
+                    let celda2 = document.createElement('td')
+                    celda2.innerHTML = supplierName
+                    let celda3 = document.createElement('td')
+                    celda3.innerHTML = response.staff.name
+                    let celda4 = document.createElement('td')
+                    celda4.innerHTML = response.receipt.receiptDate
+                    let celda5 = document.createElement('td')
+                    celda5.innerHTML = response.receipt.total
+                    trDelete.appendChild(celda1)
+                    trDelete.appendChild(celda2)
+                    trDelete.appendChild(celda3)
+                    trDelete.appendChild(celda4)
+                    trDelete.appendChild(celda5)
+                    tableDeleteBody.appendChild(trDelete)
+                })
+            }
         })
 }
+
 
 async function getAllSuppliersInaSelected() {
     let url = 'http://localhost:8080/api/v1/supplier';
@@ -162,14 +165,24 @@ async function getAllSuppliersInaSelected() {
     await fetch(url, getInit)
         .then(response => response.json())
         .then(response => {
+            let firstSupplier = true;
             let select = document.getElementById('supplierForPurchase');
-            response.forEach(c => {
+            response.forEach(s => {
                 let option = document.createElement('option');
-                option.setAttribute('value', c.id);
-                option.innerHTML = c.fullName;
+                option.setAttribute('value', s.id);
+                option.innerHTML = s.fullName;
+                option.setAttribute('data-content',"<span class='label label-success'>" + s.fullName + "</span>")
                 select.appendChild(option);
+
+                if (firstSupplier) {
+                    $('#supplierForPurchase').val(s.id);
+                    $('.selectpicker').selectpicker('render');
+                    console.log( 'id: '+ s.id)
+                    firstSupplier = false;
+                }
             });
         })
+    $('.selectpicker').selectpicker('refresh');
 }
 
 async function getAllStaffInaSelected() {
@@ -185,14 +198,20 @@ async function getAllStaffInaSelected() {
     await fetch(url, getInit)
         .then(response => response.json())
         .then(response => {
+            let firstStaff = true;
             let select = document.getElementById('personalName');
-            response.forEach(c => {
+            response.forEach(s => {
+                if(firstStaff){
+                    $('#personalName').selectpicker('val', s.idStaff);
+                    firstStaff = false;
+                }
                 let option = document.createElement('option');
-                option.setAttribute('value', c.idStaff);
-                option.innerHTML = c.name;
+                option.setAttribute('value', s.idStaff);
+                option.innerHTML = s.name;
                 select.appendChild(option);
             });
         })
+    $('.selectpicker').selectpicker('refresh');
 }
 
 async function getAllProductsInaSelected() {
@@ -209,14 +228,20 @@ async function getAllProductsInaSelected() {
         .then(response => response.json())
         .then(response => {
             let select = document.getElementById('productName');
-            response.forEach(c => {
+            response.forEach(s => {
+                let fistProduct = true;
+                if (fistProduct) {
+                    $('#productName').selectpicker('val', s.id);
+                    fistProduct = false;
+                }
                 let option = document.createElement('option');
-                option.setAttribute('value', c.id);
-                option.setAttribute('buyPrice', c.buyPrice)
-                option.innerHTML = c.name + ' - ' + c.buyPrice + '€';
+                option.setAttribute('value', s.id);
+                option.setAttribute('buyPrice', s.buyPrice)
+                option.innerHTML = s.name + ' - ' + s.buyPrice + '€';
                 select.appendChild(option);
             });
         })
+    $('.selectpicker').selectpicker('refresh');
 }
 
 function addProductToTheCart() {
@@ -244,7 +269,10 @@ function addProductToTheCart() {
 }
 
 function createProduct() {
-    let select = document.getElementById('productName')
+    let productid = $('#productName').val();
+    let productText = $('#productName option:selected').text();
+    let productPrice = $('#productName option:selected').attr('buyPrice');
+
     let quantity = document.getElementById('countSell')
     let table = document.getElementById('productPurchase')
     let subtotal = document.getElementById('subtotal')
@@ -253,14 +281,17 @@ function createProduct() {
     let iva = document.getElementById('iva')
     let tr = document.createElement('tr')
     let td1 = document.createElement('td')
-    td1.innerHTML = select.options[select.selectedIndex].text;
+    console.log('Texto: ' + productText);
+    console.log('Precio: ' + productPrice);
+
+    td1.innerHTML = productText;
     tr.appendChild(td1);
     let td2 = document.createElement('td')
     td2.innerHTML = quantity.value;
-    tr.setAttribute('id', select.value)
+    tr.setAttribute('id', productid)
     tr.appendChild(td2);
     table.appendChild(tr);
-    let optionnValue = Number(select.options[select.selectedIndex].getAttribute('buyPrice'))
+    let optionnValue = Number(productPrice)
     let actualValue = Number(subtotal.value)
     let countQuantity = Number(count.value)
     subtotal.value = actualValue + (optionnValue * countQuantity);
@@ -308,7 +339,8 @@ async function allPurchasesLoad() {
                 celda2.innerHTML = await giveMeSupplierName(purchase.supplier); //Habría que sacar el nombre del proveedor
                 row.appendChild(celda2);
                 celda2.addEventListener("click", () => {
-                    let id = purchase.supplier;;
+                    let id = purchase.supplier;
+                    ;
                     location.href = 'suppliers.html?id=' + id;
                 });
 
@@ -348,7 +380,7 @@ async function allPurchasesLoad() {
                 row.appendChild(celda7);
 
                 body.appendChild(row);
-                
+
             });
         })
 }
@@ -370,8 +402,9 @@ async function giveMeSupplierName(id) {
 }
 
 async function addPurchase() {
-    let supplier = document.getElementById('supplierForPurchase');
-    let staffId = document.getElementById('personalName');
+    let supplier = $('#supplierForPurchase').val();
+    let staffId = $('#personalName').val();
+
     let current = new Date();
     let fecha = current.getFullYear() + '-' + (current.getMonth() + 1) + '-' + current.getDate() + ' ' + current.getHours() + ':' + current.getMinutes() + ':' + current.getSeconds();
     let subtotal = document.getElementById('subtotal');
@@ -380,7 +413,7 @@ async function addPurchase() {
     let total = document.getElementById('total');
     let tablaProductos = document.getElementById('productPurchase')
 
-    let urlStaff = 'http://localhost:8080/api/v1/staffs/' + staffId.value;
+    let urlStaff = 'http://localhost:8080/api/v1/staffs/' + Number(staffId);
     let getInit = {
         method: 'GET',
         headers: {
@@ -405,7 +438,7 @@ async function addPurchase() {
         .then(response => staff = response)
 
     let data = {
-        supplier: supplier.value,
+        supplier: Number(supplier),
         staff: staff,
         receipt: {
             receiptDate: fecha,
@@ -434,7 +467,7 @@ async function addPurchase() {
             }
         })
 
-    location.href = 'purchasesOperation.html'
+    
 }
 
 async function cargarProductos(producto, purchaseLines) {
@@ -478,7 +511,7 @@ async function crearCompra(purchaseLines) {
         let sumaValue = Number(suma)
         let quantityValue = Number(product.quantity)
         suma = sumaValue + quantityValue;
-        body = { stock: suma }
+        body = {stock: suma}
         console.log(body)
         let postInit = {
             method: 'PATCH',
@@ -490,7 +523,9 @@ async function crearCompra(purchaseLines) {
         }
         await fetch(url, postInit)
             .then(response => {
-                if (response.ok) { console.log('ok') }
+                if (response.ok) {
+                    console.log('ok')
+                }
             })
     })
     await delay(500)
@@ -498,7 +533,7 @@ async function crearCompra(purchaseLines) {
 }
 
 function filterTablePurchases() {
-    var input, filter, table, tr, td, i, txtValue;
+    let input, filter, table, tr, td, i, txtValue;
     input = document.getElementById("myInput");
     filter = input.value.toUpperCase();
     table = document.getElementById("allPurchasesTable");
@@ -518,22 +553,22 @@ function filterTablePurchases() {
     }
 }
 
-    async function deletePurchase() {
-        const querystring = location.search;
-        const params = new URLSearchParams(querystring)
-        let id = params.get('id')
-        if (id == undefined) id = 1
-        let url = 'http://localhost:8080/api/v1/purchases/' + id;
-        let deleteInit = {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            }
+async function deletePurchase() {
+    const querystring = location.search;
+    const params = new URLSearchParams(querystring)
+    let id = params.get('id')
+    if (id == undefined) id = 1
+    let url = 'http://localhost:8080/api/v1/purchases/' + id;
+    let deleteInit = {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
         }
+    }
 
-        await fetch(url, deleteInit)
-            .then(response => console.log(response))
+    await fetch(url, deleteInit)
+        .then(response => console.log(response))
 
-        location.href = 'purchasesOperation.html';
+    location.href = 'purchasesOperation.html';
 }
