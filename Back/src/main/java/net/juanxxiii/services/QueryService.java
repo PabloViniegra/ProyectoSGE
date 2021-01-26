@@ -952,11 +952,15 @@ public class QueryService {
 
     public Production saveProduction(Production newproduction) {
         if (newproduction.getClient() != null) {
-            Client client = clientRepository.findById(newproduction.getClient().getId()).orElse(clientRepository.save(newproduction.getClient()));
+            Client client = clientRepository.findById(newproduction.getClient().getId()).orElse(saveClient(newproduction.getClient()));
             newproduction.setClient(client);
         }
+        if (newproduction.getStaff() != null) {
+            Staff staff = staffRepository.findById(newproduction.getStaff().getIdStaff()).orElse(saveStaff(newproduction.getStaff()));
+            newproduction.setStaff(staff);
+        }
         if (newproduction.getSampling() != null) {
-            Sampling sampling = samplingRepository.findById(newproduction.getSampling().getId()).orElse(samplingRepository.save(newproduction.getSampling()));
+            Sampling sampling = samplingRepository.findById(newproduction.getSampling().getId()).orElse(saveSampling(newproduction.getSampling()));
             newproduction.setSampling(sampling);
         }
         return productionRepository.save(newproduction);
@@ -975,11 +979,15 @@ public class QueryService {
     public int updateProduction(Production newProduction, int id) {
         return productionRepository.findById(id).map(prod -> {
             if (!newProduction.getClient().equals(prod.getClient())) {
-                Client client = clientRepository.findById(newProduction.getClient().getId()).orElse(clientRepository.save(newProduction.getClient()));
+                Client client = clientRepository.findById(newProduction.getClient().getId()).orElse(saveClient(newProduction.getClient()));
                 productionRepository.updateClient(client.getId(), id);
             }
-            if (!newProduction.getSampling().equals(prod.getStatus())) {
-                Sampling sampling = samplingRepository.findById(newProduction.getSampling().getId()).orElse(samplingRepository.save(newProduction.getSampling()));
+            if (!newProduction.getStaff().equals(prod.getStaff())) {
+                Staff staff = staffRepository.findById(newProduction.getStaff().getIdStaff()).orElse(saveStaff(newProduction.getStaff()));
+                productionRepository.updateStaff(staff.getIdStaff(), id);
+            }
+            if (!newProduction.getSampling().equals(prod.getSampling())) {
+                Sampling sampling = samplingRepository.findById(newProduction.getSampling().getId()).orElse(saveSampling(newProduction.getSampling()));
                 productionRepository.updateClient(sampling.getId(), id);
             }
 

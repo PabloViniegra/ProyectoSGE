@@ -28,8 +28,8 @@ public interface ProductionRepository extends JpaRepository<Production,Integer> 
 
     @Transactional
     @Modifying
-    @Query(value = "UPDATE produccion SET idEscandallo=:idsampling WHERE idProduccion=:id",nativeQuery = true)
-    int updateSampling(@Param("idsampling") int sampling, @Param("id") int id);
+    @Query(value = "UPDATE produccion SET idPersonal=:idPersonal WHERE idProduccion=:id",nativeQuery = true)
+    int updateStaff(@Param("idPersonal") int staff, @Param("id") int id);
 
     @Transactional
     @Modifying
