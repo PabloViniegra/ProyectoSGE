@@ -20,7 +20,7 @@ async function loadSampling() {
                 response.json().then(response => {
                     let deleteForm = document.getElementById('bodyDeleteSampling');
                     let trDelete = document.createElement('tr')
-                    //id-nombre-personal-producto
+                        //id-nombre-personal-producto
                     let tdId = document.createElement('td')
                     tdId.innerHTML = response.id;
                     trDelete.appendChild(tdId)
@@ -213,18 +213,16 @@ async function getAllProductsInASelected() {
         .then(response => {
             let firstProduct = true;
             let select = document.getElementById('inputProductA');
-            response.forEach(c => {
-                console.log(c.id + c.name);
+            response.forEach(async c => {
                 let option = document.createElement('option');
                 option.setAttribute('value', c.id)
                 option.innerHTML = c.name;
-                select.appendChild(option);
+                await select.appendChild(option);
 
                 if (firstProduct) {
                     $('#inputProductA').val(c.id);
                     $('.selectpicker').selectpicker('render');
                     firstProduct = false;
-
                 }
             });
         })
@@ -235,7 +233,7 @@ async function addSampling() {
     let form = document.getElementById('addSampling');
     let product = document.getElementById('inputProductM')
     let cantidad = document.getElementById('inputDetalleCantidad')
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', async(e) => {
         e.preventDefault();
         const querystring = location.search;
         const params = new URLSearchParams(querystring)
@@ -271,11 +269,13 @@ async function addSampling() {
 
 }
 
+async function addDetails() {
 
+}
 
 async function updateSampling() {
     let form = document.getElementById('updateSampling');
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', async(e) => {
         const querystring = location.search;
         const params = new URLSearchParams(querystring)
         let id = params.get("id");
@@ -312,7 +312,7 @@ async function updateSampling() {
 
 function deleteSampling() {
     let form = document.getElementById('deleteSampling');
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', async(e) => {
         const querystring = location.search;
         const params = new URLSearchParams(querystring)
         let id = params.get("id");

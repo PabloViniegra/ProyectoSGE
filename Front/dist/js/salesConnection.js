@@ -1,7 +1,3 @@
-
-
-
-
 async function loadSalesList() {
     let url = 'http://localhost:8080/api/v1/sales'
     let getInit = {
@@ -177,20 +173,17 @@ async function getAllClientsInaSelected() {
         .then(response => {
             let firstClient = true;
             let select = document.getElementById('clienteForSale');
-            response.forEach(c => {
+            response.forEach(async c => {
+                if (firstClient) {
+                    $('#clienteForSale').selectpicker('val', c.id);
+                    firstClient = false;
+                }
+
                 let option = document.createElement('option');
                 option.setAttribute('value', c.id);
                 option.innerHTML = c.fullName;
-                option.setAttribute('data-content',"<span class='label label-success'>" + c.fullName + "</span>")
+                option.setAttribute('data-content', "<span class='label label-success'>" + c.fullName + "</span>")
                 select.appendChild(option);
-                
-                if (firstClient) {
-                    $('#clienteForSale').val(c.id);
-                    $('.selectpicker').selectpicker('render');
-                    console.log( 'id: '+ c.id)
-                    firstClient = false;
-                }
-                
             });
         })
     $('.selectpicker').selectpicker('refresh');
@@ -240,8 +233,8 @@ async function getAllProductsInaSelected() {
         .then(response => response.json())
         .then(response => {
             let select = document.getElementById('productName');
+            let fistProduct = true;
             response.forEach(c => {
-                let fistProduct = true;
                 if (fistProduct) {
                     $('#productName').selectpicker('val', c.id);
                     fistProduct = false;
@@ -253,7 +246,7 @@ async function getAllProductsInaSelected() {
                 select.appendChild(option);
             });
         })
-        $('.selectpicker').selectpicker('refresh');
+    $('.selectpicker').selectpicker('refresh');
 }
 
 function addProductToTheCart() {
