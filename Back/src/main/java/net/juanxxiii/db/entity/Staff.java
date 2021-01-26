@@ -11,13 +11,6 @@ import java.io.Serializable;
 @Entity
 @Table(name = "personal")
 public class Staff implements Serializable {
-    public Staff () {
-        this.positionStaff = null;
-        this.name = null;
-        this.email = null;
-        this.password = null;
-        this.telephone = 0;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

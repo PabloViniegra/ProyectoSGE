@@ -171,14 +171,8 @@ async function getAllClientsInaSelected() {
     await fetch(url, getInit)
         .then(response => response.json())
         .then(response => {
-            let firstClient = true;
             let select = document.getElementById('clienteForSale');
             response.forEach(async c => {
-                if (firstClient) {
-                    $('#clienteForSale').selectpicker('val', c.id);
-                    firstClient = false;
-                }
-
                 let option = document.createElement('option');
                 option.setAttribute('value', c.id);
                 option.innerHTML = c.fullName;
@@ -186,7 +180,6 @@ async function getAllClientsInaSelected() {
                 select.appendChild(option);
             });
         })
-    $('.selectpicker').selectpicker('refresh');
 }
 
 async function getAllStaffInaSelected() {
@@ -202,21 +195,15 @@ async function getAllStaffInaSelected() {
     await fetch(url, getInit)
         .then(response => response.json())
         .then(response => {
-            let firstStaff = true;
+            var firstStaff = true;
             let select = document.getElementById('personalName');
             response.forEach(c => {
-                if (firstStaff) {
-                    $('#personalName').selectpicker('val', c.idStaff);
-                    firstStaff = false;
-                }
-
                 let option = document.createElement('option');
                 option.setAttribute('value', c.idStaff);
                 option.innerHTML = c.name;
                 select.appendChild(option);
             });
         })
-    $('.selectpicker').selectpicker('refresh');
 }
 
 async function getAllProductsInaSelected() {
@@ -233,12 +220,8 @@ async function getAllProductsInaSelected() {
         .then(response => response.json())
         .then(response => {
             let select = document.getElementById('productName');
-            let fistProduct = true;
+            var fistProduct = true;
             response.forEach(c => {
-                if (fistProduct) {
-                    $('#productName').selectpicker('val', c.id);
-                    fistProduct = false;
-                }
                 let option = document.createElement('option');
                 option.setAttribute('value', c.id);
                 option.setAttribute('sellPrice', c.sellPrice)
@@ -246,7 +229,6 @@ async function getAllProductsInaSelected() {
                 select.appendChild(option);
             });
         })
-    $('.selectpicker').selectpicker('refresh');
 }
 
 function addProductToTheCart() {
@@ -274,10 +256,11 @@ function addProductToTheCart() {
 
 function createProduct() {
 
-    let productid = $('#productName').val();
-    let productText = $('#productName option:selected').text();
-    let productPrice = $('#productName option:selected').attr('sellPrice');
+    let select = document.getElementById('productName')
 
+    let productid = select.value
+    let productText = select.options[select.selectedIndex].text
+    let productPrice = select.options[select.selectedIndex].getAttribute('sellPrice')
 
     let quantity = document.getElementById('countSell')
     let table = document.getElementById('productSale')
