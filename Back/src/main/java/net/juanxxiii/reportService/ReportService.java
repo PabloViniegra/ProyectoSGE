@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
-
+import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -39,16 +39,11 @@ public class ReportService {
             Map<String, Object> map = new HashMap<>();
             map.put("createdBy", "Grupo 2 SGE");
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, dataSource);
-            switch (reportFormat) {
-                case "html":
-                    JasperExportManager.exportReportToPdfFile(jasperPrint,"reportClient.pdf");
-                    break;
-                case "pdf":
-                    JasperExportManager.exportReportToHtmlFile(jasperPrint, "reportClient.html");
-                    break;
-
+            if (reportFormat.equals("pdf")) {
+                JasperExportManager.exportReportToPdfFile(jasperPrint,"C:\\report_client.pdf");
+            } else if (reportFormat.equals("html")) {
+                JasperExportManager.exportReportToHtmlFile(jasperPrint, "C:\\report_client.html");
             }
-
         } catch (JRException e) {
             e.printStackTrace();
         }

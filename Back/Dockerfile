@@ -1,4 +1,4 @@
 From openjdk:8-jdk-alpine
 copy ./target/Back-1.0-SNAPSHOT.jar back.jar
 CMD ["java","-jar","back.jar"]
-RUN apk add ttf-dejavu
+RUN apk --update add fontconfig ttf-dejavu
