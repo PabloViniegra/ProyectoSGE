@@ -6,6 +6,7 @@ async function loadSampling() {
         id = 1
     };
     let url = 'http://localhost:8080/api/v1/sampling'
+    let urlDetails = 'http://localhost:8080/api/v1/detailsampling';
     let getInit = {
         method: 'GET',
         headers: {
@@ -16,12 +17,13 @@ async function loadSampling() {
     await fetch(url + '/' + id, getInit)
         .then(response => {
             if (response.ok) {
-                response.json().then(response => {
+                response.json().then(async response => {
                     let deleteForm = document.getElementById('bodyDeleteSampling');
                     let trDelete = document.createElement('tr')
                         //id-nombre-personal-producto
                     let tdId = document.createElement('td')
-                    tdId.innerHTML = response.id;
+                    let idSampling = response.id;
+                    tdId.innerHTML = idSampling
                     trDelete.appendChild(tdId)
 
                     let tdNombre = document.createElement('td')
@@ -60,6 +62,24 @@ async function loadSampling() {
                     staffM.innerText = response.staff.name;
                     productM.setAttribute('value', response.product.id)
                     productM.innerText = response.product.name;
+
+                    await fetch(urlDetails, getInit)
+                        .then(response => response.json())
+                        .then(response => {
+                            let tableDet = document.getElementById('bodyMostrarDet')
+                            response.forEach(detalle => {
+                                if (detalle.sampling.id == idSampling) {
+                                    let tr = document.createElement('tr')
+                                    let td1 = document.createElement('td')
+                                    let td2 = document.createElement('td')
+                                    td1.innerText = detalle.product.name
+                                    td2.innerText = detalle.quantity
+                                    tr.appendChild(td1)
+                                    tr.appendChild(td2)
+                                    tableDet.appendChild(tr)
+                                }
+                            })
+                        })
                 })
             }
         })
@@ -284,7 +304,7 @@ async function addSampling() {
                 }
             })
 
-        //location.href = 'sampling.html?id=' + id;
+        location.href = 'sampling.html?id=' + id;
     })
 }
 
