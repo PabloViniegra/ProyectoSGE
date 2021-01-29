@@ -258,9 +258,33 @@ async function addSampling() {
 
         await fetch(url, postInit)
             .then(response => response.json())
-            .then(response => id = response.id)
+            .then(async response => {
+                id = response.id;
+                let body = document.getElementById('tablaDetalles')
+                for (let i = 1; i < body.rows.length; i++) {
+                    let objCells = body.rows.item(i).cells;
+                    let prodID = objCells.item(0).getAttribute('value');
+                    let quantity = objCells.item(1).innerHTML;
+                    let product = await cargarProduct(prodID)
+                    let data2 = {
+                        quantity: quantity,
+                        product: product,
+                        sampling: response
+                    }
+                    let urlDetails = 'http://localhost:8080/api/v1/detailsampling';
+                    let postInit2 = {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify(data2)
+                    }
+                    await fetch(urlDetails, postInit2)
+                }
+            })
 
-        location.href = 'sampling.html?id=' + id;
+        //location.href = 'sampling.html?id=' + id;
     })
 }
 
@@ -297,7 +321,19 @@ async function cargarProduct(product) {
 }
 
 async function addDetails() {
-
+    let body = document.getElementById('bodyTblAñadirDet')
+    let tr = document.createElement('tr')
+    let td1 = document.createElement('td')
+    let td2 = document.createElement('td')
+    let cantidad = document.getElementById('inputDetalleCantidad').value
+    let select = document.getElementById('inputDetalleComponente')
+    let producto = select.options[select.selectedIndex].text
+    td2.innerText = cantidad;
+    td1.innerText = producto;
+    td1.setAttribute("value", select.value)
+    tr.appendChild(td1)
+    tr.appendChild(td2)
+    body.appendChild(tr)
 }
 
 async function updateSampling() {
