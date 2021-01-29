@@ -881,10 +881,7 @@ public class QueryService {
             Product product = productRepository.findById(newSampling.getProduct().getId()).orElse(productRepository.save(newSampling.getProduct()));
             newSampling.setProduct(product);
         }
-
         return samplingRepository.save(newSampling);
-
-
     }
 
     public int updateSampling(Sampling newsampling, int id) {
