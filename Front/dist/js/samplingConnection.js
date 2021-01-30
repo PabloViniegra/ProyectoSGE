@@ -80,6 +80,8 @@ async function loadSampling() {
                                 }
                             })
                         })
+                    
+                        
                 })
             }
         })
@@ -110,6 +112,10 @@ async function loadSampling() {
 
                 document.getElementById('lastSamplingList').appendChild(a);
             }
+        })
+
+        document.getElementById('goToDetail').addEventListener('click', () => {
+            location.href = 'detailSampling.html?id=' + id;
         })
 }
 
@@ -417,3 +423,4 @@ function deleteSampling() {
         location.href = 'sampling.html';
     })
 }
+
