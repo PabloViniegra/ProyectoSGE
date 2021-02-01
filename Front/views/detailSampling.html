@@ -57,7 +57,7 @@
                       <tr>
                         <th scope="col">Producto</th>
                         <th scope="col">Cantidad</th>
-                        
+                        <th scope="col">Borrar</th>
                       </tr>
                     </thead>
                     <tbody id="bodyTableDetails">
@@ -65,23 +65,18 @@
                     </tbody>
                   </table>
                   <div class="col-12 row justify-content-around align-items-center">
-                      <div class="col-4 text-center font-weight-bold row justify-content-center align-items-center" id="añadirProducto">
+                      <div class="col-8 text-center font-weight-bold row justify-content-center align-items-center" id="añadirProducto">
                           <label for="selectProduct" class="mb-1 text-center col-6">Producto</label>
                           <label for="cantidadProductoA" class="mb-1 text-center col-6">Cantidad</label>
                           <select  id="selectProduct" class="browser-default custom-select form-control col-6">
 
                           </select>
-                          <input type="number" id="cantidadProductoA" class="form-control col-6">
+                          <input type="number" id="cantidadProductoA" class="form-control col-6" min="1">
                         <button class="btn btn-dark col-12 mt-2" type="button" id="btnAddproduct" onclick="addProductToDetail();">Añadir Producto</button>
                       </div>
                       
-                      <div class="col-4 row justify-content-center align-items-center" id="borraDetalle">
-                        
-                        <button class="btn btn-dark mt-4" type="button">Borrar Detalle</button>
-                        
-                      </div> 
+                       
                   </div>
-                  <button class="col-4 btn btn2 mt-5" type="button">Guardar Detalle</button>
             </section>
             <div class=" footer row">
                 <div class="pull-left col-12 ">

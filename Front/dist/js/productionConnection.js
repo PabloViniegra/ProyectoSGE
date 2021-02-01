@@ -11,24 +11,27 @@ async function loadProductionOrderList() {
     await fetch(url, getInit)
         .then(response => response.json())
         .then(response => {
-            
 
-            for (let i = 0; i < response.length; i++) {
-                let a = document.createElement('a');
-                let urlSampling = 'production.html?id=' + response[i].id;
-                a.setAttribute('href', urlSampling);
+            if (response != null) {
+                for (let i = 0; i < response.length; i++) {
+                    let a = document.createElement('a');
+                    let urlSampling = 'production.html?id=' + response[i].id;
+                    a.setAttribute('href', urlSampling);
 
-                let li = document.createElement('li');
+                    let li = document.createElement('li');
 
-                let ii = document.createElement('i');
-                ii.setAttribute('class', 'fab fa-product-hunt');
-                li.appendChild(ii);
+                    let ii = document.createElement('i');
+                    ii.setAttribute('class', 'fab fa-product-hunt');
+                    li.appendChild(ii);
 
-                li.innerHTML = li.innerHTML + ' ' + response[i].client.fullName + ' - ' + response[i].date;
+                    li.innerHTML = li.innerHTML + ' ' + response[i].client.fullName + ' - ' + response[i].date;
 
-                a.appendChild(li);
+                    a.appendChild(li);
 
-                document.getElementById('LastProductionList').appendChild(a);
+                    document.getElementById('LastProductionList').appendChild(a);
+                }
             }
+
+
         })
 }
