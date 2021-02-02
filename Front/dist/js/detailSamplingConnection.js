@@ -83,15 +83,14 @@ async function addProductToDetail() {
     let quantity = document.getElementById('cantidadProductoA')
     let row = document.createElement('tr')
     let tdDelete = document.createElement('td')
+    let tdProducto = document.createElement('td')
+    let tdCantidad = document.createElement('td')
     let btn = document.createElement('button')
     btn.setAttribute('class', 'btn btn-dark mt-4')
     btn.setAttribute('type', 'button')
     tdDelete.appendChild(btn)
-    row.appendChild(tdProduct)
-    row.appendChild(tdCantidad)
     row.appendChild(tdDelete)
-    let tdProducto = document.createElement('td')
-    let tdCantidad = document.createElement('td')
+    
     tdProducto.innerHTML = product.text;
     tdCantidad.innerHTML = quantity.value;
     row.appendChild(tdProducto)
@@ -172,4 +171,5 @@ async function deleteDetail(id) {
 
     location.href = 'detailSampling.html?id=' + idDetail;
 }
+
 
