@@ -1,4 +1,3 @@
-
 async function loadProductionOrderList() {
     const querystring = location.search;
     const params = new URLSearchParams(querystring)
@@ -67,11 +66,11 @@ async function loadProductionOrderList() {
                         location.href = 'detailSampling.html?id=' + idSampling
                     })
 
-                    
+
                 })
             }
         })
-        
+
     await fetch(url, getInit)
         .then(response => response.json())
         .then(response => {
@@ -208,17 +207,17 @@ async function getAllSamplingInASelect() {
         }
     };
     let select = document.getElementById('samplingForProduction')
-    
+
     await fetch(url, getInit)
-    .then (response => response.json())
-    .then (response => {
-        response.forEach(element => {
-            let option = document.createElement('option')
-            option.innerHTML = element.name
-            option.setAttribute('value',element.id)
-            select.appendChild(option)
-        });
-    })
+        .then(response => response.json())
+        .then(response => {
+            response.forEach(element => {
+                let option = document.createElement('option')
+                option.innerHTML = element.name
+                option.setAttribute('value', element.id)
+                select.appendChild(option)
+            });
+        })
 }
 
 async function getAllClientsInASelect() {
@@ -231,17 +230,17 @@ async function getAllClientsInASelect() {
         }
     };
     let select = document.getElementById('clientForProduction')
-    
+
     await fetch(url, getInit)
-    .then (response => response.json())
-    .then (response => {
-        response.forEach(element => {
-            let option = document.createElement('option')
-            option.innerHTML = element.fullName
-            option.setAttribute('value',element.id)
-            select.appendChild(option)
-        });
-    })
+        .then(response => response.json())
+        .then(response => {
+            response.forEach(element => {
+                let option = document.createElement('option')
+                option.innerHTML = element.fullName
+                option.setAttribute('value', element.id)
+                select.appendChild(option)
+            });
+        })
 }
 
 async function getAllStaffInASelect() {
@@ -254,15 +253,102 @@ async function getAllStaffInASelect() {
         }
     };
     let select = document.getElementById('staffForProduction')
-    
+
     await fetch(url, getInit)
-    .then (response => response.json())
-    .then (response => {
-        response.forEach(element => {
-            let option = document.createElement('option')
-            option.innerHTML = element.name
-            option.setAttribute('value',element.idStaff)
-            select.appendChild(option)
-        });
+        .then(response => response.json())
+        .then(response => {
+            response.forEach(element => {
+                let option = document.createElement('option')
+                option.innerHTML = element.name
+                option.setAttribute('value', element.idStaff)
+                select.appendChild(option)
+            });
+        })
+}
+
+async function addProductionOrder() {
+    let form = document.getElementById('formProduction');
+    form.addEventListener('submit', async(e) => {
+        e.preventDefault();
+        let current = new Date();
+        let fecha = current.getFullYear() + '-' + (current.getMonth() + 1) + '-' + current.getDate();
+        let formSampling = document.getElementById('samplingForProduction').value;
+        let idClient = document.getElementById('clientForProduction').value;
+        let quantity = document.getElementById('quantityForProduction').value;
+        let status = document.getElementById('statusForProduction').value;
+        let idStaff = document.getElementById('staffForProduction').value;
+        let data = {
+            quantity: quantity,
+            status: status,
+            date: fecha,
+            client: await cargarClient(idClient),
+            staff: await cargarStaff(idStaff),
+            sampling: await cargarSampling(formSampling)
+        }
+
+        let url = 'http://localhost:8080/api/v1/production';
+        let postInit = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }
+
+        let id;
+        await fetch(url, postInit)
+            .then(response => response.json())
+            .then(response => id = response.id)
+
+        location.href = 'production.html?id=' + id;
     })
+}
+
+async function cargarSampling(sampling) {
+    let getInit = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    };
+    let urlSampling = 'http://localhost:8080/api/v1/sampling/' + sampling;
+    let fullSampling;
+    await fetch(urlSampling, getInit)
+        .then(response => response.json())
+        .then(response => fullSampling = response)
+    return fullSampling;
+}
+
+async function cargarStaff(staff) {
+    let getInit = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    };
+    let urlProduct = 'http://localhost:8080/api/v1/staffs/' + staff;
+    let fullStaff;
+    await fetch(urlProduct, getInit)
+        .then(response => response.json())
+        .then(response => fullStaff = response)
+    return fullStaff;
+}
+
+async function cargarClient(client) {
+    let getInit = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    };
+    let urlProduct = 'http://localhost:8080/api/v1/clients/' + client;
+    let fullClient;
+    await fetch(urlProduct, getInit)
+        .then(response => response.json())
+        .then(response => fullClient = response)
+    return fullClient;
 }
