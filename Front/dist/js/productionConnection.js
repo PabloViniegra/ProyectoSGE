@@ -43,10 +43,31 @@ async function loadProductionOrderList() {
                             bar.setAttribute('aria-valuenow', 75)
                             break;
                     }
+                    let modifySampling = document.getElementById('updateSampling')
+                    let optionSampling = document.createElement('option')
+                    let modifyClient = document.getElementById('updateClientProduction')
+                    let optionClient = document.createElement('option')
+                    let modifyQuantity = document.getElementById('updateQuantityProduction')
+                    let updateStatus = document.getElementById('updateStatusProduction')
+                    let modifyStaff = document.getElementById('updateStaffProduction')
+                    let optionStaff = document.createElement('option')
+                    optionClient.innerHTML = response.client.fullName
+                    optionClient.value = response.client.id
+                    modifyClient.appendChild(optionClient)
+                    optionSampling.innerHTML = response.sampling.name
+                    optionSampling.value = response.sampling.id
+                    modifySampling.appendChild(optionSampling)
+                    modifyQuantity.value = response.quantity
+                    updateStatus.value = response.status;
+                    optionStaff.innerHTML = response.staff.name
+                    optionStaff.value = response.staff.idStaff
+                    modifyStaff.appendChild(optionStaff)
                     loadTableDetails(idSampling)
                     document.getElementById('btnDetalle').addEventListener('click', () => {
                         location.href = 'detailSampling.html?id=' + idSampling
                     })
+
+                    
                 })
             }
         })
@@ -177,3 +198,71 @@ function filterTableProduction() {
     }
 }
 
+async function getAllSamplingInASelect() {
+    let url = 'http://localhost:8080/api/v1/sampling';
+    let getInit = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    };
+    let select = document.getElementById('samplingForProduction')
+    
+    await fetch(url, getInit)
+    .then (response => response.json())
+    .then (response => {
+        response.forEach(element => {
+            let option = document.createElement('option')
+            option.innerHTML = element.name
+            option.setAttribute('value',element.id)
+            select.appendChild(option)
+        });
+    })
+}
+
+async function getAllClientsInASelect() {
+    let url = 'http://localhost:8080/api/v1/clients';
+    let getInit = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    };
+    let select = document.getElementById('clientForProduction')
+    
+    await fetch(url, getInit)
+    .then (response => response.json())
+    .then (response => {
+        response.forEach(element => {
+            let option = document.createElement('option')
+            option.innerHTML = element.fullName
+            option.setAttribute('value',element.id)
+            select.appendChild(option)
+        });
+    })
+}
+
+async function getAllStaffInASelect() {
+    let url = 'http://localhost:8080/api/v1/staffs';
+    let getInit = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    };
+    let select = document.getElementById('staffForProduction')
+    
+    await fetch(url, getInit)
+    .then (response => response.json())
+    .then (response => {
+        response.forEach(element => {
+            let option = document.createElement('option')
+            option.innerHTML = element.name
+            option.setAttribute('value',element.idStaff)
+            select.appendChild(option)
+        });
+    })
+}
