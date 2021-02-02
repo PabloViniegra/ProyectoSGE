@@ -1,5 +1,3 @@
-
-
 async function loadDetailSampling() {
     const querystring = location.search;
     const params = new URLSearchParams(querystring)
@@ -37,10 +35,10 @@ async function loadDetailSampling() {
                     row.appendChild(tdDelete)
                     row.setAttribute('value', element.id);
                     body.appendChild(row)
-                   
+
                 }
             });
-           
+
         })
 }
 
@@ -56,7 +54,7 @@ async function showProductsInSelected() {
     let select = document.getElementById('selectProduct')
     await fetch(url, getInit)
         .then(response => response.json())
-        .then(response => response.sort(function (a, b) {
+        .then(response => response.sort(function(a, b) {
             a.name.localeCompare(b.name);
         }))
         .then(response => {
@@ -86,15 +84,17 @@ async function addProductToDetail() {
     let tdProducto = document.createElement('td')
     let tdCantidad = document.createElement('td')
     let btn = document.createElement('button')
+    btn.innerHTML = 'Borrar'
     btn.setAttribute('class', 'btn btn-dark mt-4')
     btn.setAttribute('type', 'button')
+
     tdDelete.appendChild(btn)
-    row.appendChild(tdDelete)
-    
+
     tdProducto.innerHTML = product.text;
     tdCantidad.innerHTML = quantity.value;
     row.appendChild(tdProducto)
     row.appendChild(tdCantidad)
+    row.appendChild(tdDelete)
     body.appendChild(row);
 
     let data2 = {
@@ -115,7 +115,9 @@ async function addProductToDetail() {
         .then(response => response.json())
         .then(response => idDetails = response.id)
     row.setAttribute('value', idDetails)
-    btn.addEventListener('click', deleteDetail(idDetails))
+    btn.addEventListener('click', () => {
+        deleteDetail(idDetails)
+    })
 }
 
 async function cargarProduct(product) {
@@ -155,7 +157,7 @@ async function cargarSampling(sampling) {
 async function deleteDetail(id) {
     const querystring = location.search;
     const params = new URLSearchParams(querystring)
-    let idDetail= params.get("id");
+    let idDetail = params.get("id");
     let url = 'http://localhost:8080/api/v1/detailsampling/' + id;
     let deleteInit = {
         method: 'DELETE',
@@ -166,10 +168,8 @@ async function deleteDetail(id) {
     }
 
     await fetch(url, deleteInit)
-    .then (response => console.log(response));
-    
+        .then(response => console.log(response));
+
 
     location.href = 'detailSampling.html?id=' + idDetail;
 }
-
-
