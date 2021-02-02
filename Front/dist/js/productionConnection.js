@@ -112,6 +112,9 @@ async function loadTableDetails(idSampling) {
     let bodyTbl = document.getElementById('tablaMostrarDetalle')
     await fetch(urlSampling, getInit)
         .then(response => response.json())
+        .then(response => response.sort((a,b) => {
+            return a.name.localeCompare(b.name)
+        }))
         .then(response => {
             response.forEach(element => {
                 if (element.sampling.id == idSampling) {
@@ -211,6 +214,9 @@ async function getAllSamplingInASelect() {
     
     await fetch(url, getInit)
     .then (response => response.json())
+    .then (response => response.sort((a,b) => {
+         return a.name.localeCompare(b.name)
+    }))
     .then (response => {
         response.forEach(element => {
             let option = document.createElement('option')
@@ -234,6 +240,9 @@ async function getAllClientsInASelect() {
     
     await fetch(url, getInit)
     .then (response => response.json())
+    .then (response => response.sort((a,b) => {
+        return a.fullName.localeCompare(b.fullName)
+    }))
     .then (response => {
         response.forEach(element => {
             let option = document.createElement('option')
@@ -257,6 +266,9 @@ async function getAllStaffInASelect() {
     
     await fetch(url, getInit)
     .then (response => response.json())
+    .then (response => response.sort((a,b) => {
+        return a.name.localeCompare(b.name)
+    }))
     .then (response => {
         response.forEach(element => {
             let option = document.createElement('option')

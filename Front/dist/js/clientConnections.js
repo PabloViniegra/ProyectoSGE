@@ -355,6 +355,9 @@ async function getAllPopulationsInASelect() {
 
     await fetch(url, getInit)
         .then(response => response.json())
+        .then (response => response.sort((a,b) => {
+            return a.population.localeCompare(b.population)
+        }))
         .then(response => {
             let select = document.getElementById('population');
             response.forEach(c => {
