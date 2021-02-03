@@ -26,7 +26,7 @@ services:
     depends_on:
       - db-sge
     volumes:
-      - api_data:/var/lib/api
+      - api_data:/var/lib/data Back
     networks:
       - backend
 volumes:
