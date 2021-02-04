@@ -227,6 +227,9 @@ async function getAllProductsInASelected() {
     }
     await fetch(url, getInit)
         .then(response => response.json())
+        .then (response => response.sort((a,b) => {
+            return a.name.localeCompare(b.name)
+        }))
         .then(response => {
             let select = document.getElementById('inputProductA');
             let select2 = document.getElementById('inputDetalleComponente');

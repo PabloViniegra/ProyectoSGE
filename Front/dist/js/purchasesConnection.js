@@ -161,6 +161,9 @@ async function getAllSuppliersInaSelected() {
 
     await fetch(url, getInit)
         .then(response => response.json())
+        .then (response => response.sort((a,b) => {
+            return a.fullName.localeCompare(b.fullName)
+        }))
         .then(response => {
             let select = document.getElementById('supplierForPurchase');
             response.forEach(c => {
@@ -184,6 +187,9 @@ async function getAllStaffInaSelected() {
 
     await fetch(url, getInit)
         .then(response => response.json())
+        .then (response => response.sort((a,b) => {
+            return a.name.localeCompare(b.name)
+        }))
         .then(response => {
             let select = document.getElementById('personalName');
             response.forEach(c => {
@@ -207,6 +213,9 @@ async function getAllProductsInaSelected() {
 
     await fetch(url, getInit)
         .then(response => response.json())
+        .then (response => response.sort((a,b) => {
+            return a.name.localeCompare(b.name)
+        }))
         .then(response => {
             let select = document.getElementById('productName');
             response.forEach(c => {
