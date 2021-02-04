@@ -1,10 +1,25 @@
+async function getFirstId() {
+    let url = 'http://localhost:8080/api/v1/production'
+    let getInit = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    }
+    let id;
+    await fetch(url, getInit)
+        .then(response => response.json())
+        .then(response => id = response[response.length - 1].id)
+    return id;
+}
+
 async function loadProductionOrderList() {
     const querystring = location.search;
     const params = new URLSearchParams(querystring)
     let idSampling;
     let id = params.get("id");
-    if (id == undefined) id = 1;
-    let url = 'http://localhost:8080/api/v1/production/process';
+    if (id == undefined) id = await getFirstId();
     let url2 = 'http://localhost:8080/api/v1/production'
     let getInit = {
         method: 'GET',
@@ -33,13 +48,16 @@ async function loadProductionOrderList() {
                     escandallo.innerHTML = escandallo.innerHTML + response.sampling.name
                     switch (response.status) {
                         case 'SOLICITADO':
-                            bar.setAttribute('aria-valuenow', 25)
+                            bar.setAttribute('value', Number(25))
+                            bar.innerHTML = '33%';
                             break;
                         case 'EN PROCESO':
-                            bar.setAttribute('aria-valuenow', 50)
+                            bar.setAttribute('value', Number(50))
+                            bar.innerHTML = '66%';
                             break;
                         case 'TRAMITADO':
-                            bar.setAttribute('aria-valuenow', 75)
+                            bar.setAttribute('value', Number(75))
+                            bar.innerHTML = '100%';
                             break;
                     }
                     let modifySampling = document.getElementById('updateSampling')
@@ -49,6 +67,7 @@ async function loadProductionOrderList() {
                     let modifyQuantity = document.getElementById('updateQuantityProduction')
                     let updateStatus = document.getElementById('updateStatusProduction')
                     let modifyStaff = document.getElementById('updateStaffProduction')
+                    let modifyButton = document.getElementById('modifyProduction')
                     let optionStaff = document.createElement('option')
                     optionClient.innerHTML = response.client.fullName
                     optionClient.value = response.client.id
@@ -57,6 +76,7 @@ async function loadProductionOrderList() {
                     optionSampling.value = response.sampling.id
                     modifySampling.appendChild(optionSampling)
                     modifyQuantity.value = response.quantity
+                    modifyButton.setAttribute('idParaModificar', id)
                     updateStatus.value = response.status;
                     optionStaff.innerHTML = response.staff.name
                     optionStaff.value = response.staff.idStaff
@@ -71,12 +91,19 @@ async function loadProductionOrderList() {
             }
         })
 
-    await fetch(url, getInit)
+    await fetch(url2, getInit)
         .then(response => response.json())
         .then(response => {
 
             if (response != null) {
-                for (let i = 0; i < response.length; i++) {
+                let final = 1;
+                if (response.length > 20) {
+                    final = response.length - 20;
+                } else {
+                    final = 0;
+                }
+
+                for (let i = response.length - 1; i >= final; i--) {
                     let a = document.createElement('a');
                     let urlSampling = 'production.html?id=' + response[i].id;
                     a.setAttribute('href', urlSampling);
@@ -87,7 +114,7 @@ async function loadProductionOrderList() {
                     ii.setAttribute('class', 'fab fa-product-hunt');
                     li.appendChild(ii);
 
-                    li.innerHTML = li.innerHTML + ' ' + response[i].client.fullName + ' - ' + response[i].date;
+                    li.innerHTML = li.innerHTML + ' ' + response[i].client.fullName + ' - ' + response[i].date + ' - ' + response[i].status;
 
                     a.appendChild(li);
 
@@ -97,6 +124,120 @@ async function loadProductionOrderList() {
 
 
         })
+}
+
+async function updateOrder() {
+    let form = document.getElementById('updateProduction')
+    form.addEventListener('submit', async(e) => {
+        e.preventDefault();
+        let modifyButton = document.getElementById('modifyProduction')
+        let id = modifyButton.getAttribute('idParaModificar')
+        let url = 'http://localhost:8080/api/v1/production/' + id
+        let getInit = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        }
+        let statusModify = document.getElementById('updateStatusProduction')
+        let status = statusModify.options[statusModify.selectedIndex].value;
+        if (status == 'EN PROCESO') {
+            let data = {
+                status: status
+            }
+            let patchInit = {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }
+            let podemosModificar = true;
+            let stonks = [];
+            let idStonks = [];
+            let quantityStonks = [];
+            await fetch(url, getInit)
+                .then(response => response.json())
+                .then(async response => {
+                    let url2 = 'http://localhost:8080/api/v1/detailsampling'
+                    await fetch(url2, getInit)
+                        .then(response2 => response2.json())
+                        .then(response2 => {
+                            response2.forEach(detalle => {
+                                if (detalle.sampling.id == response.sampling.id) {
+                                    if ((detalle.quantity * response.quantity) > detalle.product.stock) {
+                                        podemosModificar = false;
+                                    } else {
+                                        stonks.push(detalle.product.stock)
+                                        idStonks.push(detalle.product.id)
+                                        quantityStonks.push(detalle.quantity * response.quantity)
+                                    }
+                                }
+                            })
+                        })
+                    if (podemosModificar) {
+                        await fetch(url, patchInit)
+
+                        for (let i = 0; i < idStonks.length; i++) {
+                            let url3 = 'http://localhost:8080/api/v1/products/' + idStonks[i]
+                            let data2 = {
+                                stock: stonks[i] - quantityStonks[i]
+                            }
+                            let patchInit2 = {
+                                method: 'PATCH',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Accept': 'application/json'
+                                },
+                                body: JSON.stringify(data2)
+                            }
+                            console.log(data2)
+                            await fetch(url3, patchInit2)
+                        }
+                    } else {
+                        document.getElementById('debug').innerHTML = 'NO HAY STOCK SUFICIENTE DE ALGUNOS PRODUCTOS'
+                    }
+                })
+        } else {
+            await fetch(url, getInit)
+                .then(response => response.json())
+                .then(async response => {
+                    if (response.status == 'EN PROCESO' && status != 'SOLICITADO') {
+                        let data3 = {
+                            status: status
+                        }
+                        let patchInit3 = {
+                            method: 'PATCH',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify(data3)
+                        }
+                        await fetch(url, patchInit3)
+
+                        let url4 = 'http://localhost:8080/api/v1/products/' + response.sampling.product.id
+                        let data4 = {
+                            stock: response.sampling.product.stock + response.quantity
+                        }
+                        let patchInit4 = {
+                            method: 'PATCH',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify(data4)
+                        }
+                        await fetch(url4, patchInit4)
+                    }
+                })
+
+        }
+        location.href = 'production.html?id=' + id;
+    })
+
 }
 
 async function loadTableDetails(idSampling) {
@@ -111,9 +252,9 @@ async function loadTableDetails(idSampling) {
     let bodyTbl = document.getElementById('tablaMostrarDetalle')
     await fetch(urlSampling, getInit)
         .then(response => response.json())
-        .then(response => response.sort((a, b) => {
-            return a.name.localeCompare(b.name)
-        }))
+        // .then(response => response.sort((a, b) => {
+        //     return a.name.localeCompare(b.name)
+        // }))
         .then(response => {
             response.forEach(element => {
                 if (element.sampling.id == idSampling) {
@@ -122,7 +263,7 @@ async function loadTableDetails(idSampling) {
                     tdId.innerHTML = element.id;
                     row.appendChild(tdId)
                     let tdSampling = document.createElement('td')
-                    tdSampling.innerHTML = element.sampling.name
+                    tdSampling.innerHTML = element.product.name
                     row.appendChild(tdSampling)
                     let tdQuantity = document.createElement('td')
                     tdQuantity.innerHTML = element.quantity
@@ -168,13 +309,12 @@ async function getAllOrderProductions() {
                 tdStatus.innerHTML = element.status
                 row.appendChild(tdStatus)
                 let tdStaff = document.createElement('td')
-                tdStatus.innerHTML = element.staff.name
+                tdStaff.innerHTML = element.staff.name
                 row.appendChild(tdStaff)
                 body.appendChild(row)
+                tdId.addEventListener('click', () => { location.href = 'production.html?id=' + element.id })
                 tdClient.addEventListener('click', () => { location.href = 'clients.html?id=' + element.client.id })
                 tdProduct.addEventListener('click', () => { location.href = 'sampling.html?id=' + element.sampling.id })
-
-
             });
         })
 }
@@ -297,7 +437,6 @@ async function addProductionOrder() {
             staff: await cargarStaff(idStaff),
             sampling: await cargarSampling(formSampling)
         }
-
         let url = 'http://localhost:8080/api/v1/production';
         let postInit = {
             method: 'POST',
