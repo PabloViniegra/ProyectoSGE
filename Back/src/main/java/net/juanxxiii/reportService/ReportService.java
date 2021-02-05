@@ -37,7 +37,6 @@ public class ReportService {
         //Load file and compile it
         JasperReport jasperReport = null;
         try {
-
             InputStream stream = getClass().getResourceAsStream("/clients_template.jrxml");
             jasperReport = JasperCompileManager.compileReport(stream);
             JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(clients);
@@ -46,10 +45,9 @@ public class ReportService {
             map.put("createdBy", "Grupo 2 SGE");
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, dataSource);
             if (reportFormat.equals("pdf")) {
-                //"../Reports/report_client[" + LocalDate.now() + "].pdf"
-                JasperExportManager.exportReportToPdfFile(jasperPrint,"report_client.pdf");
+                JasperExportManager.exportReportToPdfFile(jasperPrint,"/home/report_client.pdf");
             } else if (reportFormat.equals("html")) {
-                JasperExportManager.exportReportToHtmlFile(jasperPrint, "../Reports/report_client[" + LocalDate.now() + "].html");
+                JasperExportManager.exportReportToHtmlFile(jasperPrint, "/home/report_client.html");
             }
         } catch (JRException e) {
             e.printStackTrace();

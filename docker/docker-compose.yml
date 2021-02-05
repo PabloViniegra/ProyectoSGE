@@ -26,11 +26,10 @@ services:
     depends_on:
       - db-sge
     volumes:
-      - api_data:/var/lib/data Back
+      - ./../Reports:/home
     networks:
       - backend
 volumes:
   data:
-  api_data:
 networks:
   backend:
