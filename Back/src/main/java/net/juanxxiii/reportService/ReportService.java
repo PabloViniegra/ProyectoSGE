@@ -40,9 +40,9 @@ public class ReportService {
             map.put("createdBy", "Grupo 2 SGE");
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, dataSource);
             if (reportFormat.equals("pdf")) {
-                JasperExportManager.exportReportToPdfFile(jasperPrint,"C:\\report_client.pdf");
+                JasperExportManager.exportReportToPdfFile(jasperPrint,"/home/report_client.pdf");
             } else if (reportFormat.equals("html")) {
-                JasperExportManager.exportReportToHtmlFile(jasperPrint, "C:\\report_client.html");
+                JasperExportManager.exportReportToHtmlFile(jasperPrint, "/home/report_client.html");
             }
         } catch (JRException e) {
             e.printStackTrace();
