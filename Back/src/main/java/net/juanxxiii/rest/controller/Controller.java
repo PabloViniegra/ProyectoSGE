@@ -594,6 +594,12 @@ public class Controller {
         return reportService.exportReport(format);
     }
 
+    @GetMapping("/reports/sales/{dateinit}/{datelast}")
+    public String exportReportSales(@RequestBody int client, @PathVariable("dateinit") String dateinit, @PathVariable("datelast") String datelast) {
+        List<Sale> saleList = queryService.getReportSales(client,dateinit,datelast);
+        return reportService.exportReportSales(saleList);
+    }
+
 }
 
 

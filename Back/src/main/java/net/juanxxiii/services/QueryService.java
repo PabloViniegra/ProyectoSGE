@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -1017,6 +1020,21 @@ public class QueryService {
             }
             return detailSamplingRepository.updateDetailSampling(newDetail.getQuantity(), id);
         }).orElse(-1);
+
+    }
+
+    public List<Sale> getReportSales(int client, String dateinit, String datelast) {
+        Date initDate = null;
+        Date lastDate = null;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            initDate = sdf.parse(dateinit);
+            lastDate = sdf.parse(datelast);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        List<Sale> salesList = saleRepository.getSalesForReport(client, initDate, lastDate);
+        return salesList;
 
     }
 }

@@ -1,6 +1,7 @@
 package net.juanxxiii.reportService;
 
 import net.juanxxiii.db.entity.Client;
+import net.juanxxiii.db.entity.Sale;
 import net.juanxxiii.db.repository.ClientRepository;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -31,7 +32,6 @@ public class ReportService {
     private ClientRepository clientRepository;
 
 
-
     public String exportReport(String reportFormat) {
         List<Client> clients = clientRepository.findAll();
         //Load file and compile it
@@ -45,10 +45,29 @@ public class ReportService {
             map.put("createdBy", "Grupo 2 SGE");
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, dataSource);
             if (reportFormat.equals("pdf")) {
-                JasperExportManager.exportReportToPdfFile(jasperPrint,"/home/report_client.pdf");
+                JasperExportManager.exportReportToPdfFile(jasperPrint, "/home/report_client.pdf");
             } else if (reportFormat.equals("html")) {
                 JasperExportManager.exportReportToHtmlFile(jasperPrint, "/home/report_client.html");
             }
+        } catch (JRException e) {
+            e.printStackTrace();
+        }
+        return "report generated";
+    }
+
+    public String exportReportSales(List<Sale> saleList) {
+        JasperReport jasperReport = null;
+
+        try {
+            InputStream stream = getClass().getResourceAsStream("/clients_template.jrxml");
+            jasperReport = JasperCompileManager.compileReport(stream);
+            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(saleList);
+
+            Map<String, Object> map = new HashMap<>();
+            map.put("createdBy", "Grupo 2 SGE");
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, dataSource);
+            JasperExportManager.exportReportToPdfFile(jasperPrint, "/home/report_client.pdf");
+            JasperExportManager.exportReportToHtmlFile(jasperPrint, "/home/report_client.html");
         } catch (JRException e) {
             e.printStackTrace();
         }
