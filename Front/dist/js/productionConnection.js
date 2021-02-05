@@ -39,7 +39,7 @@ async function loadProductionOrderList() {
                     let cliente = document.getElementById('clienteProduccion')
                     let escandallo = document.getElementById('escandalloProduccion')
                     let bar = document.getElementById('progressProd')
-                    personal.innerHTML = personal.innerHTML + response.sampling.staff.name
+                    personal.innerHTML = personal.innerHTML + response.staff.name
                     idSampling = response.sampling.id;
                     fecha.innerHTML = fecha.innerHTML + response.date
                     cantidad.innerHTML = cantidad.innerHTML + response.quantity
@@ -93,8 +93,8 @@ async function loadProductionOrderList() {
                     modifyQuantity.value = response.quantity
                     modifyButton.setAttribute('idParaModificar', id)
                     updateStatus.value = response.status;
-                    optionStaff.innerHTML = response.sampling.staff.name
-                    optionStaff.value = response.sampling.staff.idStaff
+                    optionStaff.innerHTML = response.staff.name
+                    optionStaff.value = response.staff.idStaff
                     modifyStaff.appendChild(optionStaff)
                     loadTableDetails(idSampling)
                     document.getElementById('btnDetalle').addEventListener('click', () => {
@@ -324,7 +324,7 @@ async function getAllOrderProductions() {
                 tdStatus.innerHTML = element.status
                 row.appendChild(tdStatus)
                 let tdStaff = document.createElement('td')
-                tdStaff.innerHTML = element.sampling.staff.name
+                tdStaff.innerHTML = element.staff.name
                 row.appendChild(tdStaff)
                 body.appendChild(row)
                 tdId.addEventListener('click', () => { location.href = 'production.html?id=' + element.id })
