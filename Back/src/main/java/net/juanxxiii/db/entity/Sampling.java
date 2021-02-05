@@ -19,13 +19,11 @@ public class Sampling {
     @Column(name = "nombre")
     private String name;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(targetEntity = Staff.class, optional = false)
     @JoinColumn(name = "idpersonal", referencedColumnName = "idpersonal")
     private Staff staff;
 
     @OneToOne(optional = false)
     @JoinColumn(name = "idproducto", referencedColumnName = "idproducto")
     private Product product;
-
-
 }

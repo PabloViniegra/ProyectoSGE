@@ -1,12 +1,12 @@
-let idStaffM;
-let idProductM;
-
 async function loadSampling() {
     const querystring = location.search;
     const params = new URLSearchParams(querystring)
-    let id = params.get("id")
-    if (id == undefined) id = 1;
+    let id = params.get("id");
+    if (id == undefined) {
+        id = 1
+    };
     let url = 'http://localhost:8080/api/v1/sampling'
+    let urlDetails = 'http://localhost:8080/api/v1/detailsampling';
     let getInit = {
         method: 'GET',
         headers: {
@@ -17,12 +17,13 @@ async function loadSampling() {
     await fetch(url + '/' + id, getInit)
         .then(response => {
             if (response.ok) {
-                response.json().then(response => {
+                response.json().then(async response => {
                     let deleteForm = document.getElementById('bodyDeleteSampling');
                     let trDelete = document.createElement('tr')
-                    //id-nombre-personal-producto
+                        //id-nombre-personal-producto
                     let tdId = document.createElement('td')
-                    tdId.innerHTML = response.id;
+                    let idSampling = response.id;
+                    tdId.innerHTML = idSampling
                     trDelete.appendChild(tdId)
 
                     let tdNombre = document.createElement('td')
@@ -54,11 +55,33 @@ async function loadSampling() {
                     let stockEscandalloCarta = document.getElementById('stockProducto')
                     stockEscandalloCarta.innerHTML = stockEscandalloCarta.innerHTML + response.product.stock;
 
-                    idStaffM = response.staff.idStaff;
-                    idProductM = response.product.id;
                     document.getElementById('inputSamplingM').value = response.name;
-                    document.getElementById('inputStaffM').value = response.staff.name;
-                    document.getElementById('inputProductM').value = response.product.name;
+                    let staffM = document.getElementById('staffM')
+                    let productM = document.getElementById('productM')
+                    staffM.setAttribute('value', response.staff.idStaff)
+                    staffM.innerText = response.staff.name;
+                    productM.setAttribute('value', response.product.id)
+                    productM.innerText = response.product.name;
+
+                    await fetch(urlDetails, getInit)
+                        .then(response => response.json())
+                        .then(response => {
+                            let tableDet = document.getElementById('bodyMostrarDet')
+                            response.forEach(detalle => {
+                                if (detalle.sampling.id == idSampling) {
+                                    let tr = document.createElement('tr')
+                                    let td1 = document.createElement('td')
+                                    let td2 = document.createElement('td')
+                                    td1.innerText = detalle.product.name
+                                    td2.innerText = detalle.quantity
+                                    tr.appendChild(td1)
+                                    tr.appendChild(td2)
+                                    tableDet.appendChild(tr)
+                                }
+                            })
+                        })
+                    
+                        
                 })
             }
         })
@@ -89,6 +112,10 @@ async function loadSampling() {
 
                 document.getElementById('lastSamplingList').appendChild(a);
             }
+        })
+
+        document.getElementById('goToDetail').addEventListener('click', () => {
+            location.href = 'detailSampling.html?id=' + id;
         })
 }
 
@@ -178,7 +205,6 @@ async function getAllStaffInASelect() {
     await fetch(url, getInit)
         .then(response => response.json())
         .then(response => {
-            let firstSampling = true;
             let select = document.getElementById('inputStaffA');
 
             response.forEach(c => {
@@ -186,17 +212,8 @@ async function getAllStaffInASelect() {
                 option.setAttribute('value', c.idStaff)
                 option.innerHTML = c.name;
                 select.appendChild(option);
-
-                if (firstSampling) {
-                    $('#inputStaffA').val(c.idStaff);
-                    $('.selectpicker').selectpicker('render');
-                    console.log('id: ' + c.idStaff)
-                    firstSampling = false;
-
-                }
             });
         })
-    $('.selectpicker').selectpicker('refresh');
 }
 
 async function getAllProductsInASelected() {
@@ -210,46 +227,53 @@ async function getAllProductsInASelected() {
     }
     await fetch(url, getInit)
         .then(response => response.json())
+        .then (response => response.sort((a,b) => {
+            return a.name.localeCompare(b.name)
+        }))
         .then(response => {
-            let firstProduct = true;
             let select = document.getElementById('inputProductA');
+            let select2 = document.getElementById('inputDetalleComponente');
             response.forEach(c => {
-                console.log(c.id + c.name);
                 let option = document.createElement('option');
                 option.setAttribute('value', c.id)
                 option.innerHTML = c.name;
-                select.appendChild(option);
-
-                if (firstProduct) {
-                    $('#inputProductA').val(c.id);
-                    $('.selectpicker').selectpicker('render');
-                    firstProduct = false;
-
+                if (c.type == 'SIMPLE') {
+                    select2.appendChild(option)
+                } else if (c.type == 'COMPUESTO') {
+                    select.appendChild(option)
                 }
             });
         })
-    $('.selectpicker').selectpicker('refresh');
 }
 
 async function addSampling() {
     let form = document.getElementById('addSampling');
-    let product = document.getElementById('inputProductM')
-    let cantidad = document.getElementById('inputDetalleCantidad')
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', async(e) => {
         e.preventDefault();
         const querystring = location.search;
         const params = new URLSearchParams(querystring)
         let id = params.get("id");
         if (id == undefined) id = 1
         let name = document.getElementById('inputSamplingA');
-        let staff = $('#inputStaffA').val();
-        let product = $('#inputProductA').val();
+        let staff = Number(document.getElementById('inputStaffA').value);
+        let product = Number(document.getElementById('inputProductA').value);
+
+        let fullStaff = await cargarStaff(staff)
+        let fullProduct = await cargarProduct(product)
+
+        if (fullProduct.type != "COMPUESTO") {
+            let debug = document.getElementById('debug')
+            debug.innerText = 'Seleccione un producto compuesto'
+            return null;
+        }
 
         let data = {
             name: name.value,
-            staff: staff,
-            product: product
+            staff: fullStaff,
+            product: fullProduct
         }
+
+        console.log(data)
 
         let url = 'http://localhost:8080/api/v1/sampling';
         let postInit = {
@@ -263,32 +287,103 @@ async function addSampling() {
 
         await fetch(url, postInit)
             .then(response => response.json())
-            .then(response => id = response.id)
+            .then(async response => {
+                id = response.id;
+                let body = document.getElementById('tablaDetalles')
+                for (let i = 1; i < body.rows.length; i++) {
+                    let objCells = body.rows.item(i).cells;
+                    let prodID = objCells.item(0).getAttribute('value');
+                    let quantity = objCells.item(1).innerHTML;
+                    let product = await cargarProduct(prodID)
+                    let data2 = {
+                        quantity: quantity,
+                        product: product,
+                        sampling: response
+                    }
+                    let urlDetails = 'http://localhost:8080/api/v1/detailsampling';
+                    let postInit2 = {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify(data2)
+                    }
+                    await fetch(urlDetails, postInit2)
+                }
+            })
 
         location.href = 'sampling.html?id=' + id;
     })
-
-
 }
 
+async function cargarStaff(staff) {
+    let getInit = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    };
+    let urlProduct = 'http://localhost:8080/api/v1/staffs/' + staff;
+    let fullStaff;
+    await fetch(urlProduct, getInit)
+        .then(response => response.json())
+        .then(response => fullStaff = response)
+    return fullStaff;
+}
 
+async function cargarProduct(product) {
+    let getInit = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    };
+    let urlProduct = 'http://localhost:8080/api/v1/products/' + product;
+    let fullProduct;
+    await fetch(urlProduct, getInit)
+        .then(response => response.json())
+        .then(response => fullProduct = response)
+    return fullProduct;
+}
+
+async function addDetails() {
+    let body = document.getElementById('bodyTblAñadirDet')
+    let tr = document.createElement('tr')
+    let td1 = document.createElement('td')
+    let td2 = document.createElement('td')
+    let cantidad = document.getElementById('inputDetalleCantidad').value
+    let select = document.getElementById('inputDetalleComponente')
+    let producto = select.options[select.selectedIndex].text
+    td2.innerText = cantidad;
+    td1.innerText = producto;
+    td1.setAttribute("value", select.value)
+    tr.appendChild(td1)
+    tr.appendChild(td2)
+    body.appendChild(tr)
+}
 
 async function updateSampling() {
     let form = document.getElementById('updateSampling');
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', async(e) => {
         const querystring = location.search;
         const params = new URLSearchParams(querystring)
         let id = params.get("id");
         if (id == undefined) id = 1
         e.preventDefault();
         let name = document.getElementById('inputSamplingM')
-        let staff = document.getElementById('inputStaffM')
-        let product = document.getElementById('inputProductM')
+        let staff = document.getElementById('staffM').value
+        let product = document.getElementById('productM').value
+
+        let fullStaff = await cargarStaff(staff)
+        let fullProduct = await cargarProduct(product)
 
         let data = {
             name: name.value,
-            staff: idStaffM,
-            product: idProductM
+            staff: fullStaff,
+            product: fullProduct
         }
 
         console.log(data)
@@ -312,7 +407,7 @@ async function updateSampling() {
 
 function deleteSampling() {
     let form = document.getElementById('deleteSampling');
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', async(e) => {
         const querystring = location.search;
         const params = new URLSearchParams(querystring)
         let id = params.get("id");
@@ -331,3 +426,4 @@ function deleteSampling() {
         location.href = 'sampling.html';
     })
 }
+

@@ -881,10 +881,7 @@ public class QueryService {
             Product product = productRepository.findById(newSampling.getProduct().getId()).orElse(productRepository.save(newSampling.getProduct()));
             newSampling.setProduct(product);
         }
-
         return samplingRepository.save(newSampling);
-
-
     }
 
     public int updateSampling(Sampling newsampling, int id) {
@@ -950,20 +947,20 @@ public class QueryService {
                                 .orElse(null)));
     }
 
-    public Production saveProduction(Production newproduction) {
-        if (newproduction.getClient() != null) {
-            Client client = clientRepository.findById(newproduction.getClient().getId()).orElse(saveClient(newproduction.getClient()));
-            newproduction.setClient(client);
+    public Production saveProduction(Production newProduction) {
+        if (newProduction.getClient() != null) {
+            Client client = clientRepository.findById(newProduction.getClient().getId()).orElse(saveClient(newProduction.getClient()));
+            newProduction.setClient(client);
         }
-        if (newproduction.getStaff() != null) {
-            Staff staff = staffRepository.findById(newproduction.getStaff().getIdStaff()).orElse(saveStaff(newproduction.getStaff()));
-            newproduction.setStaff(staff);
+        if (newProduction.getStaff() != null) {
+            Staff staff = staffRepository.findById(newProduction.getStaff().getIdStaff()).orElse(saveStaff(newProduction.getStaff()));
+            newProduction.setStaff(staff);
         }
-        if (newproduction.getSampling() != null) {
-            Sampling sampling = samplingRepository.findById(newproduction.getSampling().getId()).orElse(saveSampling(newproduction.getSampling()));
-            newproduction.setSampling(sampling);
+        if (newProduction.getSampling() != null) {
+            Sampling sampling = samplingRepository.findById(newProduction.getSampling().getId()).orElse(saveSampling(newProduction.getSampling()));
+            newProduction.setSampling(sampling);
         }
-        return productionRepository.save(newproduction);
+        return productionRepository.save(newProduction);
     }
 
     public int updateStatus(String status, int id) {

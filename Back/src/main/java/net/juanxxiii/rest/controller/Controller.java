@@ -1,6 +1,7 @@
 package net.juanxxiii.rest.controller;
 
 import net.juanxxiii.db.entity.*;
+import net.juanxxiii.reportService.ReportService;
 import net.juanxxiii.services.QueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +15,12 @@ import java.util.List;
 public class Controller {
 
     private final QueryService queryService;
+    private final ReportService reportService;
 
     @Autowired
-    public Controller(QueryService queryService) {
+    public Controller(QueryService queryService, ReportService reportService) {
         this.queryService = queryService;
+        this.reportService = reportService;
     }
 
     //Client Mapping
@@ -582,6 +585,13 @@ public class Controller {
     public ResponseEntity<?> deleteProduction(@PathVariable("id") int id) {
         queryService.deleteProduction(id);
         return ResponseEntity.ok("production order deleted");
+    }
+
+
+    //Report Mapping
+    @GetMapping("/clientReport/{format}")
+    public String generateClientReport(@PathVariable("format") String format) {
+        return reportService.exportReport(format);
     }
 
 }

@@ -1,7 +1,3 @@
-
-
-
-
 async function loadSalesList() {
     let url = 'http://localhost:8080/api/v1/sales'
     let getInit = {
@@ -174,26 +170,19 @@ async function getAllClientsInaSelected() {
 
     await fetch(url, getInit)
         .then(response => response.json())
+        .then (response => response.sort((a,b) => {
+            return a.fullName.localeCompare(b.fullName)
+        }))
         .then(response => {
-            let firstClient = true;
             let select = document.getElementById('clienteForSale');
-            response.forEach(c => {
+            response.forEach(async c => {
                 let option = document.createElement('option');
                 option.setAttribute('value', c.id);
                 option.innerHTML = c.fullName;
-                option.setAttribute('data-content',"<span class='label label-success'>" + c.fullName + "</span>")
+                option.setAttribute('data-content', "<span class='label label-success'>" + c.fullName + "</span>")
                 select.appendChild(option);
-                
-                if (firstClient) {
-                    $('#clienteForSale').val(c.id);
-                    $('.selectpicker').selectpicker('render');
-                    console.log( 'id: '+ c.id)
-                    firstClient = false;
-                }
-                
             });
         })
-    $('.selectpicker').selectpicker('refresh');
 }
 
 async function getAllStaffInaSelected() {
@@ -208,22 +197,19 @@ async function getAllStaffInaSelected() {
 
     await fetch(url, getInit)
         .then(response => response.json())
+        .then (response => response.sort((a,b) => {
+            return a.name.localeCompare(b.name)
+        }))
         .then(response => {
-            let firstStaff = true;
+            var firstStaff = true;
             let select = document.getElementById('personalName');
             response.forEach(c => {
-                if (firstStaff) {
-                    $('#personalName').selectpicker('val', c.idStaff);
-                    firstStaff = false;
-                }
-
                 let option = document.createElement('option');
                 option.setAttribute('value', c.idStaff);
                 option.innerHTML = c.name;
                 select.appendChild(option);
             });
         })
-    $('.selectpicker').selectpicker('refresh');
 }
 
 async function getAllProductsInaSelected() {
@@ -238,14 +224,13 @@ async function getAllProductsInaSelected() {
 
     await fetch(url, getInit)
         .then(response => response.json())
+        .then (response => response.sort((a,b) => {
+            return a.name.localeCompare(b.name)
+        }))
         .then(response => {
             let select = document.getElementById('productName');
+            var fistProduct = true;
             response.forEach(c => {
-                let fistProduct = true;
-                if (fistProduct) {
-                    $('#productName').selectpicker('val', c.id);
-                    fistProduct = false;
-                }
                 let option = document.createElement('option');
                 option.setAttribute('value', c.id);
                 option.setAttribute('sellPrice', c.sellPrice)
@@ -253,7 +238,6 @@ async function getAllProductsInaSelected() {
                 select.appendChild(option);
             });
         })
-        $('.selectpicker').selectpicker('refresh');
 }
 
 function addProductToTheCart() {
@@ -281,10 +265,11 @@ function addProductToTheCart() {
 
 function createProduct() {
 
-    let productid = $('#productName').val();
-    let productText = $('#productName option:selected').text();
-    let productPrice = $('#productName option:selected').attr('sellPrice');
+    let select = document.getElementById('productName')
 
+    let productid = select.value
+    let productText = select.options[select.selectedIndex].text
+    let productPrice = select.options[select.selectedIndex].getAttribute('sellPrice')
 
     let quantity = document.getElementById('countSell')
     let table = document.getElementById('productSale')
