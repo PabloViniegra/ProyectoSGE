@@ -281,6 +281,7 @@ function createProduct() {
     let td1 = document.createElement('td')
     console.log('Texto: ' + productText);
     console.log('Precio: ' + productPrice);
+
     td1.innerHTML = productText;
     tr.appendChild(td1);
     let td2 = document.createElement('td')

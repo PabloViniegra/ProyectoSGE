@@ -13,12 +13,12 @@ async function loadPurchasesList() {
         .then(response => {
             let final = 1;
             if (response.length > 20) {
-                final = response.length-20;
+                final = response.length - 20;
             } else {
                 final = 0;
             }
-            
-            for (let i = response.length-1; i >= final; i--) {
+
+            for (let i = response.length - 1; i >= final; i--) {
                 let a = document.createElement('a');
                 let urlSupplier = 'purchasesOperation.html?id=' + response[i].id + '&idSupplier=' + response[i].supplier;
                 a.setAttribute('href', urlSupplier);
@@ -166,10 +166,10 @@ async function getAllSuppliersInaSelected() {
         }))
         .then(response => {
             let select = document.getElementById('supplierForPurchase');
-            response.forEach(c => {
+            response.forEach(s => {
                 let option = document.createElement('option');
-                option.setAttribute('value', c.id);
-                option.innerHTML = c.fullName;
+                option.setAttribute('value', s.id);
+                option.innerHTML = s.fullName;
                 select.appendChild(option);
             });
         })
@@ -192,10 +192,10 @@ async function getAllStaffInaSelected() {
         }))
         .then(response => {
             let select = document.getElementById('personalName');
-            response.forEach(c => {
+            response.forEach(s => {
                 let option = document.createElement('option');
-                option.setAttribute('value', c.idStaff);
-                option.innerHTML = c.name;
+                option.setAttribute('value', s.idStaff);
+                option.innerHTML = s.name;
                 select.appendChild(option);
             });
         })
@@ -218,11 +218,11 @@ async function getAllProductsInaSelected() {
         }))
         .then(response => {
             let select = document.getElementById('productName');
-            response.forEach(c => {
+            response.forEach(s => {
                 let option = document.createElement('option');
-                option.setAttribute('value', c.id);
-                option.setAttribute('buyPrice', c.buyPrice)
-                option.innerHTML = c.name + ' - ' + c.buyPrice + '€';
+                option.setAttribute('value', s.id);
+                option.setAttribute('buyPrice', s.buyPrice)
+                option.innerHTML = s.name + ' - ' + s.buyPrice + '€';
                 select.appendChild(option);
             });
         })
@@ -317,7 +317,7 @@ async function allPurchasesLoad() {
                 celda2.innerHTML = await giveMeSupplierName(purchase.supplier); //Habría que sacar el nombre del proveedor
                 row.appendChild(celda2);
                 celda2.addEventListener("click", () => {
-                    let id = purchase.supplier;;
+                    let id = purchase.supplier;
                     location.href = 'suppliers.html?id=' + id;
                 });
 
@@ -357,7 +357,7 @@ async function allPurchasesLoad() {
                 row.appendChild(celda7);
 
                 body.appendChild(row);
-                
+
             });
         })
 }
@@ -507,7 +507,7 @@ async function crearCompra(purchaseLines) {
 }
 
 function filterTablePurchases() {
-    var input, filter, table, tr, td, i, txtValue;
+    let input, filter, table, tr, td, i, txtValue;
     input = document.getElementById("myInput");
     filter = input.value.toUpperCase();
     table = document.getElementById("allPurchasesTable");
