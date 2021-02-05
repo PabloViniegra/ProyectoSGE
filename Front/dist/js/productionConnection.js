@@ -61,7 +61,7 @@ async function loadProductionOrderList() {
                             break;
                     }
                     let bdyDelete = document.getElementById('deleteTableProduction')
-                    let trBorrar = document.getElementById('tr')
+                    let trBorrar = document.createElement('tr')
                     let celdaBorrarId = document.createElement('td')
                     celdaBorrarId.innerHTML = response.id;
                     trBorrar.appendChild(celdaBorrarId);
@@ -517,4 +517,27 @@ async function cargarClient(client) {
         .then(response => response.json())
         .then(response => fullClient = response)
     return fullClient;
+}
+
+async function deleteOrder() {
+    let form = document.getElementById('formDelete')
+    form.addEventListener('submit', async(e) => {
+        e.preventDefault()
+        const querystring = location.search;
+        const params = new URLSearchParams(querystring)
+        let id = params.get("id");
+        let url = 'http://localhost:8080/api/v1/production/' + id;
+        let deleteInit = {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        }
+
+        await fetch(url, deleteInit)
+            .then(response => console.log(response))
+
+        location.href = 'production.html';
+    })
 }
