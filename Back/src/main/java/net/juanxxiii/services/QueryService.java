@@ -1023,7 +1023,7 @@ public class QueryService {
 
     }
 
-    public List<Sale> getReportSales(int client, String dateinit, String datelast) {
+    public Client getReportClient(int client ,String dateinit, String datelast) {
         Date initDate = null;
         Date lastDate = null;
         try {
@@ -1033,8 +1033,8 @@ public class QueryService {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        List<Sale> salesList = saleRepository.getSalesForReport(client, initDate, lastDate);
-        return salesList;
-
+        Client newClient = clientRepository.getSalesForReport(client);
+        newClient.setSales(saleRepository.getSalesInThisdates(initDate,lastDate));
+        return newClient;
     }
 }

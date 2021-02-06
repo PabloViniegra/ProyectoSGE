@@ -29,6 +29,6 @@ public interface SaleRepository extends JpaRepository<Sale, Integer> {
     @Query(value = "UPDATE sge_moviles.ventas SET idFactura=:idfactura WHERE idVenta=:id",nativeQuery = true)
     void updateIdReceipt(@Param("idfactura")int idReceipt,@Param("id") int id1);
 
-    @Query("from Sale s where s.client=:client and s.receipt.receiptDate between :initdate and :enddate")
-    List<Sale> getSalesForReport(@Param("client") int client, @Param("initdate") Date initDate, @Param("enddate") Date lastDate);
+    @Query("from Sale s where s.receipt.receiptDate between :initDate and :lastDate")
+    List<Sale> getSalesInThisdates(@Param("initDate") Date initDate, @Param("lastDate") Date lastDate);
 }

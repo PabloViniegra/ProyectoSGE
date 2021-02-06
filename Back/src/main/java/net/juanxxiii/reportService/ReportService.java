@@ -55,19 +55,19 @@ public class ReportService {
         return "report generated";
     }
 
-    public String exportReportSales(List<Sale> saleList) {
+    public String exportReportSales(Client client) {
         JasperReport jasperReport = null;
 
         try {
-            InputStream stream = getClass().getResourceAsStream("/clients_template.jrxml");
+            InputStream stream = getClass().getResourceAsStream("/reportSalesTemplate.jrxml");
             jasperReport = JasperCompileManager.compileReport(stream);
-            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(saleList);
+            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(client.getSales());
 
             Map<String, Object> map = new HashMap<>();
             map.put("createdBy", "Grupo 2 SGE");
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, dataSource);
-            JasperExportManager.exportReportToPdfFile(jasperPrint, "/home/report_client.pdf");
-            JasperExportManager.exportReportToHtmlFile(jasperPrint, "/home/report_client.html");
+            JasperExportManager.exportReportToPdfFile(jasperPrint, "/home/report_sales.pdf");
+            JasperExportManager.exportReportToHtmlFile(jasperPrint, "/home/report_sales.html");
         } catch (JRException e) {
             e.printStackTrace();
         }
