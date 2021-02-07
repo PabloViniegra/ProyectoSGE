@@ -3,6 +3,7 @@ package net.juanxxiii.reportService;
 import net.juanxxiii.db.entity.Client;
 import net.juanxxiii.db.entity.Sale;
 import net.juanxxiii.db.repository.ClientRepository;
+import net.juanxxiii.dto.JasperSales;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
@@ -55,13 +56,13 @@ public class ReportService {
         return "report generated";
     }
 
-    public String exportReportSales(Client client) {
-        JasperReport jasperReport = null;
-
+    public String exportReportSales(List<JasperSales> salesList) {
+        JasperReport jasperReport;
+        System.out.println(salesList);
         try {
             InputStream stream = getClass().getResourceAsStream("/reportSalesTemplate.jrxml");
             jasperReport = JasperCompileManager.compileReport(stream);
-            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(client.getSales());
+            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(salesList);
 
             Map<String, Object> map = new HashMap<>();
             map.put("createdBy", "Grupo 2 SGE");

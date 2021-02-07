@@ -1,6 +1,7 @@
 package net.juanxxiii.rest.controller;
 
 import net.juanxxiii.db.entity.*;
+import net.juanxxiii.dto.JasperSales;
 import net.juanxxiii.reportService.ReportService;
 import net.juanxxiii.services.QueryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -594,10 +595,14 @@ public class Controller {
         return reportService.exportReport(format);
     }
 
-    @GetMapping("/reports/sales/{dateinit}/{datelast}")
-    public String exportReportSales(@RequestBody int client,@PathVariable("dateinit") String dateinit, @PathVariable("datelast") String datelast) {
-        Client newclient = queryService.getReportClient(client,dateinit,datelast);
-        return reportService.exportReportSales(newclient);
+    @GetMapping("/reports/sales/{client}/{dateinit}/{datelast}")
+    public String exportReportSales(@PathVariable("client") int client,@PathVariable("dateinit") String dateinit, @PathVariable("datelast") String datelast) {
+        List<JasperSales> jasper = queryService.getReportList(client,dateinit,datelast);
+        if (jasper != null) {
+            return reportService.exportReportSales(jasper);
+        } else {
+            return "No existe ese cliente";
+        }
     }
 
 }
