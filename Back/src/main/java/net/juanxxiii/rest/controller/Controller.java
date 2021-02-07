@@ -1,6 +1,7 @@
 package net.juanxxiii.rest.controller;
 
 import net.juanxxiii.db.entity.*;
+import net.juanxxiii.dto.JasperPurchases;
 import net.juanxxiii.dto.JasperSales;
 import net.juanxxiii.reportService.ReportService;
 import net.juanxxiii.services.QueryService;
@@ -602,6 +603,16 @@ public class Controller {
             return reportService.exportReportSales(jasper);
         } else {
             return "No existe ese cliente";
+        }
+    }
+
+    @GetMapping("/reports/purchases/{supplier}/{dateinit}/{datelast}")
+    public String exportReportPurchases(@PathVariable("supplier") int client,@PathVariable("dateinit") String dateinit, @PathVariable("datelast") String datelast) {
+        List<JasperPurchases> jasper = queryService.getReportPurchasesList(client,dateinit,datelast);
+        if (jasper != null) {
+            return reportService.exportReportPurchases(jasper);
+        } else {
+            return "No existe ese proveedor";
         }
     }
 
