@@ -3,15 +3,22 @@ package net.juanxxiii.services;
 import lombok.extern.java.Log;
 import net.juanxxiii.db.entity.*;
 import net.juanxxiii.db.repository.*;
+import net.juanxxiii.dto.JasperPurchases;
+import net.juanxxiii.dto.JasperSales;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @Log
@@ -1023,18 +1030,56 @@ public class QueryService {
 
     }
 
-    public Client getReportClient(int client ,String dateinit, String datelast) {
-        Date initDate = null;
-        Date lastDate = null;
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            initDate = sdf.parse(dateinit);
-            lastDate = sdf.parse(datelast);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        Client newClient = clientRepository.getSalesForReport(client);
-        newClient.setSales(saleRepository.getSalesInThisdates(initDate,lastDate));
-        return newClient;
+    public List<JasperSales> getReportList(int client, String dateinit, String datelast) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate d1 = LocalDate.parse(dateinit, formatter);
+        LocalDate d2 = LocalDate.parse(datelast, formatter);
+        List<JasperSales> reportSales = new ArrayList<>();
+        Client newClient = clientRepository.findById(client).orElse(null);
+        saleRepository.getSalesInThisdates(d1.toString(), d2.toString()).stream()
+                .filter(sale -> sale.getClient() == Objects.requireNonNull(newClient).getId())
+                .forEach(sale -> {
+                    JasperSales jas = new JasperSales();
+                    jas.setIdDoc(sale.getReceipt().getId());
+                    jas.setClient(newClient.getFullName());
+                    jas.setDni(newClient.getDni());
+                    jas.setReceiptDate(sale.getReceipt().getReceiptDate());
+                    jas.setSubtotal(sale.getReceipt().getSubtotal());
+                    jas.setQuote(sale.getReceipt().getSubtotal() * (sale.getReceipt().getIva() / 100));
+                    jas.setIva(sale.getReceipt().getIva());
+                    jas.setTotal(sale.getReceipt().getTotal());
+                    jas.setImportTotal(reportSales.stream()
+                            .map(JasperSales::getTotal)
+                            .reduce(0F, Float::sum) + jas.getTotal());
+                    reportSales.add(jas);
+                });
+
+        return reportSales;
+    }
+
+    public List<JasperPurchases> getReportPurchasesList(int supplier, String dateinit, String datelast) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate d1 = LocalDate.parse(dateinit, formatter);
+        LocalDate d2 = LocalDate.parse(datelast, formatter);
+        List<JasperPurchases> reportPurchases = new ArrayList<>();
+        Supplier newsupplier = supplierRepository.findById(supplier).orElse(null);
+        purchaseRepository.getPurchasesInThisDates(d1.toString(), d2.toString())
+                .stream().filter(p -> p.getSupplier() == Objects.requireNonNull(newsupplier).getId())
+                .forEach(purchase -> {
+                    JasperPurchases jas = new JasperPurchases();
+                    jas.setIdDoc(purchase.getReceipt().getId());
+                    jas.setDate(purchase.getReceipt().getReceiptDate());
+                    jas.setSupplier(newsupplier.getFullName());
+                    jas.setDni(newsupplier.getDni());
+                    jas.setSubtotal(purchase.getReceipt().getSubtotal());
+                    jas.setQuote(purchase.getReceipt().getSubtotal() * (purchase.getReceipt().getIva() * 100));
+                    jas.setIva(purchase.getReceipt().getIva());
+                    jas.setTotal(purchase.getReceipt().getTotal());
+                    jas.setImportTotal(reportPurchases.stream()
+                    .map(JasperPurchases::getTotal).reduce(0F,Float::sum) + jas.getTotal());
+                    reportPurchases.add(jas);
+                });
+        return reportPurchases;
     }
 }
