@@ -2,7 +2,6 @@ package net.juanxxiii.dto;
 
 import lombok.Data;
 
-
 @Data
 public class JasperSales {
     private int idDoc;
