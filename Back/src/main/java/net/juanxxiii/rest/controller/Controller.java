@@ -3,6 +3,7 @@ package net.juanxxiii.rest.controller;
 import net.juanxxiii.db.entity.*;
 import net.juanxxiii.dto.JasperPurchases;
 import net.juanxxiii.dto.JasperSales;
+import net.juanxxiii.dto.JasperStockSimple;
 import net.juanxxiii.reportService.ReportService;
 import net.juanxxiii.services.QueryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -614,6 +615,17 @@ public class Controller {
         } else {
             return "No existe ese proveedor";
         }
+    }
+
+    @GetMapping("reports/stock/simple/{product}")
+    public String exportReportStockProduct(@PathVariable("product") int product) {
+        List<JasperStockSimple> jasper = queryService.getReportStockSimpleProducts(product);
+        if (jasper != null) {
+            return reportService.exportReportStockSimpleProducts(jasper);
+        } else {
+            return "No existe ese producto";
+        }
+        
     }
 
 }
