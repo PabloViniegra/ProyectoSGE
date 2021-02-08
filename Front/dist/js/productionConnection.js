@@ -11,6 +11,7 @@ async function getFirstId() {
     await fetch(url, getInit)
         .then(response => response.json())
         .then(response => id = response[response.length - 1].id)
+    if (id == undefined) id = 1;
     return id;
 }
 
@@ -101,7 +102,7 @@ async function loadProductionOrderList() {
                         location.href = 'detailSampling.html?id=' + idSampling
                     })
 
-                   
+
                 })
             }
         })
