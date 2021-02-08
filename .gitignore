@@ -15,3 +15,5 @@ docker/*
 .ionide
 .idea
 target
+
+Reports/*.html_files
