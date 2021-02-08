@@ -5,6 +5,7 @@ import net.juanxxiii.db.entity.*;
 import net.juanxxiii.db.repository.*;
 import net.juanxxiii.dto.JasperPurchases;
 import net.juanxxiii.dto.JasperSales;
+import net.juanxxiii.dto.JasperStockSimple;
 import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Service
@@ -1081,5 +1083,17 @@ public class QueryService {
                     reportPurchases.add(jas);
                 });
         return reportPurchases;
+    }
+
+    public List<JasperStockSimple> getReportStockSimpleProducts(int product) {
+        List<JasperStockSimple> listStockSimple = new ArrayList<>();
+        Product newproduct = productRepository.findById(product).orElse(null);
+        if (newproduct != null) {
+
+        } else {
+            System.err.println("Parece que no existe ese producto");
+            Logger.getLogger(getClass().getName(), "Parece que no existe ese producto");
+        }
+        return listStockSimple;
     }
 }

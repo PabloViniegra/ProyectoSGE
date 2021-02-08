@@ -5,6 +5,7 @@ import net.juanxxiii.db.entity.Sale;
 import net.juanxxiii.db.repository.ClientRepository;
 import net.juanxxiii.dto.JasperPurchases;
 import net.juanxxiii.dto.JasperSales;
+import net.juanxxiii.dto.JasperStockSimple;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
@@ -90,5 +91,9 @@ public class ReportService {
             e.printStackTrace();
         }
         return "report generated";
+    }
+
+    public String exportReportStockSimpleProducts(List<JasperStockSimple> jasper) {
+        return null;
     }
 }
