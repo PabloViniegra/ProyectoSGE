@@ -1,4 +1,19 @@
-
+async function getFirstId() {
+    let url = 'http://localhost:8080/api/v1/purchases'
+    let getInit = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    }
+    let id;
+    await fetch(url, getInit)
+        .then(response => response.json())
+        .then(response => id = response[response.length - 1].id)
+    if (id == undefined) id = 1;
+    return id;
+}
 async function loadPurchasesList() {
     let url = 'http://localhost:8080/api/v1/purchases'
     let getInit = {
@@ -43,7 +58,9 @@ async function loadPurchase() {
     const params = new URLSearchParams(querystring)
     let id = params.get('id')
     let idSupplier = params.get('idSupplier');
-    if (id == undefined) id = 1;
+    if (id == undefined) {
+        id = await getFirstId();
+    }
     if (idSupplier == undefined) idSupplier = 1;
     let urlSupplier = 'http://localhost:8080/api/v1/supplier/' + idSupplier;
     let getInit = {
@@ -161,7 +178,7 @@ async function getAllSuppliersInaSelected() {
 
     await fetch(url, getInit)
         .then(response => response.json())
-        .then (response => response.sort((a,b) => {
+        .then(response => response.sort((a, b) => {
             return a.fullName.localeCompare(b.fullName)
         }))
         .then(response => {
@@ -187,7 +204,7 @@ async function getAllStaffInaSelected() {
 
     await fetch(url, getInit)
         .then(response => response.json())
-        .then (response => response.sort((a,b) => {
+        .then(response => response.sort((a, b) => {
             return a.name.localeCompare(b.name)
         }))
         .then(response => {
@@ -213,7 +230,7 @@ async function getAllProductsInaSelected() {
 
     await fetch(url, getInit)
         .then(response => response.json())
-        .then (response => response.sort((a,b) => {
+        .then(response => response.sort((a, b) => {
             return a.name.localeCompare(b.name)
         }))
         .then(response => {
@@ -442,8 +459,6 @@ async function addPurchase() {
                 crearCompra(purchaseLines);
             }
         })
-
-    location.href = 'purchasesOperation.html'
 }
 
 async function cargarProductos(producto, purchaseLines) {
@@ -527,22 +542,22 @@ function filterTablePurchases() {
     }
 }
 
-    async function deletePurchase() {
-        const querystring = location.search;
-        const params = new URLSearchParams(querystring)
-        let id = params.get('id')
-        if (id == undefined) id = 1
-        let url = 'http://localhost:8080/api/v1/purchases/' + id;
-        let deleteInit = {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            }
+async function deletePurchase() {
+    const querystring = location.search;
+    const params = new URLSearchParams(querystring)
+    let id = params.get('id')
+    if (id == undefined) id = 1
+    let url = 'http://localhost:8080/api/v1/purchases/' + id;
+    let deleteInit = {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
         }
+    }
 
-        await fetch(url, deleteInit)
-            .then(response => console.log(response))
+    await fetch(url, deleteInit)
+        .then(response => console.log(response))
 
-        location.href = 'purchasesOperation.html';
+    location.href = 'purchasesOperation.html';
 }

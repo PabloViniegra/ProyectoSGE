@@ -1,3 +1,19 @@
+async function getFirstId() {
+    let url = 'http://localhost:8080/api/v1/sales'
+    let getInit = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    }
+    let id;
+    await fetch(url, getInit)
+        .then(response => response.json())
+        .then(response => id = response[response.length - 1].id)
+    if (id == undefined) id = 1;
+    return id;
+}
 async function loadSalesList() {
     let url = 'http://localhost:8080/api/v1/sales'
     let getInit = {
@@ -42,7 +58,9 @@ async function loadSale() {
     const params = new URLSearchParams(querystring)
     let id = params.get('id')
     let idClient = params.get('idClient');
-    if (id == undefined) id = 1;
+    if (id == undefined) {
+        id = await getFirstId();
+    }
     if (idClient == undefined) idClient = 1;
     let urlCliente = 'http://localhost:8080/api/v1/clients/' + idClient;
     let getInit = {
@@ -170,7 +188,7 @@ async function getAllClientsInaSelected() {
 
     await fetch(url, getInit)
         .then(response => response.json())
-        .then (response => response.sort((a,b) => {
+        .then(response => response.sort((a, b) => {
             return a.fullName.localeCompare(b.fullName)
         }))
         .then(response => {
@@ -197,7 +215,7 @@ async function getAllStaffInaSelected() {
 
     await fetch(url, getInit)
         .then(response => response.json())
-        .then (response => response.sort((a,b) => {
+        .then(response => response.sort((a, b) => {
             return a.name.localeCompare(b.name)
         }))
         .then(response => {
@@ -224,7 +242,7 @@ async function getAllProductsInaSelected() {
 
     await fetch(url, getInit)
         .then(response => response.json())
-        .then (response => response.sort((a,b) => {
+        .then(response => response.sort((a, b) => {
             return a.name.localeCompare(b.name)
         }))
         .then(response => {
@@ -460,7 +478,7 @@ async function addSale() {
     await fetch(url, postInit)
         .then(response => {
             if (response.ok) {
-                crearVenta(saleLines);
+                crearVenta(saleLines, response.id);
             }
         })
 }
