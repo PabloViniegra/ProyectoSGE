@@ -60,6 +60,21 @@ async function loadProductionOrderList() {
                             bar.innerHTML = '100%';
                             break;
                     }
+                    let bdyDelete = document.getElementById('deleteTableProduction')
+                    let trBorrar = document.createElement('tr')
+                    let celdaBorrarId = document.createElement('td')
+                    celdaBorrarId.innerHTML = response.id;
+                    trBorrar.appendChild(celdaBorrarId);
+                    let celdaFecha = document.createElement('td')
+                    celdaFecha.innerHTML = response.date
+                    trBorrar.appendChild(celdaFecha)
+                    let celdaEstado = document.createElement('td')
+                    celdaEstado.innerHTML = response.status
+                    trBorrar.appendChild(celdaEstado)
+                    let celdacantidad = document.createElement('td')
+                    celdacantidad.innerHTML = response.quantity
+                    trBorrar.appendChild(celdacantidad)
+                    bdyDelete.appendChild(trBorrar);
                     let modifySampling = document.getElementById('updateSampling')
                     let optionSampling = document.createElement('option')
                     let modifyClient = document.getElementById('updateClientProduction')
@@ -86,7 +101,7 @@ async function loadProductionOrderList() {
                         location.href = 'detailSampling.html?id=' + idSampling
                     })
 
-
+                   
                 })
             }
         })
@@ -502,4 +517,27 @@ async function cargarClient(client) {
         .then(response => response.json())
         .then(response => fullClient = response)
     return fullClient;
+}
+
+async function deleteOrder() {
+    let form = document.getElementById('formDelete')
+    form.addEventListener('submit', async(e) => {
+        e.preventDefault()
+        const querystring = location.search;
+        const params = new URLSearchParams(querystring)
+        let id = params.get("id");
+        let url = 'http://localhost:8080/api/v1/production/' + id;
+        let deleteInit = {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        }
+
+        await fetch(url, deleteInit)
+            .then(response => console.log(response))
+
+        location.href = 'production.html';
+    })
 }

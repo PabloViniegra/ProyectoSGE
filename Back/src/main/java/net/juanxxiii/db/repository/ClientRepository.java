@@ -1,16 +1,12 @@
 package net.juanxxiii.db.repository;
 
 import net.juanxxiii.db.entity.Client;
-import net.juanxxiii.dto.ClienteCompletoDto;
-import net.juanxxiii.dto.ClienteTelefonoDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Repository
 public interface ClientRepository extends JpaRepository<Client, Integer> {
@@ -46,4 +42,6 @@ public interface ClientRepository extends JpaRepository<Client, Integer> {
     @Transactional
     @Query(value = "UPDATE sge_moviles.clientes SET codigo_postal=:codPostal WHERE idCliente=:id",nativeQuery = true)
     void updatePopulation(@Param("codPostal") int codPostal, @Param("id") int id);
+
+
 }

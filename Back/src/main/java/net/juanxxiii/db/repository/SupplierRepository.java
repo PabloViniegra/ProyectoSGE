@@ -1,10 +1,6 @@
 package net.juanxxiii.db.repository;
 
 import net.juanxxiii.db.entity.Supplier;
-import net.juanxxiii.dto.ClienteCompletoDto;
-import net.juanxxiii.dto.ClienteTelefonoDto;
-import net.juanxxiii.dto.ProveedorCompletoDto;
-import net.juanxxiii.dto.ProveedorTelefonoDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -18,13 +14,6 @@ import java.util.List;
 public interface SupplierRepository extends JpaRepository<Supplier, Integer> {
     //SELECT t.idTelefono, t.numTelefono FROM Supplier s JOIN telefonosProveedor t on s.idProveedor = t.IdProveedor
     //SELECT new net.juanxxiii.dto.TelephoneDto(t.id, t.number) FROM Supplier s INNER JOIN Telephone t ON t.supplier = s.id
-
-    //ES NECESARIO USAR ALIAS PARA LAS TABLAS
-    @Query(value = "SELECT new net.juanxxiii.dto.ProveedorTelefonoDto(s.id, s.fullName, t.id, t.number) FROM Supplier s INNER JOIN SupplierTelephone t ON t.supplier = s.id")
-    List<ProveedorTelefonoDto> fetchTelephoneInnerJoin();
-
-    @Query(value = "SELECT new net.juanxxiii.dto.ProveedorCompletoDto(s.id, s.fullName, d.id, d.direction, t.id, t.number) FROM Supplier s INNER JOIN SupplierDirection d ON s.id = d.supplier INNER JOIN SupplierTelephone t ON s.id = t.supplier")
-    List<ProveedorCompletoDto> fetchFullSupplierJoin();
 
     @Query("SELECT MAX(s.id) FROM Supplier s")
     int lastId();

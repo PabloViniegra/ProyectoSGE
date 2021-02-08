@@ -13,10 +13,10 @@
 </head>
 
 
-<body onload="loadProductionOrderList();getAllSamplingInASelect();getAllClientsInASelect();getAllStaffInASelect(); addProductionOrder(); updateOrder()">
+<body onload="loadProductionOrderList();getAllSamplingInASelect();getAllClientsInASelect();getAllStaffInASelect(); addProductionOrder(); updateOrder();deleteOrder();">
     <div class="container-fluid">
         <nav class="navbar navbar-expand-md navbar-dark myNavbar">
-            <a class="navbar-brand" href="../index.html">
+            <a class="navbar-brand" href="./index.html">
                 <img src="../resources/logoTemporal.png" alt="" class="w-50" />
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,10 +37,10 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navReport" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reportes</a>
                         <div class="dropdown-menu" aria-labelledby="navReport">
-                            <a class="dropdown-item" href="#">Reporte</a>
-                            <a class="dropdown-item" href="#">Otro Reporte</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Más Reportes</a>
+                            <a class="dropdown-item" href="purchasesReport.html">Reporte de compras</a>
+                            <a class="dropdown-item" href="salesReport.html">Reporte de ventas</a>
+                            <a class="dropdown-item" href="allReceipts.html">Reporte de factura</a>
+                            <a class="dropdown-item" href="allProductsForReport.html">Consulta de movimientos de stock</a>
                         </div>
                     </li>
 
@@ -52,7 +52,7 @@
         </nav>
         <section class="row">
             <aside class="col-4 aside">
-                <h1 class="h1main my-2">HISTORIAL DE ÓRDENES EN PROCESO</h1>
+                <h1 class="h1main my-2">HISTORIAL DE ÓRDENES</h1>
                 <hr class="bg-white" />
                 <ul id="LastProductionList">
                 </ul>
@@ -250,6 +250,7 @@
                                 <div class="card-body pt-0 row justify-content-center bg-secondary">
                                     <div>
                                         <!-- <div> -->
+                                       <form id="formDelete">
                                         <div class="col-12 text-center">
                                             <table class="table table-dark table-bordered my-5">
                                                 <thead>
@@ -264,8 +265,9 @@
 
                                                 </tbody>
                                             </table>
-                                            <button type="button" class="btn btn2" id="deleteProduction">Borrar</button>
+                                            <button type="submit" class="btn btn2" id="deleteProduction">Borrar</button>
                                         </div>
+                                       </form>
                                         <!-- </div> -->
                                     </div>
                                 </div>
