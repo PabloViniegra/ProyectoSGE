@@ -1073,7 +1073,7 @@ public class QueryService {
                     jas.setSupplier(newsupplier.getFullName());
                     jas.setDni(newsupplier.getDni());
                     jas.setSubtotal(purchase.getReceipt().getSubtotal());
-                    jas.setQuote(purchase.getReceipt().getSubtotal() * (purchase.getReceipt().getIva() * 100));
+                    jas.setQuote(purchase.getReceipt().getSubtotal() * (purchase.getReceipt().getIva() / 100));
                     jas.setIva(purchase.getReceipt().getIva());
                     jas.setTotal(purchase.getReceipt().getTotal());
                     jas.setImportTotal(reportPurchases.stream()
