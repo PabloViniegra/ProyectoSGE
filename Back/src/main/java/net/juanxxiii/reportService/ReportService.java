@@ -94,6 +94,19 @@ public class ReportService {
     }
 
     public String exportReportStockSimpleProducts(List<JasperStockSimple> jasper) {
-        return null;
+        JasperReport jasperReport;
+        try {
+            InputStream stream = getClass().getResourceAsStream("/reportStockSimple.jrxml");
+            jasperReport = JasperCompileManager.compileReport(stream);
+            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(jasper);
+            Map<String, Object> map = new HashMap<>();
+            map.put("createdBy", "Grupo 2 SGE");
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, dataSource);
+            JasperExportManager.exportReportToPdfFile(jasperPrint, "/home/report_stockSimple.pdf");
+            JasperExportManager.exportReportToHtmlFile(jasperPrint, "/home/report_stockSimple.html");
+        } catch (JRException e) {
+            e.printStackTrace();
+        }
+        return "report generated";
     }
 }
