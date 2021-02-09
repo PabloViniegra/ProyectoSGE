@@ -6,19 +6,16 @@ import net.juanxxiii.db.repository.*;
 import net.juanxxiii.dto.JasperPurchases;
 import net.juanxxiii.dto.JasperSales;
 import net.juanxxiii.dto.JasperStockSimple;
-import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -1079,17 +1076,79 @@ public class QueryService {
                     jas.setIva(purchase.getReceipt().getIva());
                     jas.setTotal(purchase.getReceipt().getTotal());
                     jas.setImportTotal(reportPurchases.stream()
-                    .map(JasperPurchases::getTotal).reduce(0F,Float::sum) + jas.getTotal());
+                            .map(JasperPurchases::getTotal).reduce(0F, Float::sum) + jas.getTotal());
                     reportPurchases.add(jas);
                 });
         return reportPurchases;
     }
-
+    //Revisar este método, dudo que funcione.
     public List<JasperStockSimple> getReportStockSimpleProducts(int product) {
         List<JasperStockSimple> listStockSimple = new ArrayList<>();
+        Logger logger = Logger.getLogger(getClass().getName());
         Product newproduct = productRepository.findById(product).orElse(null);
-        if (newproduct != null) {
 
+        if (newproduct != null) {
+            List<SaleLine> linesSale = saleLineRepository.getSaleLinesWithThisProduct(newproduct.getId());
+            List<PurchaseLine> linesPurchase = purchaseLineRepository.getPurchaseLinesWithThisProduct(newproduct.getId());
+            linesSale.forEach(ls -> {
+                JasperStockSimple jasper = new JasperStockSimple();
+                Optional<Sale> sale = saleRepository.findById(ls.getIdSale());
+                if (sale.isPresent()) {
+                    jasper.setDate(sale.get().getReceipt().getReceiptDate());
+                    jasper.setAgent(clientRepository.findById(sale.get().getClient()).get().getFullName());
+                    jasper.setUdssales(ls.getQuantity());
+                    jasper.setPrice(ls.getIdProduct().getSellPrice());
+                    jasper.setUdspurchases(0);
+                    jasper.setStock(linesSale.stream()
+                            .map(SaleLine::getQuantity)
+                            .reduce(0, Math::subtractExact));
+                    listStockSimple.add(jasper);
+                } else {
+                    System.err.println("La venta parece estar vacía");
+                    logger.info("La venta parece estar vacía");
+                }
+            });
+            linesPurchase.forEach(lp -> {
+                Optional<Purchase> purchase = purchaseRepository.findById(lp.getIdPurchase());
+                JasperStockSimple jasper = new JasperStockSimple();
+                if (purchase.isPresent()) {
+                    jasper.setDate(purchase.get().getReceipt().getReceiptDate());
+                    jasper.setAgent(supplierRepository.findById(purchase.get().getSupplier()).get().getFullName());
+                    jasper.setUdssales(0);
+                    jasper.setPrice(lp.getIdProduct().getBuyPrice());
+                    jasper.setUdspurchases(lp.getQuantity());
+                    jasper.setStock(linesPurchase.stream().map(PurchaseLine::getQuantity).reduce(0, Integer::sum));
+                    listStockSimple.add(jasper);
+                } else {
+                    System.err.println("La compra parece estar vacía");
+                    logger.info("La compra parece estar vacía");
+                }
+            });
+            List<DetailSampling> details = detailSamplingRepository
+                    .findAll()
+                    .stream()
+                    .filter(d -> d.getProduct().getId() == newproduct.getId())
+                    .collect(Collectors.toList());
+
+            List<Production> orders = productionRepository.findAll();
+            orders.forEach(o -> {
+                details.forEach(d -> {
+                    if (o.getSampling().getId() == d.getSampling().getId()) {
+                        JasperStockSimple jasper = new JasperStockSimple();
+                        jasper.setDate(o.getDate());
+                        jasper.setAgent(o.getClient().getFullName());
+                        jasper.setUdspurchases(details.stream()
+                                .map(DetailSampling::getQuantity)
+                                .reduce(0, Integer::sum));
+                        jasper.setPrice(d.getProduct().getBuyPrice());
+                        jasper.setUdssales(0);
+                        jasper.setStock(details.stream()
+                                .map(DetailSampling::getQuantity)
+                                .reduce(0, Integer::sum));
+                        listStockSimple.add(jasper);
+                    }
+                });
+            });
         } else {
             System.err.println("Parece que no existe ese producto");
             Logger.getLogger(getClass().getName(), "Parece que no existe ese producto");
