@@ -49,5 +49,11 @@ async function getAllClientsInaSelected() {
             await fetch(url, getInit)
                 .then(response => {
                     console.log(response)
+                    if (response.ok){
+                        let mostrarInforme = document.getElementById("mostrarInforme")
+                        fetch("../../Reports/report_sales.html")
+                            .then(data=>data.text())
+                            .then(html=>mostrarInforme.innerHTML=html)
+                    }
                 });
     }
