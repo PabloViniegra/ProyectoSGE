@@ -1040,7 +1040,7 @@ public class QueryService {
                 .filter(sale -> sale.getClient() == Objects.requireNonNull(newClient).getId())
                 .forEach(sale -> {
                     JasperSales jas = new JasperSales();
-                    jas.setIdDoc(sale.getReceipt().getId());
+                    jas.setIdDoc(sale.getId());
                     jas.setClient(newClient.getFullName());
                     jas.setDni(newClient.getDni());
                     jas.setReceiptDate(sale.getReceipt().getReceiptDate());
@@ -1067,7 +1067,7 @@ public class QueryService {
                 .stream().filter(p -> p.getSupplier() == Objects.requireNonNull(newsupplier).getId())
                 .forEach(purchase -> {
                     JasperPurchases jas = new JasperPurchases();
-                    jas.setIdDoc(purchase.getReceipt().getId());
+                    jas.setIdDoc(purchase.getId());
                     jas.setDate(purchase.getReceipt().getReceiptDate());
                     jas.setSupplier(newsupplier.getFullName());
                     jas.setDni(newsupplier.getDni());
