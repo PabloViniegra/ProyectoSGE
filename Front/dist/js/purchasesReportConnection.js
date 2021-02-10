@@ -40,7 +40,7 @@ async function getAllSuppliersInaSelected() {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/text'
             }
         }
 
@@ -50,10 +50,12 @@ async function getAllSuppliersInaSelected() {
             .then(response => {
                 console.log(response)
                 if (response.ok){
-                    let mostrarInforme = document.getElementById("mostrarInforme")
-                    fetch("../../Reports/report_purchases.html")
-                        .then(data=>data.text())
-                        .then(html=>mostrarInforme.innerHTML=html)
+                    response.text()
+                    .then(response => {
+                        let mostrarInforme = document.getElementById("mostrarInforme")
+                        mostrarInforme.setAttribute('src','../../Reports/' + response + '.pdf')
+                    })
+
                 }
             });
     }

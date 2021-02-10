@@ -590,13 +590,7 @@ public class Controller {
         return ResponseEntity.ok("production order deleted");
     }
 
-
     //Report Mapping
-    @GetMapping("/clientReport/{format}")
-    public String generateClientReport(@PathVariable("format") String format) {
-        return reportService.exportReport(format);
-    }
-
     @GetMapping("/reports/sales/{client}/{dateinit}/{datelast}")
     public String exportReportSales(@PathVariable("client") int client,@PathVariable("dateinit") String dateinit, @PathVariable("datelast") String datelast) {
         List<JasperSales> jasper = queryService.getReportList(client,dateinit,datelast);
@@ -617,7 +611,7 @@ public class Controller {
         }
     }
 
-    @GetMapping("reports/stock/simple/{product}")
+    @GetMapping("/reports/stock/simple/{product}")
     public String exportReportStockProduct(@PathVariable("product") int product) {
         List<JasperStockSimple> jasper = queryService.getReportStockSimpleProducts(product);
         if (jasper != null) {
@@ -625,7 +619,6 @@ public class Controller {
         } else {
             return "No existe ese producto";
         }
-        
     }
 
 }

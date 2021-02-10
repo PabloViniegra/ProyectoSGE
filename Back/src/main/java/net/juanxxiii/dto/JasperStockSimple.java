@@ -6,6 +6,7 @@ import lombok.Data;
 public class JasperStockSimple {
     private String date;
     private String agent;
+    private String producto;
     private int udspurchases;
     private float price;
     private int udssales;
