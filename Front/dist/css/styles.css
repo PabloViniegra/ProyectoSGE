@@ -465,3 +465,19 @@ form button:hover {
 }
 
 /* ALLSTAFF.HTML*/
+
+
+
+.bootstrap-select .dropdown-menu {
+  text-align: center;
+  width: 100%;
+
+}
+
+.bootstrap-select .dropdown-menu ul li {
+  margin-top: -55px;
+}
+
+.bootstrap-select .dropdown-menu .selected a {
+  background-color: var(--color_corporative_first);
+}

@@ -1,5 +1,4 @@
 Front/node_modules
-docker/*
 
 ### VisualStudioCode ###
 .vscode/*
@@ -15,3 +14,5 @@ docker/*
 .ionide
 .idea
 target
+
+Reports/*.html_files

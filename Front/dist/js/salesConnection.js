@@ -1,3 +1,19 @@
+async function getFirstId() {
+    let url = 'http://localhost:8080/api/v1/sales'
+    let getInit = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    }
+    let id;
+    await fetch(url, getInit)
+        .then(response => response.json())
+        .then(response => id = response[response.length - 1].id)
+    if (id == undefined) id = 1;
+    return id;
+}
 async function loadSalesList() {
     let url = 'http://localhost:8080/api/v1/sales'
     let getInit = {
@@ -12,12 +28,12 @@ async function loadSalesList() {
         .then(response => {
             let final = 1;
             if (response.length > 20) {
-                final = response.length-20;
+                final = response.length - 20;
             } else {
                 final = 0;
             }
-            
-            for (let i = response.length-1; i >= final; i--) {
+
+            for (let i = response.length - 1; i >= final; i--) {
                 let a = document.createElement('a');
                 let urlClient = 'salesOperation.html?id=' + response[i].id + '&idClient=' + response[i].client;
                 a.setAttribute('href', urlClient);
@@ -42,7 +58,9 @@ async function loadSale() {
     const params = new URLSearchParams(querystring)
     let id = params.get('id')
     let idClient = params.get('idClient');
-    if (id == undefined) id = 1;
+    if (id == undefined) {
+        id = await getFirstId();
+    }
     if (idClient == undefined) idClient = 1;
     let urlCliente = 'http://localhost:8080/api/v1/clients/' + idClient;
     let getInit = {
@@ -77,7 +95,7 @@ async function loadSale() {
             if (response.ok) {
                 response.json().then(response => {
                     console.log(response)
-        
+
                     let discount = document.getElementById('descuentoVenta')
                     discount.innerHTML = discount.innerHTML + response.receipt.discounts;
                     let iva = document.getElementById('ivaVenta')
@@ -90,7 +108,7 @@ async function loadSale() {
                     date.innerHTML = date.innerHTML + response.receipt.receiptDate;
                     let button = document.getElementById('enlaceRecibo')
                     button.setAttribute('href', 'allReceipts.html?id=' + response.receipt.id + '&date=' + response.receipt.receiptDate)
-        
+
                     let idPersonal = document.getElementById('idStaff')
                     idPersonal.innerHTML = idPersonal.innerHTML + response.staff.idStaff;
                     let nameStaff = document.getElementById('nameStaff')
@@ -100,9 +118,12 @@ async function loadSale() {
                     let emailStaff = document.getElementById('emailStaff')
                     emailStaff.innerHTML = emailStaff.innerHTML + response.staff.email;
                     let buttonStaff = document.getElementById('enlaceStaff')
-                    buttonStaff.setAttribute('href', 'staff.html?id=' + response.staff.idStaff)
-                
-        
+                    buttonStaff.setAttribute('href', 'staff.html?id=' + response.staff.idStaff);
+                    let sectionStaff = document.getElementById('sectionStaff')
+                    sectionStaff.innerHTML = sectionStaff.innerHTML + response.staff.positionStaff.section;
+                    let privilegeStaff = document.getElementById('privilegeStaff')
+                    privilegeStaff.innerHTML = privilegeStaff.innerHTML + response.staff.positionStaff.privilege;
+
                     let tBody = document.getElementById('products')
                     response.saleLines.forEach(line => {
                         //line.idProduct
@@ -130,7 +151,7 @@ async function loadSale() {
                         tr.appendChild(type);
                         tBody.appendChild(tr)
                     });
-        
+
                     let tableDeleteBody = document.getElementById('deleteTableSale')
                     let trDelete = document.createElement('tr')
                     let celda1 = document.createElement('td')
@@ -152,7 +173,7 @@ async function loadSale() {
                 })
             }
         })
-        
+
 }
 
 async function getAllClientsInaSelected() {
@@ -167,12 +188,16 @@ async function getAllClientsInaSelected() {
 
     await fetch(url, getInit)
         .then(response => response.json())
+        .then(response => response.sort((a, b) => {
+            return a.fullName.localeCompare(b.fullName)
+        }))
         .then(response => {
             let select = document.getElementById('clienteForSale');
-            response.forEach(c => {
+            response.forEach(async c => {
                 let option = document.createElement('option');
                 option.setAttribute('value', c.id);
                 option.innerHTML = c.fullName;
+                option.setAttribute('data-content', "<span class='label label-success'>" + c.fullName + "</span>")
                 select.appendChild(option);
             });
         })
@@ -190,7 +215,11 @@ async function getAllStaffInaSelected() {
 
     await fetch(url, getInit)
         .then(response => response.json())
+        .then(response => response.sort((a, b) => {
+            return a.name.localeCompare(b.name)
+        }))
         .then(response => {
+            var firstStaff = true;
             let select = document.getElementById('personalName');
             response.forEach(c => {
                 let option = document.createElement('option');
@@ -213,8 +242,12 @@ async function getAllProductsInaSelected() {
 
     await fetch(url, getInit)
         .then(response => response.json())
+        .then(response => response.sort((a, b) => {
+            return a.name.localeCompare(b.name)
+        }))
         .then(response => {
             let select = document.getElementById('productName');
+            var fistProduct = true;
             response.forEach(c => {
                 let option = document.createElement('option');
                 option.setAttribute('value', c.id);
@@ -249,7 +282,13 @@ function addProductToTheCart() {
 }
 
 function createProduct() {
+
     let select = document.getElementById('productName')
+
+    let productid = select.value
+    let productText = select.options[select.selectedIndex].text
+    let productPrice = select.options[select.selectedIndex].getAttribute('sellPrice')
+
     let quantity = document.getElementById('countSell')
     let table = document.getElementById('productSale')
     let subtotal = document.getElementById('subtotal')
@@ -258,14 +297,17 @@ function createProduct() {
     let iva = document.getElementById('iva')
     let tr = document.createElement('tr')
     let td1 = document.createElement('td')
-    td1.innerHTML = select.options[select.selectedIndex].text;
+    console.log('Texto: ' + productText);
+    console.log('Precio: ' + productPrice);
+
+    td1.innerHTML = productText;
     tr.appendChild(td1);
     let td2 = document.createElement('td')
     td2.innerHTML = quantity.value;
-    tr.setAttribute('id', select.value)
+    tr.setAttribute('id', productid)
     tr.appendChild(td2);
     table.appendChild(tr);
-    let optionnValue = Number(select.options[select.selectedIndex].getAttribute('sellPrice'))
+    let optionnValue = Number(productPrice)
     let actualValue = Number(subtotal.value)
     let countQuantity = Number(count.value)
     subtotal.value = actualValue + (optionnValue * countQuantity);
@@ -310,7 +352,7 @@ async function allSalesLoad() {
                 });
 
                 let celda2 = document.createElement('td');
-                celda2.innerHTML = await giveMeClientName(sale.client); 
+                celda2.innerHTML = await giveMeClientName(sale.client);
                 row.appendChild(celda2);
                 celda2.addEventListener("click", () => {
                     let id = sale.client;
@@ -321,7 +363,7 @@ async function allSalesLoad() {
                 celda3.innerHTML = sale.staff.name;
                 row.appendChild(celda3);
                 celda3.addEventListener("click", () => {
-                    let id =sale.staff.idStaff;
+                    let id = sale.staff.idStaff;
                     location.href = 'staff.html?id=' + id;
                 });
 
@@ -353,7 +395,7 @@ async function allSalesLoad() {
                 row.appendChild(celda7);
 
                 body.appendChild(row);
-                
+
             });
         })
 }
@@ -375,17 +417,18 @@ async function giveMeClientName(id) {
 }
 
 async function addSale() {
-    let client = document.getElementById('clienteForSale');
-    let staffId = document.getElementById('personalName');
+    let client = $('#clienteForSale').val();
+    let staffid = $('#personalName').val();
+
     let current = new Date();
-    let fecha = current.getFullYear() + '-' + current.getMonth() + '-' + current.getDate() + ' ' + current.getHours() + ':' + current.getMinutes() + ':' + current.getSeconds();
+    let fecha = current.getFullYear() + '-' + (current.getMonth() + 1) + '-' + current.getDate() + ' ' + current.getHours() + ':' + current.getMinutes() + ':' + current.getSeconds();
     let subtotal = document.getElementById('subtotal');
     let descuento = document.getElementById('discount');
     let iva = document.getElementById('iva');
     let total = document.getElementById('total');
     let tablaProductos = document.getElementById('productSale')
 
-    let urlStaff = 'http://localhost:8080/api/v1/staffs/' + staffId.value;
+    let urlStaff = 'http://localhost:8080/api/v1/staffs/' + Number(staffid);
     let getInit = {
         method: 'GET',
         headers: {
@@ -410,7 +453,7 @@ async function addSale() {
         .then(response => staff = response)
 
     let data = {
-        client: client.value,
+        client: Number(client),
         staff: staff,
         receipt: {
             receiptDate: fecha,
@@ -421,7 +464,7 @@ async function addSale() {
         },
         saleLines: saleLines
     }
-
+    console.log(data);
     let url = 'http://localhost:8080/api/v1/sales';
     let postInit = {
         method: 'POST',
@@ -435,7 +478,7 @@ async function addSale() {
     await fetch(url, postInit)
         .then(response => {
             if (response.ok) {
-                crearVenta(saleLines);
+                crearVenta(saleLines, response.id);
             }
         })
 }

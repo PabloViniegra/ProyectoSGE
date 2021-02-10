@@ -1,5 +1,6 @@
 package net.juanxxiii.db.repository;
 
+import net.juanxxiii.db.entity.Client;
 import net.juanxxiii.db.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -50,4 +51,6 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query(value = "SELECT * FROM productos ORDER BY idProducto DESC LIMIT 20",
             nativeQuery = true)
     List<Product> getLastProducts();
+
+
 }

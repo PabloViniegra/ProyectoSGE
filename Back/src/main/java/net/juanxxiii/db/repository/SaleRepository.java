@@ -8,6 +8,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
+
 @Repository
 public interface SaleRepository extends JpaRepository<Sale, Integer> {
     @Query("Select max(s.id) from Sale s")
@@ -25,4 +29,7 @@ public interface SaleRepository extends JpaRepository<Sale, Integer> {
     @Transactional
     @Query(value = "UPDATE sge_moviles.ventas SET idFactura=:idfactura WHERE idVenta=:id",nativeQuery = true)
     void updateIdReceipt(@Param("idfactura")int idReceipt,@Param("id") int id1);
+
+    @Query("from Sale s where s.receipt.receiptDate between :initDate and :lastDate")
+    List<Sale> getSalesInThisdates(@Param("initDate") String initDate, @Param("lastDate") String lastDate);
 }

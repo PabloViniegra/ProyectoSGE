@@ -3,12 +3,21 @@ package net.juanxxiii.services;
 import lombok.extern.java.Log;
 import net.juanxxiii.db.entity.*;
 import net.juanxxiii.db.repository.*;
+import net.juanxxiii.dto.JasperPurchases;
+import net.juanxxiii.dto.JasperSales;
+import net.juanxxiii.dto.JasperStockSimple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Service
 @Log
@@ -28,7 +37,10 @@ public class QueryService {
     private final PurchaseLineRepository purchaseLineRepository;
     private final SupplierTelephoneRepository supplierTelephoneRepository;
     private final SupplierDirectionRepository supplierDirectionRepository;
-    private final PoblationRepository poblationRepository;
+    private final PopulationRepository populationRepository;
+    private final SamplingRepository samplingRepository;
+    private final DetailSamplingRepository detailSamplingRepository;
+    private final ProductionRepository productionRepository;
 
 
     @Autowired
@@ -45,7 +57,11 @@ public class QueryService {
                         SupplierTelephoneRepository supplierTelephoneRepository,
                         SupplierDirectionRepository supplierDirectionRepository,
                         PurchaseRepository purchaseRepository,
-                        PurchaseLineRepository purchaseLineRepository) {
+                        PurchaseLineRepository purchaseLineRepository,
+                        PopulationRepository populationRepository,
+                        SamplingRepository samplingRepository,
+                        DetailSamplingRepository detailSamplingRepository,
+                        ProductionRepository productionRepository) {
         this.clientRepository = clientRepository;
         this.supplierRepository = supplierRepository;
         this.staffRepository = staffRepository;
@@ -60,10 +76,14 @@ public class QueryService {
         this.supplierDirectionRepository = supplierDirectionRepository;
         this.purchaseRepository = purchaseRepository;
         this.purchaseLineRepository = purchaseLineRepository;
-        this.poblationRepository = poblationRepository;
+        this.populationRepository = populationRepository;
+        this.samplingRepository = samplingRepository;
+        this.detailSamplingRepository = detailSamplingRepository;
+        this.productionRepository = productionRepository;
     }
 
     //Client queryList
+    @Transactional
     public Client saveClient(Client newClient) {
         List<ClientTelephone> telephones = null;
         List<ClientDirection> directions = null;
@@ -79,6 +99,10 @@ public class QueryService {
         if (!newClient.getSales().isEmpty()) {
             sales = newClient.getSales();
             newClient.setSales(null);
+        }
+        if (newClient.getPopulation() != null) {
+            Population population = populationRepository.findById(newClient.getPopulation().getIdPopulation()).orElse(savePopulation(newClient.getPopulation()));
+            newClient.setPopulation(population);
         }
         clientRepository.save(newClient);
         int id = clientRepository.lastId();
@@ -156,6 +180,10 @@ public class QueryService {
                             deleteSale(sale.getId());
                         }
                     });
+                    if (!client.getPopulation().equals(newClient.getPopulation())) {
+                        Population population = populationRepository.findById(newClient.getPopulation().getIdPopulation()).orElse(savePopulation(newClient.getPopulation()));
+                        clientRepository.updatePopulation(population.getIdPopulation(), id);
+                    }
                     return clientRepository.updateClient(newClient.getFullName(), newClient.getDni(), newClient.getEmail(), newClient.getIban(), id);
                 })
                 .orElse(-1);
@@ -806,6 +834,7 @@ public class QueryService {
                                 .findById(id)
                                 .orElse(null)));
     }
+
     public Staff getStaffByEmail(String email) {
         staffRepository.findByEmail(email)
                 .forEach(e -> log.info(e.toString()));
@@ -818,4 +847,312 @@ public class QueryService {
         return positionStaffRepository.findAll();
     }
 
+    //Population querys
+    public Population savePopulation(Population newPopulation) {
+        return populationRepository.save(newPopulation);
+    }
+
+    public List<Population> getPopulations() {
+        return populationRepository.findAll();
+    }
+
+    public Population getPopulation(int id) {
+        return populationRepository.findById(id).orElse(null);
+    }
+
+    public int updatePopulation(Population population, int id) {
+        return populationRepository.updatePopulation(population.getPopulation(), population.getProvince(), id);
+    }
+
+    public void deletePopulation(int id) {
+        populationRepository
+                .delete(Objects
+                        .requireNonNull(populationRepository
+                                .findById(id)
+                                .orElse(null)));
+    }
+
+    public List<Sampling> getAllSampling() {
+        return samplingRepository.findAll();
+    }
+
+    public Sampling getSampling(int id) {
+        return samplingRepository.findById(id).orElse(null);
+    }
+
+
+    public Sampling saveSampling(Sampling newSampling) {
+        if (newSampling.getStaff() != null) {
+            Staff staff = staffRepository.findById(newSampling.getStaff().getIdStaff()).orElse(staffRepository.save(newSampling.getStaff()));
+            newSampling.setStaff(staff);
+        }
+        if (newSampling.getProduct() != null) {
+            Product product = productRepository.findById(newSampling.getProduct().getId()).orElse(productRepository.save(newSampling.getProduct()));
+            newSampling.setProduct(product);
+        }
+        return samplingRepository.save(newSampling);
+    }
+
+    public int updateSampling(Sampling newsampling, int id) {
+
+        return samplingRepository.findById(id)
+                .map(sampling -> {
+
+                    if (!newsampling.getStaff().equals(sampling.getStaff())) {
+                        Staff staff = staffRepository.findById(newsampling.getStaff().getIdStaff()).orElse(staffRepository.save(newsampling.getStaff()));
+                        samplingRepository.updateStaff(staff.getIdStaff(), id);
+                    }
+                    if (newsampling.getProduct().equals(sampling.getProduct())) {
+                        Product product = productRepository.findById(newsampling.getProduct().getId()).orElse(productRepository.save(newsampling.getProduct()));
+                        samplingRepository.updateProduct(product.getId(), id);
+                    }
+
+                    return samplingRepository.updateSampling(newsampling.getName(), id);
+                })
+                .orElse(-1);
+    }
+
+    public void deleteSampling(int id) {
+        samplingRepository
+                .delete(Objects
+                        .requireNonNull(samplingRepository
+                                .findById(id)
+                                .orElse(null)));
+    }
+
+    public List<DetailSampling> getDetailSamplingList() {
+        return detailSamplingRepository.findAll();
+    }
+
+    public DetailSampling getDetailSampling(int id) {
+        return detailSamplingRepository.findById(id).orElse(null);
+    }
+
+    public void deleteDetailSampling(int id) {
+        detailSamplingRepository
+                .delete(Objects
+                        .requireNonNull(detailSamplingRepository
+                                .findById(id)
+                                .orElse(null)));
+    }
+
+    public List<Production> getListProduction() {
+        return productionRepository.findAll();
+    }
+
+    public List<Production> getProductionProcessList() {
+        return productionRepository.getProductionInProcess();
+    }
+
+    public Production getProduction(int id) {
+        return productionRepository.findById(id).orElse(null);
+    }
+
+    public void deleteProduction(int id) {
+        productionRepository
+                .delete(Objects
+                        .requireNonNull(productionRepository
+                                .findById(id)
+                                .orElse(null)));
+    }
+
+    public Production saveProduction(Production newProduction) {
+        if (newProduction.getClient() != null) {
+            Client client = clientRepository.findById(newProduction.getClient().getId()).orElse(saveClient(newProduction.getClient()));
+            newProduction.setClient(client);
+        }
+        if (newProduction.getStaff() != null) {
+            Staff staff = staffRepository.findById(newProduction.getStaff().getIdStaff()).orElse(saveStaff(newProduction.getStaff()));
+            newProduction.setStaff(staff);
+        }
+        if (newProduction.getSampling() != null) {
+            Sampling sampling = samplingRepository.findById(newProduction.getSampling().getId()).orElse(saveSampling(newProduction.getSampling()));
+            newProduction.setSampling(sampling);
+        }
+        return productionRepository.save(newProduction);
+    }
+
+    public int updateStatus(String status, int id) {
+        return productionRepository.findById(id).map(prod -> {
+            if (status != null) {
+                productionRepository.updateStatus(status, id);
+
+            }
+            return 1;
+        }).orElse(-1);
+    }
+
+    public int updateProduction(Production newProduction, int id) {
+        return productionRepository.findById(id).map(prod -> {
+            if (!newProduction.getClient().equals(prod.getClient())) {
+                Client client = clientRepository.findById(newProduction.getClient().getId()).orElse(saveClient(newProduction.getClient()));
+                productionRepository.updateClient(client.getId(), id);
+            }
+            if (!newProduction.getStaff().equals(prod.getStaff())) {
+                Staff staff = staffRepository.findById(newProduction.getStaff().getIdStaff()).orElse(saveStaff(newProduction.getStaff()));
+                productionRepository.updateStaff(staff.getIdStaff(), id);
+            }
+            if (!newProduction.getSampling().equals(prod.getSampling())) {
+                Sampling sampling = samplingRepository.findById(newProduction.getSampling().getId()).orElse(saveSampling(newProduction.getSampling()));
+                productionRepository.updateClient(sampling.getId(), id);
+            }
+
+            productionRepository.updateProduction(newProduction.getQuantity(), newProduction.getStatus(), newProduction.getDate(), id);
+            return 1;
+        }).orElse(-1);
+    }
+
+    public DetailSampling saveDetailSampling(DetailSampling newDetail) {
+        if (newDetail.getSampling() != null) {
+            Sampling sampling = samplingRepository.findById(newDetail.getSampling().getId()).orElse(saveSampling(newDetail.getSampling()));
+            newDetail.setSampling(sampling);
+        }
+        if (newDetail.getProduct() != null) {
+            Product product = productRepository.findById(newDetail.getProduct().getId()).orElse(saveProduct(newDetail.getProduct()));
+            newDetail.setProduct(product);
+        }
+        return detailSamplingRepository.save(newDetail);
+    }
+
+    public int updateDetailSampling(DetailSampling newDetail, int id) {
+        return detailSamplingRepository.findById(id).map(det -> {
+            if (!newDetail.getSampling().equals(det.getSampling())) {
+                Sampling sampling = samplingRepository.findById(newDetail.getSampling().getId()).orElse(saveSampling(newDetail.getSampling()));
+                detailSamplingRepository.updateSampling(sampling.getId(), id);
+            }
+            if (!newDetail.getProduct().equals(det.getProduct())) {
+                Product product = productRepository.findById(newDetail.getProduct().getId()).orElse(saveProduct(newDetail.getProduct()));
+                detailSamplingRepository.updateProduct(product.getId(), id);
+            }
+            return detailSamplingRepository.updateDetailSampling(newDetail.getQuantity(), id);
+        }).orElse(-1);
+
+    }
+
+    public List<JasperSales> getReportList(int client, String dateinit, String datelast) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate d1 = LocalDate.parse(dateinit, formatter);
+        LocalDate d2 = LocalDate.parse(datelast, formatter);
+        List<JasperSales> reportSales = new ArrayList<>();
+        Client newClient = clientRepository.findById(client).orElse(null);
+        saleRepository.getSalesInThisdates(d1.toString(), d2.toString()).stream()
+                .filter(sale -> sale.getClient() == Objects.requireNonNull(newClient).getId())
+                .forEach(sale -> {
+                    JasperSales jas = new JasperSales();
+                    jas.setIdDoc(sale.getReceipt().getId());
+                    jas.setClient(newClient.getFullName());
+                    jas.setDni(newClient.getDni());
+                    jas.setReceiptDate(sale.getReceipt().getReceiptDate());
+                    jas.setSubtotal(sale.getReceipt().getSubtotal());
+                    jas.setQuote(sale.getReceipt().getSubtotal() * (sale.getReceipt().getIva() / 100));
+                    jas.setIva(sale.getReceipt().getIva());
+                    jas.setTotal(sale.getReceipt().getTotal());
+                    jas.setImportTotal(reportSales.stream()
+                            .map(JasperSales::getTotal)
+                            .reduce(0F, Float::sum) + jas.getTotal());
+                    reportSales.add(jas);
+                });
+
+        return reportSales;
+    }
+
+    public List<JasperPurchases> getReportPurchasesList(int supplier, String dateinit, String datelast) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate d1 = LocalDate.parse(dateinit, formatter);
+        LocalDate d2 = LocalDate.parse(datelast, formatter);
+        List<JasperPurchases> reportPurchases = new ArrayList<>();
+        Supplier newsupplier = supplierRepository.findById(supplier).orElse(null);
+        purchaseRepository.getPurchasesInThisDates(d1.toString(), d2.toString())
+                .stream().filter(p -> p.getSupplier() == Objects.requireNonNull(newsupplier).getId())
+                .forEach(purchase -> {
+                    JasperPurchases jas = new JasperPurchases();
+                    jas.setIdDoc(purchase.getReceipt().getId());
+                    jas.setDate(purchase.getReceipt().getReceiptDate());
+                    jas.setSupplier(newsupplier.getFullName());
+                    jas.setDni(newsupplier.getDni());
+                    jas.setSubtotal(purchase.getReceipt().getSubtotal());
+                    jas.setQuote(purchase.getReceipt().getSubtotal() * (purchase.getReceipt().getIva() / 100));
+                    jas.setIva(purchase.getReceipt().getIva());
+                    jas.setTotal(purchase.getReceipt().getTotal());
+                    jas.setImportTotal(reportPurchases.stream()
+                            .map(JasperPurchases::getTotal).reduce(0F, Float::sum) + jas.getTotal());
+                    reportPurchases.add(jas);
+                });
+        return reportPurchases;
+    }
+    //Revisar este método, dudo que funcione.
+    public List<JasperStockSimple> getReportStockSimpleProducts(int product) {
+        List<JasperStockSimple> listStockSimple = new ArrayList<>();
+        Logger logger = Logger.getLogger(getClass().getName());
+        Product newproduct = productRepository.findById(product).orElse(null);
+
+        if (newproduct != null) {
+            List<SaleLine> linesSale = saleLineRepository.getSaleLinesWithThisProduct(newproduct.getId());
+            List<PurchaseLine> linesPurchase = purchaseLineRepository.getPurchaseLinesWithThisProduct(newproduct.getId());
+            linesSale.forEach(ls -> {
+                JasperStockSimple jasper = new JasperStockSimple();
+                Optional<Sale> sale = saleRepository.findById(ls.getIdSale());
+                if (sale.isPresent()) {
+                    jasper.setDate(sale.get().getReceipt().getReceiptDate());
+                    jasper.setAgent(clientRepository.findById(sale.get().getClient()).get().getFullName());
+                    jasper.setUdssales(ls.getQuantity());
+                    jasper.setPrice(ls.getIdProduct().getSellPrice());
+                    jasper.setUdspurchases(0);
+                    jasper.setStock(linesSale.stream()
+                            .map(SaleLine::getQuantity)
+                            .reduce(0, Math::subtractExact));
+                    listStockSimple.add(jasper);
+                } else {
+                    System.err.println("La venta parece estar vacía");
+                    logger.info("La venta parece estar vacía");
+                }
+            });
+            linesPurchase.forEach(lp -> {
+                Optional<Purchase> purchase = purchaseRepository.findById(lp.getIdPurchase());
+                JasperStockSimple jasper = new JasperStockSimple();
+                if (purchase.isPresent()) {
+                    jasper.setDate(purchase.get().getReceipt().getReceiptDate());
+                    jasper.setAgent(supplierRepository.findById(purchase.get().getSupplier()).get().getFullName());
+                    jasper.setUdssales(0);
+                    jasper.setPrice(lp.getIdProduct().getBuyPrice());
+                    jasper.setUdspurchases(lp.getQuantity());
+                    jasper.setStock(linesPurchase.stream().map(PurchaseLine::getQuantity).reduce(0, Integer::sum));
+                    listStockSimple.add(jasper);
+                } else {
+                    System.err.println("La compra parece estar vacía");
+                    logger.info("La compra parece estar vacía");
+                }
+            });
+            List<DetailSampling> details = detailSamplingRepository
+                    .findAll()
+                    .stream()
+                    .filter(d -> d.getProduct().getId() == newproduct.getId())
+                    .collect(Collectors.toList());
+
+            List<Production> orders = productionRepository.findAll();
+            orders.forEach(o -> {
+                details.forEach(d -> {
+                    if (o.getSampling().getId() == d.getSampling().getId()) {
+                        JasperStockSimple jasper = new JasperStockSimple();
+                        jasper.setDate(o.getDate());
+                        jasper.setAgent(o.getClient().getFullName());
+                        jasper.setUdspurchases(details.stream()
+                                .map(DetailSampling::getQuantity)
+                                .reduce(0, Integer::sum));
+                        jasper.setPrice(d.getProduct().getBuyPrice());
+                        jasper.setUdssales(0);
+                        jasper.setStock(details.stream()
+                                .map(DetailSampling::getQuantity)
+                                .reduce(0, Integer::sum));
+                        listStockSimple.add(jasper);
+                    }
+                });
+            });
+        } else {
+            System.err.println("Parece que no existe ese producto");
+            Logger.getLogger(getClass().getName(), "Parece que no existe ese producto");
+        }
+        return listStockSimple;
+    }
 }

@@ -1,3 +1,19 @@
+async function getFirstId() {
+    let url = 'http://localhost:8080/api/v1/purchases'
+    let getInit = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    }
+    let id;
+    await fetch(url, getInit)
+        .then(response => response.json())
+        .then(response => id = response[response.length - 1].id)
+    if (id == undefined) id = 1;
+    return id;
+}
 async function loadPurchasesList() {
     let url = 'http://localhost:8080/api/v1/purchases'
     let getInit = {
@@ -12,12 +28,12 @@ async function loadPurchasesList() {
         .then(response => {
             let final = 1;
             if (response.length > 20) {
-                final = response.length-20;
+                final = response.length - 20;
             } else {
                 final = 0;
             }
-            
-            for (let i = response.length-1; i >= final; i--) {
+
+            for (let i = response.length - 1; i >= final; i--) {
                 let a = document.createElement('a');
                 let urlSupplier = 'purchasesOperation.html?id=' + response[i].id + '&idSupplier=' + response[i].supplier;
                 a.setAttribute('href', urlSupplier);
@@ -42,7 +58,9 @@ async function loadPurchase() {
     const params = new URLSearchParams(querystring)
     let id = params.get('id')
     let idSupplier = params.get('idSupplier');
-    if (id == undefined) id = 1;
+    if (id == undefined) {
+        id = await getFirstId();
+    }
     if (idSupplier == undefined) idSupplier = 1;
     let urlSupplier = 'http://localhost:8080/api/v1/supplier/' + idSupplier;
     let getInit = {
@@ -160,12 +178,15 @@ async function getAllSuppliersInaSelected() {
 
     await fetch(url, getInit)
         .then(response => response.json())
+        .then(response => response.sort((a, b) => {
+            return a.fullName.localeCompare(b.fullName)
+        }))
         .then(response => {
             let select = document.getElementById('supplierForPurchase');
-            response.forEach(c => {
+            response.forEach(s => {
                 let option = document.createElement('option');
-                option.setAttribute('value', c.id);
-                option.innerHTML = c.fullName;
+                option.setAttribute('value', s.id);
+                option.innerHTML = s.fullName;
                 select.appendChild(option);
             });
         })
@@ -183,12 +204,15 @@ async function getAllStaffInaSelected() {
 
     await fetch(url, getInit)
         .then(response => response.json())
+        .then(response => response.sort((a, b) => {
+            return a.name.localeCompare(b.name)
+        }))
         .then(response => {
             let select = document.getElementById('personalName');
-            response.forEach(c => {
+            response.forEach(s => {
                 let option = document.createElement('option');
-                option.setAttribute('value', c.idStaff);
-                option.innerHTML = c.name;
+                option.setAttribute('value', s.idStaff);
+                option.innerHTML = s.name;
                 select.appendChild(option);
             });
         })
@@ -206,13 +230,16 @@ async function getAllProductsInaSelected() {
 
     await fetch(url, getInit)
         .then(response => response.json())
+        .then(response => response.sort((a, b) => {
+            return a.name.localeCompare(b.name)
+        }))
         .then(response => {
             let select = document.getElementById('productName');
-            response.forEach(c => {
+            response.forEach(s => {
                 let option = document.createElement('option');
-                option.setAttribute('value', c.id);
-                option.setAttribute('buyPrice', c.buyPrice)
-                option.innerHTML = c.name + ' - ' + c.buyPrice + '€';
+                option.setAttribute('value', s.id);
+                option.setAttribute('buyPrice', s.buyPrice)
+                option.innerHTML = s.name + ' - ' + s.buyPrice + '€';
                 select.appendChild(option);
             });
         })
@@ -307,7 +334,7 @@ async function allPurchasesLoad() {
                 celda2.innerHTML = await giveMeSupplierName(purchase.supplier); //Habría que sacar el nombre del proveedor
                 row.appendChild(celda2);
                 celda2.addEventListener("click", () => {
-                    let id = purchase.supplier;;
+                    let id = purchase.supplier;
                     location.href = 'suppliers.html?id=' + id;
                 });
 
@@ -347,7 +374,7 @@ async function allPurchasesLoad() {
                 row.appendChild(celda7);
 
                 body.appendChild(row);
-                
+
             });
         })
 }
@@ -372,7 +399,7 @@ async function addPurchase() {
     let supplier = document.getElementById('supplierForPurchase');
     let staffId = document.getElementById('personalName');
     let current = new Date();
-    let fecha = current.getFullYear() + '-' + current.getMonth() + '-' + current.getDate() + ' ' + current.getHours() + ':' + current.getMinutes() + ':' + current.getSeconds();
+    let fecha = current.getFullYear() + '-' + (current.getMonth() + 1) + '-' + current.getDate() + ' ' + current.getHours() + ':' + current.getMinutes() + ':' + current.getSeconds();
     let subtotal = document.getElementById('subtotal');
     let descuento = document.getElementById('discount');
     let iva = document.getElementById('iva');
@@ -432,8 +459,6 @@ async function addPurchase() {
                 crearCompra(purchaseLines);
             }
         })
-
-    location.href = 'purchasesOperation.html'
 }
 
 async function cargarProductos(producto, purchaseLines) {
@@ -497,7 +522,7 @@ async function crearCompra(purchaseLines) {
 }
 
 function filterTablePurchases() {
-    var input, filter, table, tr, td, i, txtValue;
+    let input, filter, table, tr, td, i, txtValue;
     input = document.getElementById("myInput");
     filter = input.value.toUpperCase();
     table = document.getElementById("allPurchasesTable");
@@ -517,22 +542,22 @@ function filterTablePurchases() {
     }
 }
 
-    async function deletePurchase() {
-        const querystring = location.search;
-        const params = new URLSearchParams(querystring)
-        let id = params.get('id')
-        if (id == undefined) id = 1
-        let url = 'http://localhost:8080/api/v1/purchases/' + id;
-        let deleteInit = {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            }
+async function deletePurchase() {
+    const querystring = location.search;
+    const params = new URLSearchParams(querystring)
+    let id = params.get('id')
+    if (id == undefined) id = 1
+    let url = 'http://localhost:8080/api/v1/purchases/' + id;
+    let deleteInit = {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
         }
+    }
 
-        await fetch(url, deleteInit)
-            .then(response => console.log(response))
+    await fetch(url, deleteInit)
+        .then(response => console.log(response))
 
-        location.href = 'purchasesOperation.html';
+    location.href = 'purchasesOperation.html';
 }

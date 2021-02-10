@@ -60,7 +60,7 @@ async function loadProduct() {
                     descripcion.innerHTML = descripcion.innerHTML + response.description;
                     let stock = document.getElementById('stockProducto')
                     stock.innerHTML = stock.innerHTML + response.stock;
-        
+
                     let nameModificar = document.getElementById('inputProduct')
                     nameModificar.value = response.name;
                     let descripcionModificar = document.getElementById('inputDescription')
@@ -73,8 +73,8 @@ async function loadProduct() {
                     pvrModificar.value = response.buyPrice;
                     let stockModificar = document.getElementById('inputStock')
                     stockModificar.value = response.stock;
-        
-        
+
+
                     //Carga del dato en la celda de la tabla
                     let table = document.getElementById('tableProductsLoad');
                     let tblBody = document.getElementById('bodyTableProducts');
@@ -97,21 +97,21 @@ async function loadProduct() {
                     let celda6 = document.createElement('td');
                     celda6.innerHTML = response.buyPrice;
                     row.appendChild(celda6);
-        
+
                     tblBody.appendChild(row);
                     table.appendChild(tblBody);
-        
+
                 })
             }
 
         })
-        
+
 
 }
 
 async function addProduct() {
     let form = document.getElementById('addProduct');
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', async(e) => {
         e.preventDefault();
         const querystring = location.search;
         const params = new URLSearchParams(querystring)
@@ -130,7 +130,7 @@ async function addProduct() {
             buyPrice: pvr.value,
             sellPrice: pvp.value,
             type: tipo.value,
-            stock: stock.value
+            stock: 0
         }
 
         let url = 'http://localhost:8080/api/v1/products'
@@ -154,7 +154,7 @@ async function addProduct() {
 async function updateProduct() {
     let form = document.getElementById('updateProduct')
 
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', async(e) => {
         const querystring = location.search;
         const params = new URLSearchParams(querystring)
         let id = params.get("id");
@@ -189,7 +189,7 @@ async function updateProduct() {
             type: tipoGlobal,
             stock: stock.value
         }
-        
+
         console.log(data)
 
         let url = 'http://localhost:8080/api/v1/products/' + id;
@@ -211,7 +211,7 @@ async function updateProduct() {
 
 function deleteProduct() {
     let form = document.getElementById('deleteProduct')
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', async(e) => {
         const querystring = location.search;
         const params = new URLSearchParams(querystring)
         let id = params.get("id");

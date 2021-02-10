@@ -1,6 +1,10 @@
 package net.juanxxiii.rest.controller;
 
 import net.juanxxiii.db.entity.*;
+import net.juanxxiii.dto.JasperPurchases;
+import net.juanxxiii.dto.JasperSales;
+import net.juanxxiii.dto.JasperStockSimple;
+import net.juanxxiii.reportService.ReportService;
 import net.juanxxiii.services.QueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +18,12 @@ import java.util.List;
 public class Controller {
 
     private final QueryService queryService;
+    private final ReportService reportService;
 
     @Autowired
-    public Controller(QueryService queryService) {
+    public Controller(QueryService queryService, ReportService reportService) {
         this.queryService = queryService;
+        this.reportService = reportService;
     }
 
     //Client Mapping
@@ -394,8 +400,235 @@ public class Controller {
     }
 
     @GetMapping("/possitionStaff")
-    public List<PositionStaff> getPossitionStaffList(){
+    public List<PositionStaff> getPossitionStaffList() {
         return queryService.getPossitionStaffList();
     }
 
+    //Population Mapping
+    @PostMapping("/populations")
+    public ResponseEntity<?> newPopulation(@RequestBody Population newPopulation) {
+        Population population = queryService.savePopulation(newPopulation);
+        if (population != null) {
+            return ResponseEntity.ok(population);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    //Sampling Mapping
+    @GetMapping("/sampling")
+    public List<Sampling> getSamplingList() {
+        return queryService.getAllSampling();
+    }
+
+    @GetMapping("/sampling/{id}")
+    public ResponseEntity<?> getSampling(@PathVariable("id") int id) {
+        Sampling sampling = queryService.getSampling(id);
+        if (sampling != null) {
+            return ResponseEntity.ok(sampling);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/sampling")
+    public ResponseEntity<?> newSampling(@RequestBody Sampling newSampling) {
+        Sampling sampling = queryService.saveSampling(newSampling);
+        if (sampling != null) {
+            return ResponseEntity.ok(sampling);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/sampling/{id}")
+    public ResponseEntity<?> updateSampling(@RequestBody Sampling newsampling, @PathVariable("id") int id) {
+        int samplingRequest = queryService.updateSampling(newsampling, id);
+        if (samplingRequest != -1) {
+            return ResponseEntity.ok("Purchase updated");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/populations")
+    public ResponseEntity<List<Population>> getPopulationList() {
+        return ResponseEntity.ok(queryService.getPopulations());
+    }
+
+    @GetMapping("/populations/{id}")
+    public ResponseEntity<?> getPopulation(@PathVariable("id") int id) {
+        Population population = queryService.getPopulation(id);
+        if (population != null) {
+            return ResponseEntity.ok(population);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/sampling/{id}")
+    public ResponseEntity<?> deleteSampling(@PathVariable("id") int id) {
+        queryService.deleteSampling(id);
+        return ResponseEntity.ok("sampling deleted");
+    }
+
+    //DetailSampling Mapping
+    @GetMapping("/detailsampling")
+    public List<DetailSampling> getDetailSamplingList() {
+        return queryService.getDetailSamplingList();
+    }
+
+    @GetMapping("/detailsampling/{id}")
+    public ResponseEntity<?> getDetailSampling(@PathVariable("id") int id) {
+        DetailSampling detailSampling = queryService.getDetailSampling(id);
+        if (detailSampling != null) {
+            return ResponseEntity.ok(detailSampling);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/detailsampling")
+    public ResponseEntity<?> newDetailSampling(@RequestBody DetailSampling newDetail) {
+        DetailSampling detailSampling = queryService.saveDetailSampling(newDetail);
+        if (detailSampling != null) {
+            return ResponseEntity.ok(detailSampling);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/populations/{id}")
+    public ResponseEntity<?> updatePopulation(@RequestBody Population newPopulation, @PathVariable("id") int id) {
+        int population = queryService.updatePopulation(newPopulation, id);
+        if (population != -1) {
+            return ResponseEntity.ok("Population updated");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/detailsampling/{id}")
+    public ResponseEntity<?> updateDetailSampling(@RequestBody DetailSampling newDetail,
+                                                  @PathVariable("id") int id) {
+        int request = queryService.updateDetailSampling(newDetail, id);
+        if (request != -1) {
+            return ResponseEntity.ok("Purchase updated");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/populations/{id}")
+    public ResponseEntity<?> deletePopulation(@PathVariable("id") int id) {
+        queryService.deletePopulation(id);
+        return ResponseEntity.ok("Population deleted");
+    }
+
+    @DeleteMapping("/detailsampling/{id}")
+    public ResponseEntity<?> deleteDetailSampling(@PathVariable("id") int id) {
+        queryService.deleteDetailSampling(id);
+        return ResponseEntity.ok("detail sampling deleted");
+    }
+
+    //Production Mapping
+
+    @GetMapping("/production")
+    public List<Production> getListProduction() {
+        return queryService.getListProduction();
+    }
+
+    @GetMapping("/production/{id}")
+    public ResponseEntity<?> getProduction(@PathVariable("id") int id) {
+        Production production = queryService.getProduction(id);
+        if (production != null) {
+            return ResponseEntity.ok(production);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/production/process")
+    public List<Production> getProductionInProcess() {
+        return queryService.getProductionProcessList();
+    }
+
+    @PostMapping("/production")
+    public ResponseEntity<?> newProdcution(@RequestBody Production newproduction) {
+        Production production = queryService.saveProduction(newproduction);
+        if (production != null) {
+            return ResponseEntity.ok(production);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PatchMapping("/production/{id}")
+    public ResponseEntity<?> partialUpdateStatus(@RequestBody Production newProduction,
+                                                 @PathVariable("id") int id) {
+        int request = queryService.updateStatus(newProduction.getStatus(), id);
+        if (request != -1) {
+            return ResponseEntity.ok("Production order updated");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/production/{id}")
+    public ResponseEntity<?> updateProduction(@RequestBody Production newProduction, @PathVariable("id") int id) {
+        int request = queryService.updateProduction(newProduction, id);
+        if (request != -1) {
+            return ResponseEntity.ok("Production order updated");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/production/{id}")
+    public ResponseEntity<?> deleteProduction(@PathVariable("id") int id) {
+        queryService.deleteProduction(id);
+        return ResponseEntity.ok("production order deleted");
+    }
+
+
+    //Report Mapping
+    @GetMapping("/clientReport/{format}")
+    public String generateClientReport(@PathVariable("format") String format) {
+        return reportService.exportReport(format);
+    }
+
+    @GetMapping("/reports/sales/{client}/{dateinit}/{datelast}")
+    public String exportReportSales(@PathVariable("client") int client,@PathVariable("dateinit") String dateinit, @PathVariable("datelast") String datelast) {
+        List<JasperSales> jasper = queryService.getReportList(client,dateinit,datelast);
+        if (jasper != null) {
+            return reportService.exportReportSales(jasper);
+        } else {
+            return "No existe ese cliente";
+        }
+    }
+
+    @GetMapping("/reports/purchases/{supplier}/{dateinit}/{datelast}")
+    public String exportReportPurchases(@PathVariable("supplier") int client,@PathVariable("dateinit") String dateinit, @PathVariable("datelast") String datelast) {
+        List<JasperPurchases> jasper = queryService.getReportPurchasesList(client,dateinit,datelast);
+        if (jasper != null) {
+            return reportService.exportReportPurchases(jasper);
+        } else {
+            return "No existe ese proveedor";
+        }
+    }
+
+    @GetMapping("reports/stock/simple/{product}")
+    public String exportReportStockProduct(@PathVariable("product") int product) {
+        List<JasperStockSimple> jasper = queryService.getReportStockSimpleProducts(product);
+        if (jasper != null) {
+            return reportService.exportReportStockSimpleProducts(jasper);
+        } else {
+            return "No existe ese producto";
+        }
+        
+    }
+
 }
+
+
+

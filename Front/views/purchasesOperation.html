@@ -4,21 +4,21 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Operaciones de Ventas</title>
-    <meta name="description" content="Operaciones de ventas ERP" />
+    <title>Operaciones de Compras</title>
+    <meta name="description" content="Operaciones de compras ERP" />
     <link rel="stylesheet" href="../assets/bootstrap-4.5.3-dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="../dist/css/styles.css" />
-    <script src="https://kit.fontawesome.com/5a795d2b95.js" crossorigin="anonymous"></script>
 </head>
-<!--TODO: Hacer el nuevo planning   -->
+
 
 <body onload="getAllSuppliersInaSelected(); getAllStaffInaSelected(); getAllProductsInaSelected(); loadPurchasesList(); loadPurchase(); addProductToTheCart()">
 <div class="container-fluid">
     <nav class="navbar navbar-expand-md navbar-dark myNavbar">
-        <a class="navbar-brand" href="../index.html">
+        <a class="navbar-brand" href="./index.html">
             <img src="../resources/logoTemporal.png" alt="" class="w-50" />
         </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse pr-5" id="navbarNavDropdown">
@@ -55,20 +55,23 @@
         <div class="col-8 row justify-content-center my-3">
             <div class=" col-12 row align-items-stretch">
                 <!--Accordion wrapper-->
-                <div class="accordion md-accordion accordion-3 z-depth-1-half col-12" id="accordionEx194" role="tablist" aria-multiselectable="true">
+                <div class="accordion md-accordion accordion-3 z-depth-1-half col-12" id="accordionEx194"
+                     role="tablist" aria-multiselectable="true">
 
                     <!-- Accordion card -->
                     <div class="card row justify-content-center">
 
                         <!-- Card header -->
                         <div class="card-header row justify-content-center align-items-center" role="tab" id="heading4">
-                            <a data-toggle="collapse" data-parent="#accordionEx194" href="#collapse4" aria-expanded="true" aria-controls="collapse4" class="btn btn-dark">
+                            <a data-toggle="collapse" data-parent="#accordionEx194" href="#collapse4"
+                               aria-expanded="true" aria-controls="collapse4" class="btn btn-dark">
                                 Detalles de la compra
                             </a>
                         </div>
 
                         <!-- Card body -->
-                        <div id="collapse4" class="collapse show" role="tabpanel" aria-labelledby="heading4" data-parent="#accordionEx194">
+                        <div id="collapse4" class="collapse show" role="tabpanel" aria-labelledby="heading4"
+                             data-parent="#accordionEx194">
                             <div class="card-body pt-0 bg-secondary">
                                 <div class="row justify-content-between align-items-center">
                                     <div class="col-4 align-items-stretch my-5" style="height:100%;">
@@ -108,7 +111,8 @@
                                     </div>
                                     <div class="col-4" style="height:100%;">
                                         <div class="card" style="height: 100%;">
-                                            <div class="card card-body text-center align-items-stretch" style="height: 100%;">
+                                            <div class="card card-body text-center align-items-stretch"
+                                                 style="height: 100%;">
                                                 <h3 class="h1main py-3 text-white">PERSONAL</h3>
                                                 <p class="lead" id="idStaff"><b>ID: </b> </p>
                                                 <p class="lead" id="nameStaff"><b>Nombre: </b></p>
@@ -151,7 +155,9 @@
 
                         <!-- Card header -->
                         <div class="card-header row justify-content-center align-items-center" role="tab" id="heading5">
-                            <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx194" href="#collapse5" aria-expanded="false" aria-controls="collapse5" class="btn btn-dark">
+                            <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx194"
+                               href="#collapse5" aria-expanded="false" aria-controls="collapse5"
+                               class="btn btn-dark">
                                 Añadir compra
                             </a>
                         </div>
@@ -184,7 +190,7 @@
                                                     <input type="number" class="form-control" id="subtotal" value="0" readonly>
                                                 </div>
                                                 <div class="form-group col-6">
-                                                    <label for="products" class="text-white-50 text-center">Productos</label>
+                                                    <label for="productName" class="text-white-50 text-center">Productos</label>
                                                     <select id="productName" class="browser-default custom-select form-control">
 
                                                     </select>
@@ -282,11 +288,14 @@
         </div>
     </footer>
 </div>
+
 <script>
     function goBack() {
-      window.history.back();
+        window.history.back();
     }
-    </script>
+
+</script>
+
 <script src="../dist/js/purchasesConnection.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="../assets/bootstrap-4.5.3-dist/js/bootstrap.min.js"></script>
