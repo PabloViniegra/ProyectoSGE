@@ -13,6 +13,6 @@ public interface PurchaseLineRepository extends JpaRepository<PurchaseLine, Inte
     @Query("Select max(p.id) from Purchase p")
     int lastId();
 
-    @Query("from PurchaseLine pl where pl.idProduct=:idproduct")
+    @Query("from PurchaseLine pl where pl.idProduct.id=:idproduct")
     List<PurchaseLine> getPurchaseLinesWithThisProduct(@Param("idproduct") int id);
 }

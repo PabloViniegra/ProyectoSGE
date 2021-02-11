@@ -1,13 +1,10 @@
 package net.juanxxiii.reportService;
 
-import net.juanxxiii.db.entity.Client;
-import net.juanxxiii.db.repository.ClientRepository;
 import net.juanxxiii.dto.JasperPurchases;
 import net.juanxxiii.dto.JasperSales;
 import net.juanxxiii.dto.JasperStockSimple;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;

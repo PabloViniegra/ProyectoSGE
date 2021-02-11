@@ -6,11 +6,12 @@ import net.juanxxiii.db.repository.*;
 import net.juanxxiii.dto.JasperPurchases;
 import net.juanxxiii.dto.JasperSales;
 import net.juanxxiii.dto.JasperStockSimple;
-import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -1080,7 +1081,6 @@ public class QueryService {
         return reportPurchases;
     }
 
-    //Revisar este método, dudo que funcione.
     public List<JasperStockSimple> getReportStockSimpleProducts(int product) {
         List<JasperStockSimple> listStockSimple = new ArrayList<>();
         Logger logger = Logger.getLogger(getClass().getName());
@@ -1128,23 +1128,28 @@ public class QueryService {
                     .collect(Collectors.toList());
 
             List<Production> orders = productionRepository.findAll();
-            orders.forEach(o -> {
-                details.forEach(d -> {
-                    if (o.getSampling().getId() == d.getSampling().getId()) {
-                        JasperStockSimple jasper = new JasperStockSimple();
-                        jasper.setDate(o.getDate());
-                        jasper.setAgent(o.getClient().getFullName());
-                        jasper.setUdspurchases(0);
-                        jasper.setPrice(d.getProduct().getBuyPrice());
-                        jasper.setProducto(newproduct.getName());
-                        jasper.setUdssales(o.getQuantity() * d.getQuantity());
-                        listStockSimple.add(jasper);
-                    }
-                });
-            });
+            orders.forEach(o -> details.forEach(d -> {
+                if (o.getSampling().getId() == d.getSampling().getId()) {
+                    JasperStockSimple jasper = new JasperStockSimple();
+                    jasper.setDate(o.getDate());
+                    jasper.setAgent(o.getClient().getFullName());
+                    jasper.setUdspurchases(0);
+                    jasper.setPrice(d.getProduct().getBuyPrice());
+                    jasper.setProducto(newproduct.getName());
+                    jasper.setUdssales(o.getQuantity() * d.getQuantity());
+                    listStockSimple.add(jasper);
+                }
+            }));
             sortedList = listStockSimple.stream().sorted((jasperStockSimple, t1) -> {
-                LocalDate d1 = LocalDate.parse(jasperStockSimple.getDate());
-                LocalDate d2 = LocalDate.parse(t1.getDate());
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                Date d1 = null;
+                Date d2 = null;
+                try {
+                    d1 = sdf.parse(jasperStockSimple.getDate());
+                    d2 = sdf.parse(t1.getDate());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
                 return d1.compareTo(d2);
             }).peek(jasperStockSimple -> {
                 int stock = 0;

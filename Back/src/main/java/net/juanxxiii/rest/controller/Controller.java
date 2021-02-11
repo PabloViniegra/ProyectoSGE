@@ -611,8 +611,8 @@ public class Controller {
         }
     }
 
-    @GetMapping("/reports/stock/simple/{product}")
-    public String exportReportStockProduct(@PathVariable("product") int product) {
+    @GetMapping("/reports/stock/simple/{idProduct}")
+    public String exportReportStockProduct(@PathVariable("idProduct") int product) {
         List<JasperStockSimple> jasper = queryService.getReportStockSimpleProducts(product);
         if (jasper != null) {
             return reportService.exportReportStockSimpleProducts(jasper);
