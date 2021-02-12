@@ -18,7 +18,7 @@ async function getAllClientsInaSelected() {
             response.forEach(s => {
                 let option = document.createElement('option');
                 option.setAttribute('value', s.id);
-                option.innerHTML = s.fullName;
+                option.innerHTML = '<input type=" checkbox" name="' + s.fullName+'" value="' +s.id +'">';
                 select.appendChild(option);
             });
         })
