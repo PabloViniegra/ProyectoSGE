@@ -33,7 +33,7 @@ public class ReportService {
         } catch (JRException e) {
             e.printStackTrace();
         }
-        return "report generated";
+        return "informe_ventas_" + salesList.get(0).getClient() + "_" + salesList.get(0).getReceiptDate() + "_" + salesList.get(salesList.size() - 1).getReceiptDate();
     }
 
     public String exportReportPurchases(List<JasperPurchases> purchasesList) {

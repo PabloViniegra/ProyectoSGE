@@ -53,6 +53,7 @@ async function generateReport() {
                     .then(response => {
                         let mostrarInforme = document.getElementById("mostrarInforme")
                         mostrarInforme.setAttribute('src', '../../Reports/' + response + '.pdf')
+                        console.log(response)
                     })
             }
         });
