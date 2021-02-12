@@ -1188,7 +1188,12 @@ public class QueryService {
                 Sale forSale = saleRepository.findById(sale.getIdSale()).orElse(null);
                 jasperStockComposite.setDate(forSale.getReceipt().getReceiptDate());
                 Client client = clientRepository.findById(forSale.getClient()).orElse(null);
-                jasperStockComposite.setAgent(client.getFullName());
+                jasperStockComposite.setAgent(client != null ? client.getFullName() : null);
+                jasperStockComposite.setProduct(newproduct.getName());
+                jasperStockComposite.setUnitsManufactured(0);
+                jasperStockComposite.setUnitsSold(sale.getQuantity());
+                jasperStockComposite.setPrice(sale.getQuantity()*sale.getIdProduct().getSellPrice());
+                //jasperStockComposite.setStock();
             });
         } else {
             System.err.println("Parece que no existe ese producto");
