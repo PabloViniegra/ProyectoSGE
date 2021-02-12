@@ -87,7 +87,7 @@
                 <textElement>
                     <font isBold="false"/>
                 </textElement>
-                <text><![CDATA[idDoc]]></text>
+                <text><![CDATA[Número Documento]]></text>
             </staticText>
             <staticText>
                 <reportElement style="Column header" x="88" y="0" width="88" height="18" forecolor="#000000" uuid="be02ec29-f48d-4b51-a7c6-8f046e64d215">
@@ -96,7 +96,7 @@
                 <textElement>
                     <font isBold="false"/>
                 </textElement>
-                <text><![CDATA[receiptDate]]></text>
+                <text><![CDATA[Fecha]]></text>
             </staticText>
             <staticText>
                 <reportElement style="Column header" x="176" y="0" width="88" height="18" forecolor="#000000" uuid="f5da6449-d520-4197-a9a7-44bbe4fd6657">
@@ -105,7 +105,7 @@
                 <textElement>
                     <font isBold="false"/>
                 </textElement>
-                <text><![CDATA[client]]></text>
+                <text><![CDATA[Cliente]]></text>
             </staticText>
             <staticText>
                 <reportElement style="Column header" x="264" y="0" width="88" height="18" forecolor="#000000" uuid="95696112-ff9d-44ff-8deb-e418288ba95e">
@@ -114,7 +114,7 @@
                 <textElement>
                     <font isBold="false"/>
                 </textElement>
-                <text><![CDATA[dni]]></text>
+                <text><![CDATA[DNI]]></text>
             </staticText>
             <staticText>
                 <reportElement style="Column header" x="352" y="0" width="88" height="18" forecolor="#000000" uuid="5308d9fb-1273-4dbc-b706-b296f7d15fd3">
@@ -123,7 +123,7 @@
                 <textElement>
                     <font isBold="false"/>
                 </textElement>
-                <text><![CDATA[subtotal]]></text>
+                <text><![CDATA[Base Imponible]]></text>
             </staticText>
             <staticText>
                 <reportElement style="Column header" x="440" y="0" width="88" height="18" forecolor="#000000" uuid="d8d5e718-a1b4-4ff6-9a0a-0c0b95a06f64">
@@ -132,7 +132,7 @@
                 <textElement>
                     <font isBold="false"/>
                 </textElement>
-                <text><![CDATA[quote]]></text>
+                <text><![CDATA[Cuota]]></text>
             </staticText>
             <staticText>
                 <reportElement style="Column header" x="528" y="0" width="88" height="18" forecolor="#000000" uuid="94685b32-e04a-4595-a81f-7235608a6d7c">
@@ -141,7 +141,7 @@
                 <textElement>
                     <font isBold="false"/>
                 </textElement>
-                <text><![CDATA[iva]]></text>
+                <text><![CDATA[IVA]]></text>
             </staticText>
             <staticText>
                 <reportElement style="Column header" x="616" y="0" width="88" height="18" forecolor="#000000" uuid="36e5b6c2-1cf7-4bb2-8abd-f077cf960df6">
@@ -150,7 +150,7 @@
                 <textElement>
                     <font isBold="false"/>
                 </textElement>
-                <text><![CDATA[total]]></text>
+                <text><![CDATA[Total]]></text>
             </staticText>
             <staticText>
                 <reportElement style="Column header" x="704" y="0" width="88" height="18" forecolor="#000000" uuid="ec435ec7-c3ac-4410-bccb-ddc709dc36ab">
@@ -159,7 +159,7 @@
                 <textElement>
                     <font isBold="false"/>
                 </textElement>
-                <text><![CDATA[importTotal]]></text>
+                <text><![CDATA[Importe Total]]></text>
             </staticText>
         </band>
     </columnHeader>

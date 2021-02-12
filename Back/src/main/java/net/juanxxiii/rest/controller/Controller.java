@@ -3,6 +3,7 @@ package net.juanxxiii.rest.controller;
 import net.juanxxiii.db.entity.*;
 import net.juanxxiii.dto.JasperPurchases;
 import net.juanxxiii.dto.JasperSales;
+import net.juanxxiii.dto.JasperStockSimple;
 import net.juanxxiii.reportService.ReportService;
 import net.juanxxiii.services.QueryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -589,13 +590,7 @@ public class Controller {
         return ResponseEntity.ok("production order deleted");
     }
 
-
     //Report Mapping
-    @GetMapping("/clientReport/{format}")
-    public String generateClientReport(@PathVariable("format") String format) {
-        return reportService.exportReport(format);
-    }
-
     @GetMapping("/reports/sales/{client}/{dateinit}/{datelast}")
     public String exportReportSales(@PathVariable("client") int client,@PathVariable("dateinit") String dateinit, @PathVariable("datelast") String datelast) {
         List<JasperSales> jasper = queryService.getReportList(client,dateinit,datelast);
@@ -613,6 +608,16 @@ public class Controller {
             return reportService.exportReportPurchases(jasper);
         } else {
             return "No existe ese proveedor";
+        }
+    }
+
+    @GetMapping("/reports/stock/simple/{idProduct}")
+    public String exportReportStockProduct(@PathVariable("idProduct") int product) {
+        List<JasperStockSimple> jasper = queryService.getReportStockSimpleProducts(product);
+        if (jasper != null) {
+            return reportService.exportReportStockSimpleProducts(jasper);
+        } else {
+            return "No existe ese producto";
         }
     }
 
