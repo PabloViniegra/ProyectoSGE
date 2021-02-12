@@ -7,7 +7,6 @@ import net.juanxxiii.dto.JasperStockSimple;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.stereotype.Service;
-
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.HashMap;
