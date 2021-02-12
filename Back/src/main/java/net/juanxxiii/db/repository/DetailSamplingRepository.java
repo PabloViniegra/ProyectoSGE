@@ -1,6 +1,7 @@
 package net.juanxxiii.db.repository;
 
 import net.juanxxiii.db.entity.DetailSampling;
+import net.juanxxiii.db.entity.Sampling;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -26,4 +27,6 @@ public interface DetailSamplingRepository extends JpaRepository<DetailSampling, 
     @Transactional
     @Query(value = "UPDATE detalle_escandallo SET cantidad=:quantity WHERE idDetalle=:id",nativeQuery = true)
     int updateDetailSampling(@Param("quantity") int quantity, @Param("id") int id);
+    @Query("from DetailSampling ds where ds.sampling.id =:idSampling")
+    DetailSampling getThisSampling(@Param("idSampling") int sampling);
 }

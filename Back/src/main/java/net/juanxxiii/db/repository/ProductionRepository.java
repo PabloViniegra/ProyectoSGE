@@ -39,5 +39,6 @@ public interface ProductionRepository extends JpaRepository<Production,Integer> 
     @Query(value = "select * from produccion where estado='EN PROCESO' order by idProduccion desc limit 0,20", nativeQuery = true)
     List<Production> getProductionInProcess();
 
-
+    @Query("from Production p where p.sampling.product.id = :idProduct")
+    List<Production> getOrdersWithThisProduct(@Param("idProduct") int id);
 }

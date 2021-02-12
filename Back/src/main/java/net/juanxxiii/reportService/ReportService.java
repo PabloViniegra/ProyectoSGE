@@ -2,6 +2,7 @@ package net.juanxxiii.reportService;
 
 import net.juanxxiii.dto.JasperPurchases;
 import net.juanxxiii.dto.JasperSales;
+import net.juanxxiii.dto.JasperStockComposite;
 import net.juanxxiii.dto.JasperStockSimple;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -66,5 +67,9 @@ public class ReportService {
             e.printStackTrace();
         }
         return "informe_stock_" + jasper.get(0).getProducto() + "_" + LocalDate.now();
+    }
+
+    public String exportReportStockCompositeProducts(List<JasperStockComposite> jasperList) {
+        return null;
     }
 }

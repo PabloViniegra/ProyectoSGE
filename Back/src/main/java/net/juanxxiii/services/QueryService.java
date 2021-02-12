@@ -5,6 +5,7 @@ import net.juanxxiii.db.entity.*;
 import net.juanxxiii.db.repository.*;
 import net.juanxxiii.dto.JasperPurchases;
 import net.juanxxiii.dto.JasperSales;
+import net.juanxxiii.dto.JasperStockComposite;
 import net.juanxxiii.dto.JasperStockSimple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -1083,7 +1084,6 @@ public class QueryService {
 
     public List<JasperStockSimple> getReportStockSimpleProducts(int product) {
         List<JasperStockSimple> listStockSimple = new ArrayList<>();
-        Logger logger = Logger.getLogger(getClass().getName());
         Product newproduct = productRepository.findById(product).orElse(null);
         List<JasperStockSimple> sortedList = null;
         if (newproduct != null) {
@@ -1102,7 +1102,7 @@ public class QueryService {
                     listStockSimple.add(jasper);
                 } else {
                     System.err.println("La venta parece estar vacía");
-                    logger.info("La venta parece estar vacía");
+                    log.info("La venta parece estar vacía");
                 }
             });
             linesPurchase.forEach(lp -> {
@@ -1118,7 +1118,7 @@ public class QueryService {
                     listStockSimple.add(jasper);
                 } else {
                     System.err.println("La compra parece estar vacía");
-                    logger.info("La compra parece estar vacía");
+                    log.info("La compra parece estar vacía");
                 }
             });
             List<DetailSampling> details = detailSamplingRepository
@@ -1150,7 +1150,7 @@ public class QueryService {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                return d1.compareTo(d2);
+                return Objects.requireNonNull(d1).compareTo(d2);
             }).peek(jasperStockSimple -> {
                 int stock = 0;
                 for (int i = 0; i < listStockSimple.indexOf(jasperStockSimple); i++) {
@@ -1160,8 +1160,39 @@ public class QueryService {
             }).collect(Collectors.toList());
         } else {
             System.err.println("Parece que no existe ese producto");
-            Logger.getLogger(getClass().getName(), "Parece que no existe ese producto");
+            log.warning("Parece que no existe ese producto");
         }
         return sortedList;
+    }
+    public List<JasperStockComposite> getReportStockCompositeProducts(int product) {
+        List<JasperStockComposite> jasperList = new ArrayList<>();
+        Product newproduct = productRepository.findById(product).orElse(null);
+        List<JasperStockComposite> sortedList = null;
+
+        if (newproduct != null) {
+            List<Production> productionOrders = productionRepository.getOrdersWithThisProduct(newproduct.getId());
+            List<SaleLine> salesList = saleLineRepository.getSaleLinesWithThisProduct(newproduct.getId());
+            productionOrders.forEach(production -> {
+                JasperStockComposite jasperStockComposite = new JasperStockComposite();
+                jasperStockComposite.setDate(production.getDate());
+                jasperStockComposite.setAgent(production.getClient().getFullName());
+                jasperStockComposite.setProduct(newproduct.getName());
+                jasperStockComposite.setUnitsManufactured(production.getQuantity());
+                jasperStockComposite.setPrice(production.getQuantity() * newproduct.getSellPrice());
+                jasperStockComposite.setUnitsSold(0);
+                jasperStockComposite.setStock();
+                jasperList.add(jasperStockComposite);
+            });
+            salesList.forEach(sale -> {
+                JasperStockComposite jasperStockComposite = new JasperStockComposite();
+                Sale forSale = saleRepository.findById(sale.getIdSale()).orElse(null);
+                jasperStockComposite.setDate(forSale.getReceipt().getReceiptDate());
+                jasperStockComposite.setAgent(new Client(clientRepository.findById()));
+            });
+        } else {
+            System.err.println("Parece que no existe ese producto");
+            log.warning("Parece que no existe ese producto");
+        }
+        return jasperList;
     }
 }

@@ -3,6 +3,7 @@ package net.juanxxiii.rest.controller;
 import net.juanxxiii.db.entity.*;
 import net.juanxxiii.dto.JasperPurchases;
 import net.juanxxiii.dto.JasperSales;
+import net.juanxxiii.dto.JasperStockComposite;
 import net.juanxxiii.dto.JasperStockSimple;
 import net.juanxxiii.reportService.ReportService;
 import net.juanxxiii.services.QueryService;
@@ -616,6 +617,16 @@ public class Controller {
         List<JasperStockSimple> jasper = queryService.getReportStockSimpleProducts(product);
         if (jasper != null) {
             return reportService.exportReportStockSimpleProducts(jasper);
+        } else {
+            return "No existe ese producto";
+        }
+    }
+
+    @GetMapping("/reports/stock/composite/{idProduct}")
+    public String exportReportStockCompositeProduct(@PathVariable("idProduct") int product) {
+        List<JasperStockComposite> jasperList = queryService.getReportStockCompositeProducts(product);
+        if (jasperList != null) {
+            return reportService.exportReportStockCompositeProducts(jasperList);
         } else {
             return "No existe ese producto";
         }
