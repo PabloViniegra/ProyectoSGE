@@ -3,6 +3,7 @@ package net.juanxxiii.rest.controller;
 import net.juanxxiii.db.entity.*;
 import net.juanxxiii.dto.JasperPurchases;
 import net.juanxxiii.dto.JasperSales;
+import net.juanxxiii.dto.JasperStockComposite;
 import net.juanxxiii.dto.JasperStockSimple;
 import net.juanxxiii.reportService.ReportService;
 import net.juanxxiii.services.QueryService;
@@ -590,13 +591,7 @@ public class Controller {
         return ResponseEntity.ok("production order deleted");
     }
 
-
     //Report Mapping
-    @GetMapping("/clientReport/{format}")
-    public String generateClientReport(@PathVariable("format") String format) {
-        return reportService.exportReport(format);
-    }
-
     @GetMapping("/reports/sales/{client}/{dateinit}/{datelast}")
     public String exportReportSales(@PathVariable("client") int client,@PathVariable("dateinit") String dateinit, @PathVariable("datelast") String datelast) {
         List<JasperSales> jasper = queryService.getReportList(client,dateinit,datelast);
@@ -617,15 +612,24 @@ public class Controller {
         }
     }
 
-    @GetMapping("reports/stock/simple/{product}")
-    public String exportReportStockProduct(@PathVariable("product") int product) {
+    @GetMapping("/reports/stock/simple/{idProduct}")
+    public String exportReportStockProduct(@PathVariable("idProduct") int product) {
         List<JasperStockSimple> jasper = queryService.getReportStockSimpleProducts(product);
         if (jasper != null) {
             return reportService.exportReportStockSimpleProducts(jasper);
         } else {
             return "No existe ese producto";
         }
-        
+    }
+
+    @GetMapping("/reports/stock/composite/{idProduct}")
+    public String exportReportStockCompositeProduct(@PathVariable("idProduct") int product) {
+        List<JasperStockComposite> jasperList = queryService.getReportStockCompositeProducts(product);
+        if (jasperList != null) {
+            return reportService.exportReportStockCompositeProducts(jasperList);
+        } else {
+            return "No existe ese producto";
+        }
     }
 
 }

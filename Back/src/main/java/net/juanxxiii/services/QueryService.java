@@ -5,17 +5,17 @@ import net.juanxxiii.db.entity.*;
 import net.juanxxiii.db.repository.*;
 import net.juanxxiii.dto.JasperPurchases;
 import net.juanxxiii.dto.JasperSales;
+import net.juanxxiii.dto.JasperStockComposite;
 import net.juanxxiii.dto.JasperStockSimple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -1081,12 +1081,11 @@ public class QueryService {
                 });
         return reportPurchases;
     }
-    //Revisar este método, dudo que funcione.
+
     public List<JasperStockSimple> getReportStockSimpleProducts(int product) {
         List<JasperStockSimple> listStockSimple = new ArrayList<>();
-        Logger logger = Logger.getLogger(getClass().getName());
         Product newproduct = productRepository.findById(product).orElse(null);
-
+        List<JasperStockSimple> sortedList = null;
         if (newproduct != null) {
             List<SaleLine> linesSale = saleLineRepository.getSaleLinesWithThisProduct(newproduct.getId());
             List<PurchaseLine> linesPurchase = purchaseLineRepository.getPurchaseLinesWithThisProduct(newproduct.getId());
@@ -1097,15 +1096,13 @@ public class QueryService {
                     jasper.setDate(sale.get().getReceipt().getReceiptDate());
                     jasper.setAgent(clientRepository.findById(sale.get().getClient()).get().getFullName());
                     jasper.setUdssales(ls.getQuantity());
-                    jasper.setPrice(ls.getIdProduct().getSellPrice());
+                    jasper.setPrice(ls.getIdProduct().getSellPrice() * ls.getQuantity());
+                    jasper.setProducto(newproduct.getName());
                     jasper.setUdspurchases(0);
-                    jasper.setStock(linesSale.stream()
-                            .map(SaleLine::getQuantity)
-                            .reduce(0, Math::subtractExact));
                     listStockSimple.add(jasper);
                 } else {
                     System.err.println("La venta parece estar vacía");
-                    logger.info("La venta parece estar vacía");
+                    log.info("La venta parece estar vacía");
                 }
             });
             linesPurchase.forEach(lp -> {
@@ -1115,13 +1112,13 @@ public class QueryService {
                     jasper.setDate(purchase.get().getReceipt().getReceiptDate());
                     jasper.setAgent(supplierRepository.findById(purchase.get().getSupplier()).get().getFullName());
                     jasper.setUdssales(0);
-                    jasper.setPrice(lp.getIdProduct().getBuyPrice());
+                    jasper.setPrice(lp.getIdProduct().getBuyPrice() * lp.getQuantity());
+                    jasper.setProducto(newproduct.getName());
                     jasper.setUdspurchases(lp.getQuantity());
-                    jasper.setStock(linesPurchase.stream().map(PurchaseLine::getQuantity).reduce(0, Integer::sum));
                     listStockSimple.add(jasper);
                 } else {
                     System.err.println("La compra parece estar vacía");
-                    logger.info("La compra parece estar vacía");
+                    log.info("La compra parece estar vacía");
                 }
             });
             List<DetailSampling> details = detailSamplingRepository
@@ -1131,28 +1128,77 @@ public class QueryService {
                     .collect(Collectors.toList());
 
             List<Production> orders = productionRepository.findAll();
-            orders.forEach(o -> {
-                details.forEach(d -> {
-                    if (o.getSampling().getId() == d.getSampling().getId()) {
-                        JasperStockSimple jasper = new JasperStockSimple();
-                        jasper.setDate(o.getDate());
-                        jasper.setAgent(o.getClient().getFullName());
-                        jasper.setUdspurchases(details.stream()
-                                .map(DetailSampling::getQuantity)
-                                .reduce(0, Integer::sum));
-                        jasper.setPrice(d.getProduct().getBuyPrice());
-                        jasper.setUdssales(0);
-                        jasper.setStock(details.stream()
-                                .map(DetailSampling::getQuantity)
-                                .reduce(0, Integer::sum));
-                        listStockSimple.add(jasper);
-                    }
-                });
+            orders.forEach(o -> details.forEach(d -> {
+                if (o.getSampling().getId() == d.getSampling().getId()) {
+                    JasperStockSimple jasper = new JasperStockSimple();
+                    jasper.setDate(o.getDate());
+                    jasper.setAgent(o.getClient().getFullName());
+                    jasper.setUdspurchases(0);
+                    jasper.setPrice(d.getProduct().getBuyPrice());
+                    jasper.setProducto(newproduct.getName());
+                    jasper.setUdssales(o.getQuantity() * d.getQuantity());
+                    listStockSimple.add(jasper);
+                }
+            }));
+            sortedList = listStockSimple.stream().sorted((jasperStockSimple, t1) -> {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                Date d1 = null;
+                Date d2 = null;
+                try {
+                    d1 = sdf.parse(jasperStockSimple.getDate());
+                    d2 = sdf.parse(t1.getDate());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                return Objects.requireNonNull(d1).compareTo(d2);
+            }).peek(jasperStockSimple -> {
+                int stock = 0;
+                for (int i = 0; i < listStockSimple.indexOf(jasperStockSimple); i++) {
+                    stock += listStockSimple.get(i).getUdspurchases() - listStockSimple.get(i).getUdssales();
+                }
+                jasperStockSimple.setStock(stock);
+            }).collect(Collectors.toList());
+        } else {
+            System.err.println("Parece que no existe ese producto");
+            log.warning("Parece que no existe ese producto");
+        }
+        return sortedList;
+    }
+    public List<JasperStockComposite> getReportStockCompositeProducts(int product) {
+        List<JasperStockComposite> jasperList = new ArrayList<>();
+        Product newproduct = productRepository.findById(product).orElse(null);
+        List<JasperStockComposite> sortedList = null;
+
+        if (newproduct != null) {
+            List<Production> productionOrders = productionRepository.getOrdersWithThisProduct(newproduct.getId());
+            List<SaleLine> salesList = saleLineRepository.getSaleLinesWithThisProduct(newproduct.getId());
+            productionOrders.forEach(production -> {
+                JasperStockComposite jasperStockComposite = new JasperStockComposite();
+                jasperStockComposite.setDate(production.getDate());
+                jasperStockComposite.setAgent(production.getClient().getFullName());
+                jasperStockComposite.setProduct(newproduct.getName());
+                jasperStockComposite.setUnitsManufactured(production.getQuantity());
+                jasperStockComposite.setPrice(production.getQuantity() * newproduct.getSellPrice());
+                jasperStockComposite.setUnitsSold(0);
+                //jasperStockComposite.setStock();
+                jasperList.add(jasperStockComposite);
+            });
+            salesList.forEach(sale -> {
+                JasperStockComposite jasperStockComposite = new JasperStockComposite();
+                Sale forSale = saleRepository.findById(sale.getIdSale()).orElse(null);
+                jasperStockComposite.setDate(forSale.getReceipt().getReceiptDate());
+                Client client = clientRepository.findById(forSale.getClient()).orElse(null);
+                jasperStockComposite.setAgent(client != null ? client.getFullName() : null);
+                jasperStockComposite.setProduct(newproduct.getName());
+                jasperStockComposite.setUnitsManufactured(0);
+                jasperStockComposite.setUnitsSold(sale.getQuantity());
+                jasperStockComposite.setPrice(sale.getQuantity()*sale.getIdProduct().getSellPrice());
+                //jasperStockComposite.setStock();
             });
         } else {
             System.err.println("Parece que no existe ese producto");
-            Logger.getLogger(getClass().getName(), "Parece que no existe ese producto");
+            log.warning("Parece que no existe ese producto");
         }
-        return listStockSimple;
+        return jasperList;
     }
 }

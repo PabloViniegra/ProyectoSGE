@@ -11,6 +11,6 @@ import java.util.List;
 
 @Repository
 public interface SaleLineRepository extends JpaRepository<SaleLine, Integer> {
-    @Query("from SaleLine sl where sl.idProduct=:idproduct")
+    @Query("from SaleLine sl where sl.idProduct.id=:idproduct")
     List<SaleLine> getSaleLinesWithThisProduct(@Param("idproduct") int idproduct);
 }
