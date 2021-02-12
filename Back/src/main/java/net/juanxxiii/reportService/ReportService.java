@@ -16,16 +16,18 @@ import java.util.Map;
 @Service
 public class ReportService {
 
+    private JasperPrint getJasperPrint(List<?> list, InputStream stream) throws JRException {
+        JasperReport jasperReport = JasperCompileManager.compileReport(stream);
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(list);
+        Map<String, Object> map = new HashMap<>();
+        map.put("createdBy", "Grupo 2 SGE");
+        return JasperFillManager.fillReport(jasperReport, map, dataSource);
+    }
+
     public String exportReportSales(List<JasperSales> salesList) {
-        JasperReport jasperReport;
         try {
             InputStream stream = getClass().getResourceAsStream("/reportSalesTemplate.jrxml");
-            jasperReport = JasperCompileManager.compileReport(stream);
-            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(salesList);
-
-            Map<String, Object> map = new HashMap<>();
-            map.put("createdBy", "Grupo 2 SGE");
-            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, dataSource);
+            JasperPrint jasperPrint = getJasperPrint(salesList, stream);
             JasperExportManager.exportReportToPdfFile(jasperPrint, "/home/informe_ventas_" + salesList.get(0).getClient() + "_" + salesList.get(0).getReceiptDate() + "_" + salesList.get(salesList.size() - 1).getReceiptDate() + ".pdf");
             JasperExportManager.exportReportToHtmlFile(jasperPrint, "/home/informe_ventas_" + salesList.get(0).getClient() + "_" + salesList.get(0).getReceiptDate() + "_" + salesList.get(salesList.size() - 1).getReceiptDate() + ".html");
         } catch (JRException e) {
@@ -35,14 +37,9 @@ public class ReportService {
     }
 
     public String exportReportPurchases(List<JasperPurchases> purchasesList) {
-        JasperReport jasperReport;
         try {
             InputStream stream = getClass().getResourceAsStream("/reportPurchasesTemplate.jrxml");
-            jasperReport = JasperCompileManager.compileReport(stream);
-            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(purchasesList);
-            Map<String, Object> map = new HashMap<>();
-            map.put("createdBy", "Grupo 2 SGE");
-            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, dataSource);
+            JasperPrint jasperPrint = getJasperPrint(purchasesList, stream);
             JasperExportManager.exportReportToPdfFile(jasperPrint, "/home/informe_compras_" + purchasesList.get(0).getSupplier() + "_" + purchasesList.get(0).getDate() + "_" + purchasesList.get(purchasesList.size() - 1).getDate() + ".pdf");
             JasperExportManager.exportReportToHtmlFile(jasperPrint, "/home/informe_compras_" + purchasesList.get(0).getSupplier() + "_" + purchasesList.get(0).getDate() + "_" + purchasesList.get(purchasesList.size() - 1).getDate() + ".html");
         } catch (JRException e) {
@@ -52,14 +49,9 @@ public class ReportService {
     }
 
     public String exportReportStockSimpleProducts(List<JasperStockSimple> jasper) {
-        JasperReport jasperReport;
         try {
             InputStream stream = getClass().getResourceAsStream("/reportStockSimple.jrxml");
-            jasperReport = JasperCompileManager.compileReport(stream);
-            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(jasper);
-            Map<String, Object> map = new HashMap<>();
-            map.put("createdBy", "Grupo 2 SGE");
-            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, dataSource);
+            JasperPrint jasperPrint = getJasperPrint(jasper, stream);
             JasperExportManager.exportReportToPdfFile(jasperPrint, "/home/informe_stock_" + jasper.get(0).getProducto() + "_" + LocalDate.now() + ".pdf");
             JasperExportManager.exportReportToHtmlFile(jasperPrint, "/home/informe_stock_" + jasper.get(0).getProducto() + "_" + LocalDate.now() + ".html");
         } catch (JRException e) {
