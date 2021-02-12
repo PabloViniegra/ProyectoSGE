@@ -1180,14 +1180,15 @@ public class QueryService {
                 jasperStockComposite.setUnitsManufactured(production.getQuantity());
                 jasperStockComposite.setPrice(production.getQuantity() * newproduct.getSellPrice());
                 jasperStockComposite.setUnitsSold(0);
-                jasperStockComposite.setStock();
+                //jasperStockComposite.setStock();
                 jasperList.add(jasperStockComposite);
             });
             salesList.forEach(sale -> {
                 JasperStockComposite jasperStockComposite = new JasperStockComposite();
                 Sale forSale = saleRepository.findById(sale.getIdSale()).orElse(null);
                 jasperStockComposite.setDate(forSale.getReceipt().getReceiptDate());
-                jasperStockComposite.setAgent(new Client(clientRepository.findById()));
+                Client client = clientRepository.findById(forSale.getClient()).orElse(null);
+                jasperStockComposite.setAgent(client.getFullName());
             });
         } else {
             System.err.println("Parece que no existe ese producto");
