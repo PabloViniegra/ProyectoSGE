@@ -14,14 +14,21 @@ async function getAllClientsInaSelected() {
             return a.fullName.localeCompare(b.fullName)
         }))
         .then(response => {
-            let select = document.getElementById('clientForReport');
+            let select = document.getElementById('checkBoxes');
+            select.style.textAlign = 'center';
             response.forEach(s => {
-                let option = document.createElement('option');
-                option.setAttribute('value', s.id);
-                option.innerHTML = '<input type=" checkbox" name="' + s.fullName+'" value="' +s.id +'">';
-                select.appendChild(option);
+                let label = document.createElement('label')
+                label.setAttribute('for', s.fullName)
+                let checkbox = document.createElement('input')
+                checkbox.setAttribute('type', 'checkbox')
+                checkbox.setAttribute('id', s.fullName)
+                checkbox.setAttribute('value', s.id)
+                label.innerHTML = s.fullName;
+                label.appendChild(checkbox)
+                select.appendChild(label)
             });
         })
+
 }
 
 document.getElementById("generateReport").addEventListener("click", ev => {
@@ -31,11 +38,19 @@ document.getElementById("generateReport").addEventListener("click", ev => {
 
 async function generateReport() {
 
-    let client = document.getElementById("clientForReport");
+    let markedCheckbox = document.querySelectorAll('input[type="checkbox"]:checked');
     let dateInit = document.getElementById("startDate");
     let dateLast = document.getElementById("endDate");
-
-    let url = 'http://localhost:8080/api/v1/reports/sales/' + client.value + '/' + dateInit.value + '/' + dateLast.value;
+    let stringClients = [];
+    for (let checkbox of markedCheckbox) {
+        if (checkbox.checked) {
+            stringClients.push(checkbox.value);
+        }
+    }
+    console.log(stringClients);
+    let definitiveString = stringClients.join(';');
+    console.log('String: ' + definitiveString)
+    let url = 'http://localhost:8080/api/v1/reports/sales/' + definitiveString + '/' + dateInit.value + '/' + dateLast.value;
     let getInit = {
         method: 'GET',
         headers: {
