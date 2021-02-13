@@ -593,7 +593,7 @@ public class Controller {
 
     //Report Mapping
     @GetMapping("/reports/sales/{client}/{dateinit}/{datelast}")
-    public String exportReportSales(@PathVariable("client") int client,@PathVariable("dateinit") String dateinit, @PathVariable("datelast") String datelast) {
+    public String exportReportSales(@PathVariable("client") String client,@PathVariable("dateinit") String dateinit, @PathVariable("datelast") String datelast) {
         List<JasperSales> jasper = queryService.getReportList(client,dateinit,datelast);
         if (jasper != null) {
             return reportService.exportReportSales(jasper);
@@ -603,8 +603,8 @@ public class Controller {
     }
 
     @GetMapping("/reports/purchases/{supplier}/{dateinit}/{datelast}")
-    public String exportReportPurchases(@PathVariable("supplier") int client,@PathVariable("dateinit") String dateinit, @PathVariable("datelast") String datelast) {
-        List<JasperPurchases> jasper = queryService.getReportPurchasesList(client,dateinit,datelast);
+    public String exportReportPurchases(@PathVariable("supplier") String supplier,@PathVariable("dateinit") String dateinit, @PathVariable("datelast") String datelast) {
+        List<JasperPurchases> jasper = queryService.getReportPurchasesList(supplier,dateinit,datelast);
         if (jasper != null) {
             return reportService.exportReportPurchases(jasper);
         } else {

@@ -16,7 +16,6 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Service
@@ -1028,15 +1027,15 @@ public class QueryService {
         }).orElse(-1);
 
     }
-
-    public List<JasperSales> getReportList(int client, String dateinit, String datelast) {
+    //TODO: Retocar la api para que acepte multiples clientes y proveedores
+    public List<JasperSales> getReportList(String client, String dateinit, String datelast) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate d1 = LocalDate.parse(dateinit, formatter);
         LocalDate d2 = LocalDate.parse(datelast, formatter);
         List<JasperSales> reportSales = new ArrayList<>();
-        Client newClient = clientRepository.findById(client).orElse(null);
-        saleRepository.getSalesInThisdates(d1.toString(), d2.toString()).stream()
+        //Client newClient = clientRepository.findById(client).orElse(null);
+        /*saleRepository.getSalesInThisdates(d1.toString(), d2.toString()).stream()
                 .filter(sale -> sale.getClient() == Objects.requireNonNull(newClient).getId())
                 .forEach(sale -> {
                     JasperSales jas = new JasperSales();
@@ -1052,18 +1051,24 @@ public class QueryService {
                             .map(JasperSales::getTotal)
                             .reduce(0F, Float::sum) + jas.getTotal());
                     reportSales.add(jas);
-                });
+                });*/
 
         return reportSales;
     }
 
-    public List<JasperPurchases> getReportPurchasesList(int supplier, String dateinit, String datelast) {
+    public List<JasperPurchases> getReportPurchasesList(String supplier, String dateinit, String datelast) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate d1 = LocalDate.parse(dateinit, formatter);
         LocalDate d2 = LocalDate.parse(datelast, formatter);
         List<JasperPurchases> reportPurchases = new ArrayList<>();
-        Supplier newsupplier = supplierRepository.findById(supplier).orElse(null);
-        purchaseRepository.getPurchasesInThisDates(d1.toString(), d2.toString())
+        String[] tokens = supplier.split(";");
+
+        List<Client> clientsAdded = null;
+        for (String token : tokens) {
+            Client client = clientRepository.findById(Integer.parseInt(token)).orElse(null);
+            clientsAdded.add(client);
+        }
+        /*purchaseRepository.getPurchasesInThisDates(d1.toString(), d2.toString())
                 .stream().filter(p -> p.getSupplier() == Objects.requireNonNull(newsupplier).getId())
                 .forEach(purchase -> {
                     JasperPurchases jas = new JasperPurchases();
@@ -1078,7 +1083,7 @@ public class QueryService {
                     jas.setImportTotal(reportPurchases.stream()
                             .map(JasperPurchases::getTotal).reduce(0F, Float::sum) + jas.getTotal());
                     reportPurchases.add(jas);
-                });
+                });*/
         return reportPurchases;
     }
 
@@ -1186,7 +1191,7 @@ public class QueryService {
             salesList.forEach(sale -> {
                 JasperStockComposite jasperStockComposite = new JasperStockComposite();
                 Sale forSale = saleRepository.findById(sale.getIdSale()).orElse(null);
-                jasperStockComposite.setDate(forSale.getReceipt().getReceiptDate());
+                jasperStockComposite.setDate(Objects.requireNonNull(forSale).getReceipt().getReceiptDate());
                 Client client = clientRepository.findById(forSale.getClient()).orElse(null);
                 jasperStockComposite.setAgent(client != null ? client.getFullName() : null);
                 jasperStockComposite.setProduct(newproduct.getName());
