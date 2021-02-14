@@ -48,7 +48,7 @@ async function generateReport() {
         }
     }
     console.log(stringClients);
-    let definitiveString = stringClients.join(';');
+    let definitiveString = stringClients.join('-');
     console.log('String: ' + definitiveString)
     let url = 'http://localhost:8080/api/v1/reports/sales/' + definitiveString + '/' + dateInit.value + '/' + dateLast.value;
     let getInit = {

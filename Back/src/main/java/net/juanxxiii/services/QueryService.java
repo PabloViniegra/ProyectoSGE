@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -892,21 +893,21 @@ public class QueryService {
         return samplingRepository.save(newSampling);
     }
 
-    public int updateSampling(Sampling newsampling, int id) {
+    public int updateSampling(Sampling newSampling, int id) {
 
         return samplingRepository.findById(id)
                 .map(sampling -> {
 
-                    if (!newsampling.getStaff().equals(sampling.getStaff())) {
-                        Staff staff = staffRepository.findById(newsampling.getStaff().getIdStaff()).orElse(staffRepository.save(newsampling.getStaff()));
+                    if (!newSampling.getStaff().equals(sampling.getStaff())) {
+                        Staff staff = staffRepository.findById(newSampling.getStaff().getIdStaff()).orElse(staffRepository.save(newSampling.getStaff()));
                         samplingRepository.updateStaff(staff.getIdStaff(), id);
                     }
-                    if (newsampling.getProduct().equals(sampling.getProduct())) {
-                        Product product = productRepository.findById(newsampling.getProduct().getId()).orElse(productRepository.save(newsampling.getProduct()));
+                    if (newSampling.getProduct().equals(sampling.getProduct())) {
+                        Product product = productRepository.findById(newSampling.getProduct().getId()).orElse(productRepository.save(newSampling.getProduct()));
                         samplingRepository.updateProduct(product.getId(), id);
                     }
 
-                    return samplingRepository.updateSampling(newsampling.getName(), id);
+                    return samplingRepository.updateSampling(newSampling.getName(), id);
                 })
                 .orElse(-1);
     }
@@ -1027,82 +1028,90 @@ public class QueryService {
         }).orElse(-1);
 
     }
-    //TODO: Retocar la api para que acepte multiples clientes y proveedores
-    public List<JasperSales> getReportList(String client, String dateinit, String datelast) {
 
+    public List<JasperSales> getReportList(String clientString, String dateinit, String datelast) {
+        System.out.println("El string recibido es: " + clientString);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate d1 = LocalDate.parse(dateinit, formatter);
         LocalDate d2 = LocalDate.parse(datelast, formatter);
         List<JasperSales> reportSales = new ArrayList<>();
-        //Client newClient = clientRepository.findById(client).orElse(null);
-        /*saleRepository.getSalesInThisdates(d1.toString(), d2.toString()).stream()
-                .filter(sale -> sale.getClient() == Objects.requireNonNull(newClient).getId())
+        String[] tokens = clientString.split("-");
+
+        List<Client> clientList = new ArrayList<>();
+        for (String token : tokens) {
+            clientRepository.findById(Integer.parseInt(token)).ifPresent(clientList::add);
+        }
+        saleRepository.getSalesInThisdates(d1.toString(), d2.toString()).stream()
+                .filter(sale -> clientList.contains(getClient(sale.getClient())))
                 .forEach(sale -> {
                     JasperSales jas = new JasperSales();
                     jas.setIdDoc(sale.getId());
-                    jas.setClient(newClient.getFullName());
-                    jas.setDni(newClient.getDni());
-                    jas.setReceiptDate(sale.getReceipt().getReceiptDate());
+                    jas.setClient(getClient(sale.getClient()).getFullName());
+                    jas.setDni(getClient(sale.getClient()).getDni());
+                    jas.setReceiptDate(sale.getReceipt().getReceiptDate().substring(0, 11));
                     jas.setSubtotal(sale.getReceipt().getSubtotal());
-                    jas.setQuote(sale.getReceipt().getSubtotal() * (sale.getReceipt().getIva() / 100));
+                    BigDecimal a = BigDecimal.valueOf(sale.getReceipt().getSubtotal() * (sale.getReceipt().getIva() / 100));
+                    BigDecimal roundOff = a.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+                    jas.setQuote(roundOff.floatValue());
                     jas.setIva(sale.getReceipt().getIva());
                     jas.setTotal(sale.getReceipt().getTotal());
                     jas.setImportTotal(reportSales.stream()
                             .map(JasperSales::getTotal)
                             .reduce(0F, Float::sum) + jas.getTotal());
                     reportSales.add(jas);
-                });*/
+                });
 
         return reportSales;
     }
 
-    public List<JasperPurchases> getReportPurchasesList(String supplier, String dateinit, String datelast) {
+    public List<JasperPurchases> getReportPurchasesList(String supplierString, String dateInit, String dateLast) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate d1 = LocalDate.parse(dateinit, formatter);
-        LocalDate d2 = LocalDate.parse(datelast, formatter);
+        LocalDate d1 = LocalDate.parse(dateInit, formatter);
+        LocalDate d2 = LocalDate.parse(dateLast, formatter);
         List<JasperPurchases> reportPurchases = new ArrayList<>();
-        String[] tokens = supplier.split(";");
+        String[] tokens = supplierString.split(";");
 
-        List<Client> clientsAdded = null;
+        List<Supplier> supplierList = new ArrayList<>();
         for (String token : tokens) {
-            Client client = clientRepository.findById(Integer.parseInt(token)).orElse(null);
-            clientsAdded.add(client);
+            supplierRepository.findById(Integer.parseInt(token)).ifPresent(supplierList::add);
         }
-        /*purchaseRepository.getPurchasesInThisDates(d1.toString(), d2.toString())
-                .stream().filter(p -> p.getSupplier() == Objects.requireNonNull(newsupplier).getId())
+        purchaseRepository.getPurchasesInThisDates(d1.toString(), d2.toString())
+                .stream().filter(p -> supplierList.contains(getSupplier(p.getSupplier())))
                 .forEach(purchase -> {
                     JasperPurchases jas = new JasperPurchases();
                     jas.setIdDoc(purchase.getId());
-                    jas.setDate(purchase.getReceipt().getReceiptDate());
-                    jas.setSupplier(newsupplier.getFullName());
-                    jas.setDni(newsupplier.getDni());
+                    jas.setDate(purchase.getReceipt().getReceiptDate().substring(0, 11));
+                    jas.setSupplier(getSupplier(purchase.getSupplier()).getFullName());
+                    jas.setDni(getSupplier(purchase.getSupplier()).getDni());
                     jas.setSubtotal(purchase.getReceipt().getSubtotal());
-                    jas.setQuote(purchase.getReceipt().getSubtotal() * (purchase.getReceipt().getIva() / 100));
+                    BigDecimal a = BigDecimal.valueOf(purchase.getReceipt().getSubtotal() * (purchase.getReceipt().getIva() / 100));
+                    BigDecimal roundOff = a.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+                    jas.setQuote(roundOff.floatValue());
                     jas.setIva(purchase.getReceipt().getIva());
                     jas.setTotal(purchase.getReceipt().getTotal());
                     jas.setImportTotal(reportPurchases.stream()
                             .map(JasperPurchases::getTotal).reduce(0F, Float::sum) + jas.getTotal());
                     reportPurchases.add(jas);
-                });*/
+                });
         return reportPurchases;
     }
 
     public List<JasperStockSimple> getReportStockSimpleProducts(int product) {
         List<JasperStockSimple> listStockSimple = new ArrayList<>();
-        Product newproduct = productRepository.findById(product).orElse(null);
+        Product newProduct = productRepository.findById(product).orElse(null);
         List<JasperStockSimple> sortedList = null;
-        if (newproduct != null) {
-            List<SaleLine> linesSale = saleLineRepository.getSaleLinesWithThisProduct(newproduct.getId());
-            List<PurchaseLine> linesPurchase = purchaseLineRepository.getPurchaseLinesWithThisProduct(newproduct.getId());
+        if (newProduct != null) {
+            List<SaleLine> linesSale = saleLineRepository.getSaleLinesWithThisProduct(newProduct.getId());
+            List<PurchaseLine> linesPurchase = purchaseLineRepository.getPurchaseLinesWithThisProduct(newProduct.getId());
             linesSale.forEach(ls -> {
                 JasperStockSimple jasper = new JasperStockSimple();
                 Optional<Sale> sale = saleRepository.findById(ls.getIdSale());
                 if (sale.isPresent()) {
-                    jasper.setDate(sale.get().getReceipt().getReceiptDate());
+                    jasper.setDate(sale.get().getReceipt().getReceiptDate().substring(0, 11));
                     jasper.setAgent(clientRepository.findById(sale.get().getClient()).get().getFullName());
                     jasper.setUdssales(ls.getQuantity());
                     jasper.setPrice(ls.getIdProduct().getSellPrice() * ls.getQuantity());
-                    jasper.setProducto(newproduct.getName());
+                    jasper.setProducto(newProduct.getName());
                     jasper.setUdspurchases(0);
                     listStockSimple.add(jasper);
                 } else {
@@ -1114,11 +1123,11 @@ public class QueryService {
                 Optional<Purchase> purchase = purchaseRepository.findById(lp.getIdPurchase());
                 JasperStockSimple jasper = new JasperStockSimple();
                 if (purchase.isPresent()) {
-                    jasper.setDate(purchase.get().getReceipt().getReceiptDate());
+                    jasper.setDate(purchase.get().getReceipt().getReceiptDate().substring(0, 11));
                     jasper.setAgent(supplierRepository.findById(purchase.get().getSupplier()).get().getFullName());
                     jasper.setUdssales(0);
                     jasper.setPrice(lp.getIdProduct().getBuyPrice() * lp.getQuantity());
-                    jasper.setProducto(newproduct.getName());
+                    jasper.setProducto(newProduct.getName());
                     jasper.setUdspurchases(lp.getQuantity());
                     listStockSimple.add(jasper);
                 } else {
@@ -1129,7 +1138,7 @@ public class QueryService {
             List<DetailSampling> details = detailSamplingRepository
                     .findAll()
                     .stream()
-                    .filter(d -> d.getProduct().getId() == newproduct.getId())
+                    .filter(d -> d.getProduct().getId() == newProduct.getId())
                     .collect(Collectors.toList());
 
             List<Production> orders = productionRepository.findAll();
@@ -1140,66 +1149,89 @@ public class QueryService {
                     jasper.setAgent(o.getClient().getFullName());
                     jasper.setUdspurchases(0);
                     jasper.setPrice(d.getProduct().getBuyPrice());
-                    jasper.setProducto(newproduct.getName());
+                    jasper.setProducto(newProduct.getName());
                     jasper.setUdssales(o.getQuantity() * d.getQuantity());
                     listStockSimple.add(jasper);
                 }
             }));
-            sortedList = listStockSimple.stream().sorted((jasperStockSimple, t1) -> {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                Date d1 = null;
-                Date d2 = null;
-                try {
-                    d1 = sdf.parse(jasperStockSimple.getDate());
-                    d2 = sdf.parse(t1.getDate());
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                return Objects.requireNonNull(d1).compareTo(d2);
-            }).peek(jasperStockSimple -> {
+            sortedList = listStockSimple.stream()
+                    .sorted((jasperStockSimple, t1) -> {
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                        Date d1 = null;
+                        Date d2 = null;
+                        try {
+                            d1 = sdf.parse(jasperStockSimple.getDate());
+                            d2 = sdf.parse(t1.getDate());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        return Objects.requireNonNull(d1).compareTo(d2);
+                    }).collect(Collectors.toList());
+
+            for (JasperStockSimple jasperStockSimple : sortedList) {
                 int stock = 0;
-                for (int i = 0; i < listStockSimple.indexOf(jasperStockSimple); i++) {
-                    stock += listStockSimple.get(i).getUdspurchases() - listStockSimple.get(i).getUdssales();
+                for (int i = 0; i <= sortedList.indexOf(jasperStockSimple); i++) {
+                    stock += sortedList.get(i).getUdspurchases() - sortedList.get(i).getUdssales();
                 }
                 jasperStockSimple.setStock(stock);
-            }).collect(Collectors.toList());
+            }
         } else {
             System.err.println("Parece que no existe ese producto");
             log.warning("Parece que no existe ese producto");
         }
         return sortedList;
     }
+
     public List<JasperStockComposite> getReportStockCompositeProducts(int product) {
         List<JasperStockComposite> jasperList = new ArrayList<>();
-        Product newproduct = productRepository.findById(product).orElse(null);
+        Product newProduct = productRepository.findById(product).orElse(null);
         List<JasperStockComposite> sortedList = null;
 
-        if (newproduct != null) {
-            List<Production> productionOrders = productionRepository.getOrdersWithThisProduct(newproduct.getId());
-            List<SaleLine> salesList = saleLineRepository.getSaleLinesWithThisProduct(newproduct.getId());
+        if (newProduct != null) {
+            List<Production> productionOrders = productionRepository.getOrdersWithThisProduct(newProduct.getId());
+            List<SaleLine> salesList = saleLineRepository.getSaleLinesWithThisProduct(newProduct.getId());
             productionOrders.forEach(production -> {
                 JasperStockComposite jasperStockComposite = new JasperStockComposite();
                 jasperStockComposite.setDate(production.getDate());
                 jasperStockComposite.setAgent(production.getClient().getFullName());
-                jasperStockComposite.setProduct(newproduct.getName());
+                jasperStockComposite.setProduct(newProduct.getName());
                 jasperStockComposite.setUnitsManufactured(production.getQuantity());
-                jasperStockComposite.setPrice(production.getQuantity() * newproduct.getSellPrice());
+                jasperStockComposite.setPrice(production.getQuantity() * newProduct.getSellPrice());
                 jasperStockComposite.setUnitsSold(0);
-                //jasperStockComposite.setStock();
                 jasperList.add(jasperStockComposite);
             });
             salesList.forEach(sale -> {
+                Client client = getClient(getSale(sale.getIdSale()).getClient());
                 JasperStockComposite jasperStockComposite = new JasperStockComposite();
-                Sale forSale = saleRepository.findById(sale.getIdSale()).orElse(null);
-                jasperStockComposite.setDate(Objects.requireNonNull(forSale).getReceipt().getReceiptDate());
-                Client client = clientRepository.findById(forSale.getClient()).orElse(null);
+                jasperStockComposite.setDate(getSale(sale.getIdSale()).getReceipt().getReceiptDate().substring(0, 11));
                 jasperStockComposite.setAgent(client != null ? client.getFullName() : null);
-                jasperStockComposite.setProduct(newproduct.getName());
+                jasperStockComposite.setProduct(newProduct.getName());
                 jasperStockComposite.setUnitsManufactured(0);
                 jasperStockComposite.setUnitsSold(sale.getQuantity());
-                jasperStockComposite.setPrice(sale.getQuantity()*sale.getIdProduct().getSellPrice());
-                //jasperStockComposite.setStock();
+                jasperStockComposite.setPrice(sale.getQuantity() * sale.getIdProduct().getSellPrice());
+                jasperList.add(jasperStockComposite);
             });
+            sortedList = jasperList.stream()
+                    .sorted((jasperStockSimple, t1) -> {
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                        Date d1 = null;
+                        Date d2 = null;
+                        try {
+                            d1 = sdf.parse(jasperStockSimple.getDate());
+                            d2 = sdf.parse(t1.getDate());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        return Objects.requireNonNull(d1).compareTo(d2);
+                    }).collect(Collectors.toList());
+
+            for (JasperStockComposite jasperStockComposite : sortedList) {
+                int stock = 0;
+                for (int i = 0; i <= sortedList.indexOf(jasperStockComposite); i++) {
+                    stock += sortedList.get(i).getUnitsManufactured() - sortedList.get(i).getUnitsSold();
+                }
+                jasperStockComposite.setStock(stock);
+            }
         } else {
             System.err.println("Parece que no existe ese producto");
             log.warning("Parece que no existe ese producto");
