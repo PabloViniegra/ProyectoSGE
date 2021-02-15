@@ -1,10 +1,21 @@
 package net.juanxxiii.dto;
 
 import lombok.Data;
-import net.juanxxiii.db.entity.Client;
 
 @Data
 public class JasperReceipt {
-    private Client client;
-    private int sale;
+    private String name;
+    private String location;
+    private String population;
+    private int receiptNumber;
+    private String date;
+    private float subtotal;
+    private float quote;
+    private float iva;
+    private float total;
+    private String iban;
+    private String product;
+    private int quantity;
+    private float pvp;
+    private float price;
 }

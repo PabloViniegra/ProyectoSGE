@@ -34,5 +34,6 @@ public interface SaleRepository extends JpaRepository<Sale, Integer> {
     @Query("from Sale s where s.receipt.receiptDate between :initDate and :lastDate")
     List<Sale> getSalesInThisdates(@Param("initDate") String initDate, @Param("lastDate") String lastDate);
 
-    Sale findByReceipt(Receipt receipt);
+    @Query("from Sale  s where s.receipt.id=:receipt")
+    Sale findByReceipt(@Param("receipt") int receipt);
 }

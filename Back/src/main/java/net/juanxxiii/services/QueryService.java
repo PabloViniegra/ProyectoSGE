@@ -1239,12 +1239,31 @@ public class QueryService {
     public List<JasperReceipt> getReportReceiptList(int idReceipt) {
         List<JasperReceipt> receiptList = new ArrayList<>();
         Receipt receipt = receiptRepository.findById(idReceipt).orElse(null);
-        Sale sale = saleRepository.findByReceipt(receipt);
         if (receipt != null) {
-            JasperReceipt jasperReceipt = new JasperReceipt();
-            jasperReceipt.setClient(getClient(sale.getClient()));
-            jasperReceipt.setSale(sale.getId());
-            receiptList.add(jasperReceipt);
+            Sale sale = saleRepository.findByReceipt(receipt.getId());
+            if (sale != null) {
+                sale.getSaleLines().forEach(saleLine -> {
+                    JasperReceipt jasperReceipt = new JasperReceipt();
+                    Client client = getClient(sale.getClient());
+                    jasperReceipt.setDate(receipt.getReceiptDate());
+                    jasperReceipt.setIva(receipt.getIva());
+                    jasperReceipt.setPopulation(client.getPopulation().toString());
+                    jasperReceipt.setPrice(saleLine.getQuantity() * saleLine.getIdProduct().getSellPrice());
+                    jasperReceipt.setProduct(saleLine.getIdProduct().getName());
+                    jasperReceipt.setReceiptNumber(receipt.getId());
+                    jasperReceipt.setIban(client.getIban());
+                    jasperReceipt.setLocation(client.getDirections().get(0).toString());
+                    jasperReceipt.setQuote(jasperReceipt.getPrice()*(receipt.getIva()/100));
+                    jasperReceipt.setSubtotal(receipt.getSubtotal());
+                    jasperReceipt.setTotal(receipt.getTotal());
+                    jasperReceipt.setPvp(saleLine.getIdProduct().getSellPrice());
+                    jasperReceipt.setName(client.getFullName());
+                    jasperReceipt.setQuantity(saleLine.getQuantity());
+                    System.out.println(jasperReceipt);
+                    receiptList.add(jasperReceipt);
+                });
+            }
+            System.out.println(receiptList);
         }
         return receiptList;
     }

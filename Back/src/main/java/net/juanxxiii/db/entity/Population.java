@@ -29,4 +29,9 @@ public class Population implements Serializable {
         Population that = (Population) o;
         return idPopulation == that.idPopulation && population.equalsIgnoreCase(that.population);
     }
+
+    @Override
+    public String toString() {
+        return population + " " + province + " " + idPopulation;
+    }
 }

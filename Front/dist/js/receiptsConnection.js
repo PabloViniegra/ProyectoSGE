@@ -12,12 +12,12 @@ async function loadLastReceipts() {
         .then(response => {
             let final = 1;
             if (response.length > 20) {
-                final = response.length-20;
+                final = response.length - 20;
             } else {
                 final = 0;
             }
-            
-            for (let i = response.length-1; i >= final; i--) {
+
+            for (let i = response.length - 1; i >= final; i--) {
                 let a = document.createElement('a');
                 let urlReceipt = 'receipts.html?id=' + response[i].id;
                 a.setAttribute('href', urlReceipt);
@@ -65,7 +65,7 @@ async function loadReceipt() {
                     iva.innerHTML = iva.innerHTML + ' ' + response.iva;
                     let total = document.getElementById('total')
                     total.innerHTML = total.innerHTML + ' ' + response.total;
-        
+
                     //Modificacion
                     let subtotalModificar = document.getElementById('inputSubtotalM')
                     subtotalModificar.value = response.subtotal;
@@ -75,7 +75,7 @@ async function loadReceipt() {
                     ivaModificar.value = response.iva;
                     let totalModificar = document.getElementById('inputTotalM')
                     totalModificar.value = response.total;
-        
+
                     //Carga del dato en la celda de la tabla
                     let table = document.getElementById('tableReceiptsLoad');
                     let tblBody = document.getElementById('bodyTableReceipts');
@@ -98,18 +98,18 @@ async function loadReceipt() {
                     let celda6 = document.createElement('td');
                     celda6.innerHTML = response.total;
                     row.appendChild(celda6);
-        
+
                     tblBody.appendChild(row);
                     table.appendChild(tblBody);
                 })
             }
         })
-        
+
 }
 
 async function addReceipt() {
     let form = document.getElementById('addReceipt');
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', async(e) => {
         e.preventDefault();
         const querystring = location.search;
         const params = new URLSearchParams(querystring)
@@ -152,7 +152,7 @@ async function addReceipt() {
 async function updateReceipt() {
     let form = document.getElementById('updateReceipt')
 
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', async(e) => {
         const querystring = location.search;
         const params = new URLSearchParams(querystring)
         let id = params.get("id");
@@ -193,7 +193,7 @@ async function updateReceipt() {
 
 async function deleteReceipt() {
     let form = document.getElementById('deleteReceipt')
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', async(e) => {
         e.preventDefault();
         const querystring = location.search;
         const params = new URLSearchParams(querystring)
@@ -227,13 +227,13 @@ async function loadAllReceipts() {
     let table = document.getElementById('tableAllReceipts');
     let tblBody = document.getElementById('bodyTableReceipts');
     let input = document.getElementById("myInput");
-    
+
     const querystring = location.search;
     const params = new URLSearchParams(querystring)
     let date = params.get('date')
-    if (date != undefined){
-        input.value = date;    
-    } 
+    if (date != undefined) {
+        input.value = date;
+    }
     await fetch(url, getInit)
         .then(response => response.json())
         .then(response => {
@@ -258,7 +258,7 @@ async function loadAllReceipts() {
                 celda6.innerHTML = r.total;
                 row.appendChild(celda6);
                 tblBody.appendChild(row);
-                row.addEventListener("click",() => {
+                row.addEventListener("click", () => {
                     let id = r.id;
                     location.href = 'receipts.html?id=' + id;
                 });
@@ -292,3 +292,43 @@ function filterTableReceipts() {
     }
 }
 
+async function generateReport() {
+    const querystring = location.search;
+    const params = new URLSearchParams(querystring)
+    let id = params.get('id')
+    let url = 'http://localhost:8080/api/v1/sales';
+    let getInit = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    }
+    await fetch(url, getInit)
+        .then(response => response.json())
+        .then(response => {
+            response.forEach(async sale => {
+                if (sale.receipt.id == id) {
+                    let urlReport = 'http://localhost:8080/api/v1/reports/receipt/' + id;
+                    let getInitReport = {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/text'
+                        }
+                    }
+                    await fetch(urlReport, getInitReport)
+                        .then(response => {
+                            if (response.ok) {
+                                response.text()
+                                    .then(response => {
+                                        let mostrarInforme = document.getElementById("mostrarInforme")
+                                        mostrarInforme.setAttribute('src', '../../Reports/' + response + '.pdf')
+                                        console.log(response)
+                                    })
+                            }
+                        });
+                }
+            })
+        })
+}

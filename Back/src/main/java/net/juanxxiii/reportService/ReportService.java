@@ -74,11 +74,11 @@ public class ReportService {
         try {
             InputStream stream = getClass().getResourceAsStream("/reportReceiptTemplate.jrxml");
             JasperPrint jasperPrint = getJasperPrint(jasperList, stream);
-            JasperExportManager.exportReportToPdfFile(jasperPrint, "/home/informe_recibo_" + jasperList.get(0).getClient().getFullName() + "_" + jasperList.get(0).getClient().getSales().stream().filter(sale -> sale.getId()==jasperList.get(0).getSale()).findFirst().get().getReceipt().getReceiptDate() + ".pdf");
-            JasperExportManager.exportReportToHtmlFile(jasperPrint, "/home/informe_recibo_" + jasperList.get(0).getClient().getFullName() + "_" + jasperList.get(0).getClient().getSales().stream().filter(sale -> sale.getId()==jasperList.get(0).getSale()).findFirst().get().getReceipt().getReceiptDate() + ".html");
+            JasperExportManager.exportReportToPdfFile(jasperPrint, "/home/informe_recibo_" + jasperList.get(0).getName() + "_" + jasperList.get(0).getDate() + ".pdf");
+            JasperExportManager.exportReportToHtmlFile(jasperPrint, "/home/informe_recibo_" + jasperList.get(0).getName() + "_" + jasperList.get(0).getDate() + ".html");
         } catch (JRException e) {
             e.printStackTrace();
         }
-        return "/home/informe_recibo_" + jasperList.get(0).getClient().getFullName() + "_" + jasperList.get(0).getClient().getSales().stream().filter(sale -> sale.getId()==jasperList.get(0).getSale()).findFirst().get().getReceipt().getReceiptDate();
+        return "informe_recibo_" + jasperList.get(0).getName() + "_" + jasperList.get(0).getDate();
     }
 }

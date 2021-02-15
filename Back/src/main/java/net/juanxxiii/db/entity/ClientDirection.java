@@ -28,4 +28,9 @@ public class ClientDirection implements Serializable{
         ClientDirection that = (ClientDirection) o;
         return direction.equals(that.direction);
     }
+
+    @Override
+    public String toString() {
+        return direction;
+    }
 }
