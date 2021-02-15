@@ -1,10 +1,7 @@
 package net.juanxxiii.rest.controller;
 
 import net.juanxxiii.db.entity.*;
-import net.juanxxiii.dto.JasperPurchases;
-import net.juanxxiii.dto.JasperSales;
-import net.juanxxiii.dto.JasperStockComposite;
-import net.juanxxiii.dto.JasperStockSimple;
+import net.juanxxiii.dto.*;
 import net.juanxxiii.reportService.ReportService;
 import net.juanxxiii.services.QueryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -627,6 +624,16 @@ public class Controller {
         List<JasperStockComposite> jasperList = queryService.getReportStockCompositeProducts(product);
         if (jasperList != null) {
             return reportService.exportReportStockCompositeProducts(jasperList);
+        } else {
+            return "No existe ese producto";
+        }
+    }
+
+    @GetMapping("/reports/receipt/{idReceipt}")
+    public String exportReportReceipt(@PathVariable("idReceipt") int receipt) {
+        List<JasperReceipt> jasperList = queryService.getReportReceiptList(receipt);
+        if (jasperList != null) {
+            return reportService.exportReportReceipt(jasperList);
         } else {
             return "No existe ese producto";
         }

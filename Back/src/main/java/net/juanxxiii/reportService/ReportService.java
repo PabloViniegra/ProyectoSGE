@@ -1,11 +1,9 @@
 package net.juanxxiii.reportService;
 
-import net.juanxxiii.dto.JasperPurchases;
-import net.juanxxiii.dto.JasperSales;
-import net.juanxxiii.dto.JasperStockComposite;
-import net.juanxxiii.dto.JasperStockSimple;
+import net.juanxxiii.dto.*;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.data.JRJpaDataSource;
 import org.springframework.stereotype.Service;
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -70,5 +68,17 @@ public class ReportService {
             e.printStackTrace();
         }
         return "informe_stock_" + jasper.get(0).getProduct() + "_" + LocalDate.now();
+    }
+
+    public String exportReportReceipt(List<JasperReceipt> jasperList) {
+        try {
+            InputStream stream = getClass().getResourceAsStream("/reportReceiptTemplate.jrxml");
+            JasperPrint jasperPrint = getJasperPrint(jasperList, stream);
+            JasperExportManager.exportReportToPdfFile(jasperPrint, "/home/informe_recibo_" + jasperList.get(0).getClient().getFullName() + "_" + jasperList.get(0).getClient().getSales().stream().filter(sale -> sale.getId()==jasperList.get(0).getSale()).findFirst().get().getReceipt().getReceiptDate() + ".pdf");
+            JasperExportManager.exportReportToHtmlFile(jasperPrint, "/home/informe_recibo_" + jasperList.get(0).getClient().getFullName() + "_" + jasperList.get(0).getClient().getSales().stream().filter(sale -> sale.getId()==jasperList.get(0).getSale()).findFirst().get().getReceipt().getReceiptDate() + ".html");
+        } catch (JRException e) {
+            e.printStackTrace();
+        }
+        return "/home/informe_recibo_" + jasperList.get(0).getClient().getFullName() + "_" + jasperList.get(0).getClient().getSales().stream().filter(sale -> sale.getId()==jasperList.get(0).getSale()).findFirst().get().getReceipt().getReceiptDate();
     }
 }

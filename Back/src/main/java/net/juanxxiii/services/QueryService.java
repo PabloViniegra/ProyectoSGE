@@ -3,10 +3,7 @@ package net.juanxxiii.services;
 import lombok.extern.java.Log;
 import net.juanxxiii.db.entity.*;
 import net.juanxxiii.db.repository.*;
-import net.juanxxiii.dto.JasperPurchases;
-import net.juanxxiii.dto.JasperSales;
-import net.juanxxiii.dto.JasperStockComposite;
-import net.juanxxiii.dto.JasperStockSimple;
+import net.juanxxiii.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -1237,5 +1234,18 @@ public class QueryService {
             log.warning("Parece que no existe ese producto");
         }
         return jasperList;
+    }
+
+    public List<JasperReceipt> getReportReceiptList(int idReceipt) {
+        List<JasperReceipt> receiptList = new ArrayList<>();
+        Receipt receipt = receiptRepository.findById(idReceipt).orElse(null);
+        Sale sale = saleRepository.findByReceipt(receipt);
+        if (receipt != null) {
+            JasperReceipt jasperReceipt = new JasperReceipt();
+            jasperReceipt.setClient(getClient(sale.getClient()));
+            jasperReceipt.setSale(sale.getId());
+            receiptList.add(jasperReceipt);
+        }
+        return receiptList;
     }
 }
