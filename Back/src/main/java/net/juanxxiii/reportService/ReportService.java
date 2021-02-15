@@ -33,7 +33,7 @@ public class ReportService {
         } catch (JRException e) {
             e.printStackTrace();
         }
-        return "informe_ventas_" + salesList.get(0).getClient() + "_" + salesList.get(0).getReceiptDate() + "_" + salesList.get(salesList.size() - 1).getReceiptDate();
+        return "informe_ventas_" + salesList.get(0).getClient() + "_" + salesList.get(0).getReceiptDate() + "_" + salesList.get(salesList.size() - 1).getReceiptDate()  ;
     }
 
     public String exportReportPurchases(List<JasperPurchases> purchasesList) {
@@ -60,7 +60,15 @@ public class ReportService {
         return "informe_stock_" + jasper.get(0).getProducto() + "_" + LocalDate.now();
     }
 
-    public String exportReportStockCompositeProducts(List<JasperStockComposite> jasperList) {
-        return null;
+    public String exportReportStockCompositeProducts(List<JasperStockComposite> jasper) {
+        try {
+            InputStream stream = getClass().getResourceAsStream("/reportStockComposite.jrxml");
+            JasperPrint jasperPrint = getJasperPrint(jasper, stream);
+            JasperExportManager.exportReportToPdfFile(jasperPrint, "/home/informe_stock_" + jasper.get(0).getProduct() + "_" + LocalDate.now() + ".pdf");
+            JasperExportManager.exportReportToHtmlFile(jasperPrint, "/home/informe_stock_" + jasper.get(0).getProduct() + "_" + LocalDate.now() + ".html");
+        } catch (JRException e) {
+            e.printStackTrace();
+        }
+        return "informe_stock_" + jasper.get(0).getProduct() + "_" + LocalDate.now();
     }
 }
