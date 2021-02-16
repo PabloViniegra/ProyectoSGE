@@ -1066,7 +1066,7 @@ public class QueryService {
         LocalDate d1 = LocalDate.parse(dateInit, formatter);
         LocalDate d2 = LocalDate.parse(dateLast, formatter);
         List<JasperPurchases> reportPurchases = new ArrayList<>();
-        String[] tokens = supplierString.split(";");
+        String[] tokens = supplierString.split("-");
 
         List<Supplier> supplierList = new ArrayList<>();
         for (String token : tokens) {
@@ -1245,7 +1245,7 @@ public class QueryService {
                 sale.getSaleLines().forEach(saleLine -> {
                     JasperReceipt jasperReceipt = new JasperReceipt();
                     Client client = getClient(sale.getClient());
-                    jasperReceipt.setDate(receipt.getReceiptDate());
+                    jasperReceipt.setDate(receipt.getReceiptDate().substring(0,11));
                     jasperReceipt.setIva(receipt.getIva());
                     jasperReceipt.setPopulation(client.getPopulation().toString());
                     jasperReceipt.setPrice(saleLine.getQuantity() * saleLine.getIdProduct().getSellPrice());
