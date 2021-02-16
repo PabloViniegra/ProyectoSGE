@@ -144,7 +144,7 @@ async function loadProductionOrderList() {
 
 async function updateOrder() {
     let form = document.getElementById('updateProduction')
-    form.addEventListener('submit', async(e) => {
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
         let modifyButton = document.getElementById('modifyProduction')
         let id = modifyButton.getAttribute('idParaModificar')
@@ -195,7 +195,6 @@ async function updateOrder() {
                         })
                     if (podemosModificar) {
                         await fetch(url, patchInit)
-
                         for (let i = 0; i < idStonks.length; i++) {
                             let url3 = 'http://localhost:8080/api/v1/products/' + idStonks[i]
                             let data2 = {
@@ -247,7 +246,58 @@ async function updateOrder() {
                             body: JSON.stringify(data4)
                         }
                         await fetch(url4, patchInit4)
+                    } else if (response.status == 'EN PROCESO' && status == 'SOLICITADO') {
+                        let data = {
+                            status: status
+                        }
+                        let patchInit = {
+                            method: 'PATCH',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify(data)
+                        }   
+                        let stonks = [];
+                        let idStonks = [];
+                        let quantityStonks = [];
+                        await fetch(url, getInit)
+                            .then(response => response.json())
+                            .then(async response => {
+                                let url2 = 'http://localhost:8080/api/v1/detailsampling'
+                                await fetch(url2, getInit)
+                                    .then(response2 => response2.json())
+                                    .then(response2 => {
+                                        response2.forEach(detalle => {
+                                            if (detalle.sampling.id == response.sampling.id) {
+                                                stonks.push(detalle.product.stock)
+                                                idStonks.push(detalle.product.id)
+                                                quantityStonks.push(detalle.quantity * response.quantity)
+
+                                            }
+                                        })
+                                    })
+                                await fetch(url, patchInit)
+                                for (let i = 0; i < idStonks.length; i++) {
+                                    let url3 = 'http://localhost:8080/api/v1/products/' + idStonks[i]
+                                    let data2 = {
+                                        stock: stonks[i] + quantityStonks[i]
+                                    }
+                                    let patchInit2 = {
+                                        method: 'PATCH',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'Accept': 'application/json'
+                                        },
+                                        body: JSON.stringify(data2)
+                                    }
+                                    console.log(data2)
+                                    await fetch(url3, patchInit2)
+                                }
+
+                            })
                     }
+
                 })
 
         }
@@ -268,9 +318,6 @@ async function loadTableDetails(idSampling) {
     let bodyTbl = document.getElementById('tablaMostrarDetalle')
     await fetch(urlSampling, getInit)
         .then(response => response.json())
-        // .then(response => response.sort((a, b) => {
-        //     return a.name.localeCompare(b.name)
-        // }))
         .then(response => {
             response.forEach(element => {
                 if (element.sampling.id == idSampling) {
@@ -436,7 +483,7 @@ async function getAllStaffInASelect() {
 
 async function addProductionOrder() {
     let form = document.getElementById('formProduction');
-    form.addEventListener('submit', async(e) => {
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
         let current = new Date();
         let fecha = current.getFullYear() + '-' + (current.getMonth() + 1) + '-' + current.getDate();
@@ -522,7 +569,7 @@ async function cargarClient(client) {
 
 async function deleteOrder() {
     let form = document.getElementById('formDelete')
-    form.addEventListener('submit', async(e) => {
+    form.addEventListener('submit', async (e) => {
         e.preventDefault()
         const querystring = location.search;
         const params = new URLSearchParams(querystring)
