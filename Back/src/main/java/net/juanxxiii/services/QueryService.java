@@ -1066,7 +1066,7 @@ public class QueryService {
         LocalDate d1 = LocalDate.parse(dateInit, formatter);
         LocalDate d2 = LocalDate.parse(dateLast, formatter);
         List<JasperPurchases> reportPurchases = new ArrayList<>();
-        String[] tokens = supplierString.split(";");
+        String[] tokens = supplierString.split("-");
 
         List<Supplier> supplierList = new ArrayList<>();
         for (String token : tokens) {
