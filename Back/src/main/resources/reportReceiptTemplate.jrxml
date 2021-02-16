@@ -36,63 +36,69 @@
     <pageHeader>
         <band height="154" splitType="Stretch">
             <staticText>
-                <reportElement x="20" y="0" width="100" height="40" forecolor="#003399" uuid="7e06fb55-3b98-4c16-b2bd-16cefde793f1"/>
-                <textElement textAlignment="Center">
+                <reportElement x="20" y="0" width="120" height="40" forecolor="#003399" uuid="7e06fb55-3b98-4c16-b2bd-16cefde793f1"/>
+                <textElement textAlignment="Left">
                     <font fontName="DejaVu Sans" size="16" isBold="true"/>
                 </textElement>
                 <text><![CDATA[FACTURAR A]]></text>
             </staticText>
             <staticText>
-                <reportElement x="180" y="0" width="80" height="40" forecolor="#003399" uuid="52c35cbc-03cc-42f5-b42c-25f6dea364c2"/>
-                <textElement textAlignment="Center">
+                <reportElement x="180" y="0" width="120" height="40" forecolor="#003399" uuid="52c35cbc-03cc-42f5-b42c-25f6dea364c2"/>
+                <textElement textAlignment="Left">
                     <font fontName="DejaVu Sans" size="16" isBold="true"/>
                 </textElement>
                 <text><![CDATA[ENVIAR A]]></text>
             </staticText>
             <staticText>
                 <reportElement x="320" y="0" width="120" height="40" forecolor="#003399" uuid="c03ebfac-4b8a-4f67-a0ea-77717bb1ed3a"/>
-                <textElement textAlignment="Center">
+                <textElement textAlignment="Right" verticalAlignment="Top">
                     <font fontName="DejaVu Sans" size="14" isBold="true"/>
                 </textElement>
                 <text><![CDATA[NºFACTURA:]]></text>
             </staticText>
             <staticText>
-                <reportElement x="320" y="62" width="90" height="30" forecolor="#003399" uuid="b7690a7c-f0fc-4569-8cf6-18a869d86cb7"/>
-                <textElement textAlignment="Right">
+                <reportElement x="350" y="62" width="90" height="30" forecolor="#003399" uuid="b7690a7c-f0fc-4569-8cf6-18a869d86cb7"/>
+                <textElement textAlignment="Right" verticalAlignment="Top">
                     <font fontName="DejaVu Sans" size="14" isBold="true"/>
                 </textElement>
                 <text><![CDATA[FECHA:]]></text>
             </staticText>
             <textField>
-                <reportElement x="30" y="50" width="100" height="20" uuid="c0e4a2d9-3e72-4d52-b72e-4dfc5b2aad49"/>
+                <reportElement x="20" y="50" width="120" height="20" uuid="c0e4a2d9-3e72-4d52-b72e-4dfc5b2aad49"/>
                 <textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="30" y="70" width="100" height="30" uuid="8cd2bdca-731a-45e4-869c-98b5fb14a642"/>
+                <reportElement x="20" y="70" width="120" height="30" uuid="8cd2bdca-731a-45e4-869c-98b5fb14a642"/>
                 <textFieldExpression><![CDATA[$F{location}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="30" y="100" width="100" height="30" uuid="a02f617b-4c5f-48f7-897a-7ef840d8aa34"/>
+                <reportElement x="20" y="100" width="120" height="30" uuid="a02f617b-4c5f-48f7-897a-7ef840d8aa34"/>
                 <textFieldExpression><![CDATA[$F{population}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="180" y="50" width="100" height="20" uuid="c9edb3a0-fb04-4239-9368-8d8fb0e86f62"/>
+                <reportElement x="180" y="50" width="120" height="20" uuid="c9edb3a0-fb04-4239-9368-8d8fb0e86f62"/>
                 <textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="180" y="70" width="100" height="30" uuid="325db15e-7bb3-4b4e-8417-56547e494302"/>
+                <reportElement x="180" y="70" width="120" height="30" uuid="325db15e-7bb3-4b4e-8417-56547e494302"/>
                 <textFieldExpression><![CDATA[$F{location}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="180" y="100" width="100" height="30" uuid="f0ebfa8f-980f-442a-aed5-a7705d171bcb"/>
+                <reportElement x="180" y="100" width="120" height="30" uuid="f0ebfa8f-980f-442a-aed5-a7705d171bcb"/>
                 <textFieldExpression><![CDATA[$F{population}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="445" y="0" width="105" height="40" uuid="e3026582-e3d4-47ca-a77d-919f4e7724f8"/>
+                <reportElement x="445" y="0" width="110" height="40" uuid="e3026582-e3d4-47ca-a77d-919f4e7724f8"/>
+                <textElement>
+                    <font fontName="DejaVu Sans" size="14"/>
+                </textElement>
                 <textFieldExpression><![CDATA[$F{receiptNumber}]]></textFieldExpression>
             </textField>
-            <textField>
-                <reportElement x="420" y="62" width="110" height="30" uuid="5d858870-752d-4c27-81c7-dc67f361721b"/>
+            <textField pattern="dd/MM/yyyy">
+                <reportElement x="445" y="62" width="110" height="30" uuid="5d858870-752d-4c27-81c7-dc67f361721b"/>
+                <textElement>
+                    <font fontName="DejaVu Sans" size="14"/>
+                </textElement>
                 <textFieldExpression><![CDATA[$F{date}]]></textFieldExpression>
             </textField>
             <line>
@@ -101,31 +107,31 @@
         </band>
     </pageHeader>
     <columnHeader>
-        <band height="58" splitType="Stretch">
+        <band height="46" splitType="Stretch">
             <staticText>
-                <reportElement x="17" y="20" width="73" height="21" uuid="682ce371-f224-4a82-bb28-327086599cab"/>
-                <textElement>
+                <reportElement x="20" y="20" width="73" height="21" uuid="682ce371-f224-4a82-bb28-327086599cab"/>
+                <textElement textAlignment="Center">
                     <font fontName="DejaVu Sans" size="11" isBold="true"/>
                 </textElement>
                 <text><![CDATA[Cantidad]]></text>
             </staticText>
             <staticText>
-                <reportElement x="107" y="20" width="73" height="21" uuid="e87c4c69-4554-46bb-9e59-bad85dec269e"/>
-                <textElement>
+                <reportElement x="107" y="20" width="163" height="21" uuid="e87c4c69-4554-46bb-9e59-bad85dec269e"/>
+                <textElement textAlignment="Center">
                     <font fontName="DejaVu Sans" size="11" isBold="true"/>
                 </textElement>
                 <text><![CDATA[Producto]]></text>
             </staticText>
             <staticText>
-                <reportElement x="270" y="20" width="103" height="21" uuid="134ac433-f60d-410c-813d-95661d01aa66"/>
-                <textElement>
+                <reportElement x="290" y="20" width="103" height="21" uuid="134ac433-f60d-410c-813d-95661d01aa66"/>
+                <textElement textAlignment="Right">
                     <font fontName="DejaVu Sans" size="11" isBold="true"/>
                 </textElement>
                 <text><![CDATA[Precio Unitario]]></text>
             </staticText>
             <staticText>
                 <reportElement x="417" y="19" width="73" height="21" uuid="bcc25239-2e2b-4e1f-8d30-999e72e7e53f"/>
-                <textElement>
+                <textElement textAlignment="Right">
                     <font fontName="DejaVu Sans" size="11" isBold="true"/>
                 </textElement>
                 <text><![CDATA[Importe]]></text>
@@ -133,88 +139,106 @@
         </band>
     </columnHeader>
     <detail>
-        <band height="78" splitType="Stretch">
+        <band height="27" splitType="Stretch">
             <textField>
-                <reportElement x="20" y="0" width="87" height="20" uuid="10dc0f7b-e1f3-4373-a35b-68630ee2751f">
+                <reportElement x="20" y="0" width="73" height="20" uuid="10dc0f7b-e1f3-4373-a35b-68630ee2751f">
                     <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="95332667-ff0e-4114-a3d0-80950861678e"/>
                 </reportElement>
+                <textElement textAlignment="Center"/>
                 <textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="110" y="0" width="160" height="20" uuid="0bc88e6a-dce7-4e1a-b8ba-a89db6f8a278">
+                <reportElement x="107" y="0" width="160" height="20" uuid="0bc88e6a-dce7-4e1a-b8ba-a89db6f8a278">
                     <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0f705797-30ba-495b-813c-fa7227d181d8"/>
                 </reportElement>
+                <textElement textAlignment="Center"/>
                 <textFieldExpression><![CDATA[$F{product}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="310" y="0" width="90" height="20" uuid="4c84e567-d297-4b25-93ea-fbc042bfb5b7">
+                <reportElement x="290" y="0" width="103" height="20" uuid="4c84e567-d297-4b25-93ea-fbc042bfb5b7">
                     <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="759d64e9-90ad-4c25-b18b-298ada5c23e6"/>
                 </reportElement>
+                <textElement textAlignment="Right"/>
                 <textFieldExpression><![CDATA[$F{pvp}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="430" y="0" width="80" height="20" uuid="6f2d31f2-cbfd-4e03-aac4-6ed9be84548a">
+                <reportElement x="417" y="0" width="73" height="20" uuid="6f2d31f2-cbfd-4e03-aac4-6ed9be84548a">
                     <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3798724e-8096-481f-9992-6b3b68abbaf7"/>
                 </reportElement>
+                <textElement textAlignment="Right"/>
                 <textFieldExpression><![CDATA[$F{price}]]></textFieldExpression>
             </textField>
-            <line>
-                <reportElement x="-30" y="77" width="605" height="1" uuid="7721ac2b-200d-41b1-8b8f-915fb8162fae"/>
-            </line>
         </band>
     </detail>
     <columnFooter>
         <band height="68" splitType="Stretch">
             <staticText>
-                <reportElement x="300" y="0" width="73" height="21" uuid="033167c8-7351-486e-b715-10afc9592417"/>
+                <reportElement x="300" y="3" width="73" height="21" uuid="033167c8-7351-486e-b715-10afc9592417">
+                    <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                </reportElement>
                 <textElement>
                     <font fontName="DejaVu Sans" isBold="true"/>
                 </textElement>
                 <text><![CDATA[Subtotal]]></text>
             </staticText>
             <staticText>
-                <reportElement x="300" y="21" width="73" height="21" uuid="5067c084-ca63-4c68-8379-1283f9f4774e"/>
+                <reportElement x="300" y="24" width="73" height="21" uuid="5067c084-ca63-4c68-8379-1283f9f4774e">
+                    <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                </reportElement>
                 <textElement>
                     <font fontName="DejaVu Sans" isBold="true"/>
                 </textElement>
                 <text><![CDATA[IVA]]></text>
             </staticText>
             <staticText>
-                <reportElement x="300" y="42" width="73" height="21" uuid="862794c1-ff8d-4449-ab2b-e98694151d69"/>
+                <reportElement x="300" y="45" width="73" height="21" uuid="862794c1-ff8d-4449-ab2b-e98694151d69">
+                    <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                </reportElement>
                 <textElement>
                     <font fontName="DejaVu Sans" isBold="true"/>
                 </textElement>
                 <text><![CDATA[Total]]></text>
             </staticText>
             <textField>
-                <reportElement x="390" y="0" width="130" height="21" uuid="385bf973-f2e6-4344-9336-d8cf87a3f601"/>
+                <reportElement x="390" y="3" width="130" height="21" uuid="385bf973-f2e6-4344-9336-d8cf87a3f601">
+                    <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                </reportElement>
                 <textFieldExpression><![CDATA[$F{subtotal}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="390" y="21" width="130" height="21" uuid="7479d955-40ab-4892-b39a-e40e522691e7"/>
+                <reportElement x="390" y="24" width="130" height="21" uuid="7479d955-40ab-4892-b39a-e40e522691e7"/>
                 <textFieldExpression><![CDATA[$F{quote}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="390" y="45" width="130" height="21" uuid="cd70880a-c6dc-49ac-a22a-5a4572a91801"/>
+                <reportElement x="390" y="45" width="130" height="21" uuid="cd70880a-c6dc-49ac-a22a-5a4572a91801">
+                    <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                </reportElement>
                 <textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
             </textField>
             <staticText>
-                <reportElement x="8" y="28" width="110" height="21" uuid="63462afb-ce24-43ad-b3c0-4144b382bd2d"/>
+                <reportElement x="20" y="24" width="110" height="21" uuid="63462afb-ce24-43ad-b3c0-4144b382bd2d">
+                    <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                </reportElement>
                 <textElement>
                     <font fontName="DejaVu Sans" size="10" isBold="true"/>
                 </textElement>
                 <text><![CDATA[Nº de Cuenta:]]></text>
             </staticText>
             <textField>
-                <reportElement x="100" y="28" width="100" height="21" uuid="3592b795-4fee-45aa-b3d7-6751fc805135"/>
+                <reportElement x="140" y="24" width="100" height="21" uuid="3592b795-4fee-45aa-b3d7-6751fc805135">
+                    <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                </reportElement>
                 <textFieldExpression><![CDATA[$F{iban}]]></textFieldExpression>
             </textField>
+            <line>
+                <reportElement x="-17" y="0" width="605" height="1" uuid="7721ac2b-200d-41b1-8b8f-915fb8162fae"/>
+            </line>
         </band>
     </columnFooter>
     <pageFooter>
         <band height="70" splitType="Stretch">
             <textField pattern="MMMMM dd, yyyy">
-                <reportElement x="235" y="50" width="100" height="20" uuid="e1994eb7-7b08-41bb-9937-45b7331c240e"/>
+                <reportElement x="20" y="40" width="100" height="20" uuid="e1994eb7-7b08-41bb-9937-45b7331c240e"/>
                 <textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
             </textField>
             <textField>
@@ -224,6 +248,6 @@
         </band>
     </pageFooter>
     <summary>
-        <band height="89" splitType="Stretch"/>
+        <band splitType="Stretch"/>
     </summary>
 </jasperReport>
