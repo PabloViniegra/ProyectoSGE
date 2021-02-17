@@ -177,42 +177,44 @@ async function updateOrder() {
             await fetch(url, getInit)
                 .then(response => response.json())
                 .then(async response => {
-                    let url2 = 'http://localhost:8080/api/v1/detailsampling'
-                    await fetch(url2, getInit)
-                        .then(response2 => response2.json())
-                        .then(response2 => {
-                            response2.forEach(detalle => {
-                                if (detalle.sampling.id == response.sampling.id) {
-                                    if ((detalle.quantity * response.quantity) > detalle.product.stock) {
-                                        podemosModificar = false;
-                                    } else {
-                                        stonks.push(detalle.product.stock)
-                                        idStonks.push(detalle.product.id)
-                                        quantityStonks.push(detalle.quantity * response.quantity)
+                    if (response.status != 'TRAMITADO') {
+                        let url2 = 'http://localhost:8080/api/v1/detailsampling'
+                        await fetch(url2, getInit)
+                            .then(response2 => response2.json())
+                            .then(response2 => {
+                                response2.forEach(detalle => {
+                                    if (detalle.sampling.id == response.sampling.id) {
+                                        if ((detalle.quantity * response.quantity) > detalle.product.stock) {
+                                            podemosModificar = false;
+                                        } else {
+                                            stonks.push(detalle.product.stock)
+                                            idStonks.push(detalle.product.id)
+                                            quantityStonks.push(detalle.quantity * response.quantity)
+                                        }
                                     }
-                                }
+                                })
                             })
-                        })
-                    if (podemosModificar) {
-                        await fetch(url, patchInit)
-                        for (let i = 0; i < idStonks.length; i++) {
-                            let url3 = 'http://localhost:8080/api/v1/products/' + idStonks[i]
-                            let data2 = {
-                                stock: stonks[i] - quantityStonks[i]
+                        if (podemosModificar) {
+                            await fetch(url, patchInit)
+                            for (let i = 0; i < idStonks.length; i++) {
+                                let url3 = 'http://localhost:8080/api/v1/products/' + idStonks[i]
+                                let data2 = {
+                                    stock: stonks[i] - quantityStonks[i]
+                                }
+                                let patchInit2 = {
+                                    method: 'PATCH',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'Accept': 'application/json'
+                                    },
+                                    body: JSON.stringify(data2)
+                                }
+                                console.log(data2)
+                                await fetch(url3, patchInit2)
                             }
-                            let patchInit2 = {
-                                method: 'PATCH',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'Accept': 'application/json'
-                                },
-                                body: JSON.stringify(data2)
-                            }
-                            console.log(data2)
-                            await fetch(url3, patchInit2)
+                        } else {
+                            document.getElementById('debug').innerHTML = 'NO HAY STOCK SUFICIENTE DE ALGUNOS PRODUCTOS'
                         }
-                    } else {
-                        document.getElementById('debug').innerHTML = 'NO HAY STOCK SUFICIENTE DE ALGUNOS PRODUCTOS'
                     }
                 })
         } else {
@@ -257,7 +259,7 @@ async function updateOrder() {
                                 'Accept': 'application/json'
                             },
                             body: JSON.stringify(data)
-                        }   
+                        }
                         let stonks = [];
                         let idStonks = [];
                         let quantityStonks = [];

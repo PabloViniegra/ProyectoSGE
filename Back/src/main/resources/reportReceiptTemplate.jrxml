@@ -141,28 +141,28 @@
     <detail>
         <band height="27" splitType="Stretch">
             <textField>
-                <reportElement x="20" y="0" width="73" height="20" uuid="10dc0f7b-e1f3-4373-a35b-68630ee2751f">
+                <reportElement x="20" y="7" width="73" height="20" uuid="10dc0f7b-e1f3-4373-a35b-68630ee2751f">
                     <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="95332667-ff0e-4114-a3d0-80950861678e"/>
                 </reportElement>
                 <textElement textAlignment="Center"/>
                 <textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="107" y="0" width="160" height="20" uuid="0bc88e6a-dce7-4e1a-b8ba-a89db6f8a278">
+                <reportElement x="108" y="7" width="160" height="20" uuid="0bc88e6a-dce7-4e1a-b8ba-a89db6f8a278">
                     <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0f705797-30ba-495b-813c-fa7227d181d8"/>
                 </reportElement>
                 <textElement textAlignment="Center"/>
                 <textFieldExpression><![CDATA[$F{product}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="290" y="0" width="103" height="20" uuid="4c84e567-d297-4b25-93ea-fbc042bfb5b7">
+                <reportElement x="290" y="7" width="103" height="20" uuid="4c84e567-d297-4b25-93ea-fbc042bfb5b7">
                     <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="759d64e9-90ad-4c25-b18b-298ada5c23e6"/>
                 </reportElement>
                 <textElement textAlignment="Right"/>
                 <textFieldExpression><![CDATA[$F{pvp}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="417" y="0" width="73" height="20" uuid="6f2d31f2-cbfd-4e03-aac4-6ed9be84548a">
+                <reportElement x="419" y="7" width="73" height="20" uuid="6f2d31f2-cbfd-4e03-aac4-6ed9be84548a">
                     <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3798724e-8096-481f-9992-6b3b68abbaf7"/>
                 </reportElement>
                 <textElement textAlignment="Right"/>
@@ -231,7 +231,9 @@
                 <textFieldExpression><![CDATA[$F{iban}]]></textFieldExpression>
             </textField>
             <line>
-                <reportElement x="-17" y="0" width="605" height="1" uuid="7721ac2b-200d-41b1-8b8f-915fb8162fae"/>
+                <reportElement x="-20" y="1" width="605" height="1" uuid="7721ac2b-200d-41b1-8b8f-915fb8162fae">
+                    <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                </reportElement>
             </line>
         </band>
     </columnFooter>

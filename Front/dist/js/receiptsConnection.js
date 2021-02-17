@@ -44,6 +44,8 @@ async function loadReceipt() {
     let id = params.get('id')
     if (id == undefined) id = 1;
     let urlReceipt = 'http://localhost:8080/api/v1/receipts/' + id;
+    let urlVentas ='http://localhost:8080/api/v1/sales'
+    let urlCompras ='http://localhost:8080/api/v1/purchases' 
     let getInit = {
         method: 'GET',
         headers: {
@@ -54,7 +56,7 @@ async function loadReceipt() {
     await fetch(urlReceipt, getInit)
         .then(response => {
             if (response.ok) {
-                response.json().then(response => {
+                response.json().then(async response => {
                     let fecha = document.getElementById('fechafactura')
                     fecha.innerHTML = response.receiptDate;
                     let discount = document.getElementById('discount')
@@ -65,6 +67,26 @@ async function loadReceipt() {
                     iva.innerHTML = iva.innerHTML + ' ' + response.iva;
                     let total = document.getElementById('total')
                     total.innerHTML = total.innerHTML + ' ' + response.total;
+                    let operacion = document.getElementById('operacion')
+                    let sales=[];
+                    let purchases=[];
+                    await fetch(urlVentas,getInit)
+                    .then(response => response.json())
+                    .then (response => sales = response)
+
+                    await fetch(urlCompras,getInit)
+                    .then (response => response.json())
+                    .then (response => purchases = response)    
+                    sales.forEach(sale => {
+                        if (sale.receipt.id == response.id){
+                            operacion.innerHTML = operacion.innerHTML + ' Venta'
+                        }
+                    })
+                    purchases.forEach(purchase => {
+                        if (purchase.receipt.id == response.id){
+                            operacion.innerHTML = operacion.innerHTML + ' Compra'
+                        }
+                    })
 
                     //Modificacion
                     let subtotalModificar = document.getElementById('inputSubtotalM')
@@ -109,7 +131,7 @@ async function loadReceipt() {
 
 async function addReceipt() {
     let form = document.getElementById('addReceipt');
-    form.addEventListener('submit', async(e) => {
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
         const querystring = location.search;
         const params = new URLSearchParams(querystring)
@@ -152,7 +174,7 @@ async function addReceipt() {
 async function updateReceipt() {
     let form = document.getElementById('updateReceipt')
 
-    form.addEventListener('submit', async(e) => {
+    form.addEventListener('submit', async (e) => {
         const querystring = location.search;
         const params = new URLSearchParams(querystring)
         let id = params.get("id");
@@ -193,7 +215,7 @@ async function updateReceipt() {
 
 async function deleteReceipt() {
     let form = document.getElementById('deleteReceipt')
-    form.addEventListener('submit', async(e) => {
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
         const querystring = location.search;
         const params = new URLSearchParams(querystring)
@@ -236,7 +258,25 @@ async function loadAllReceipts() {
     }
     await fetch(url, getInit)
         .then(response => response.json())
-        .then(response => {
+        .then( async response => {
+            let urlVentas = 'http://localhost:8080/api/v1/sales';
+            let urlCompras = 'http://localhost:8080/api/v1/purchases';
+            let getInit = {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            }
+            let sales=[];
+            let purchases=[];
+            await fetch (urlVentas, getInit)
+            .then (response => response.json())
+            .then (response => sales = response);
+
+            await fetch(urlCompras, getInit)
+            .then (response => response.json())
+            .then (response => purchases = response);
             response.forEach(r => {
                 let row = document.createElement('tr');
                 let celda1 = document.createElement('td');
@@ -245,6 +285,18 @@ async function loadAllReceipts() {
                 let celda2 = document.createElement('td');
                 celda2.innerHTML = r.receiptDate;
                 row.appendChild(celda2);
+                let celdaOperacion = document.createElement('td');
+                sales.forEach(sale => {
+                    if (sale.receipt.id == r.id) {
+                        celdaOperacion.innerHTML = 'Venta'
+                    }
+                })
+                purchases.forEach(purchase => {
+                    if (purchase.receipt.id == r.id) {
+                        celdaOperacion.innerHTML = 'Compra'
+                    }
+                })
+                row.appendChild(celdaOperacion)
                 let celda3 = document.createElement('td');
                 celda3.innerHTML = r.discounts;
                 row.appendChild(celda3);
@@ -304,11 +356,13 @@ async function generateReport() {
             'Accept': 'application/json'
         }
     }
+    let check = false;
     await fetch(url, getInit)
         .then(response => response.json())
         .then(response => {
             response.forEach(async sale => {
                 if (sale.receipt.id == id) {
+                    check = true;
                     let urlReport = 'http://localhost:8080/api/v1/reports/receipt/' + id;
                     let getInitReport = {
                         method: 'GET',
@@ -330,5 +384,9 @@ async function generateReport() {
                         });
                 }
             })
+        if (!check) {
+            document.getElementById('debug').innerHTML = 'No se puede hacer facturas de compras';
+            
+        }
         })
 }

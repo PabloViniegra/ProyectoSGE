@@ -23,12 +23,10 @@ async function validate_login() {
     await fetch(url, postInit)
         .then(response => response.json())
         .then(result => {
-            console.log(result)
             if (pass.value == result.password) {
                 sessionStorage.setItem('idStaff', result.idStaff)
                 location.href = "views/index.html";
             } else {
-                console.log('Ha fallado algo')
                 let p = document.getElementById('debug');
                 p.innerHTML = 'Las credenciales no son correctas';
             }
@@ -51,7 +49,6 @@ async function accessStaff() {
     await fetch(url, getInit)
         .then(response => response.json())
         .then(response => {
-            console.log(response)
             if (response.positionStaff.privilege != 0) {
                 document.getElementById('debug').innerHTML = 'Necesitas ser administrador para acceder a este módulo.';
             } else {
