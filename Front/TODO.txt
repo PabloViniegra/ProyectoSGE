@@ -1,3 +1,0 @@
-Clientes -> borrar, agregar clientes, notificaciones
-Ventas -> rellenar cliente, producto, factura, personal
-y el resto de putos htmls

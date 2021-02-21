@@ -1,5 +1,5 @@
 {
-  "name": "net.juanxxiii",
+  "name": "ERP",
   "version": "1.0.0",
   "description": "Proyecto de SGE",
   "main": "main.js",
@@ -10,7 +10,9 @@
   "author": "Alejandro Garcia, Pablo Viniegra, Anibal Gomez",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^10.1.6"
+    "electron": "^10.1.6",
+    "electron-packager": "^15.2.0",
+    "electron-winstaller": "^5.0.0"
   },
   "dependencies": {
     "@popperjs/core": "^2.5.4",
