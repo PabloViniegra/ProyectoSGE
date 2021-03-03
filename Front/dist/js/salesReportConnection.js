@@ -16,7 +16,14 @@ async function getAllClientsInaSelected() {
         .then(response => {
             let select = document.getElementById('checkBoxes');
             select.style.textAlign = 'center';
+            let selectAll = document.createElement("input");
+            selectAll.setAttribute('type', 'button');
+            selectAll.setAttribute('id', 'selectAll');
+            selectAll.setAttribute('value', 'Select all');
+            select.appendChild(selectAll);
+
             response.forEach(s => {
+
                 let label = document.createElement('label')
                 label.setAttribute('for', s.fullName)
                 let checkbox = document.createElement('input')
@@ -26,10 +33,36 @@ async function getAllClientsInaSelected() {
                 label.innerHTML = s.fullName;
                 label.appendChild(checkbox)
                 select.appendChild(label)
-            });
-        })
 
+
+            });
+
+
+            document.getElementById('selectAll').onclick = function() {
+                let x = 0;
+                var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(checkbox =>{
+                    if (checkbox.checked == true){
+                        x = x + 1;
+                    }
+                    if (x >= 0 && x < checkboxes.length){
+                        checkboxes.forEach(checkbox => {
+                            checkbox.checked = true;
+                        })
+                    }else if (x == checkboxes.length){
+                        checkboxes.forEach(checkbox => {
+                            checkbox.checked = false;
+                        })
+                    }
+
+                }
+                )
+
+            }
+
+        })
 }
+
 
 document.getElementById("generateReport").addEventListener("click", ev => {
     ev.preventDefault();
