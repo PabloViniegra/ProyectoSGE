@@ -1245,6 +1245,7 @@ public class QueryService {
                 sale.getSaleLines().forEach(saleLine -> {
                     JasperReceipt jasperReceipt = new JasperReceipt();
                     Client client = getClient(sale.getClient());
+                    jasperReceipt.setDniClient(client.getDni());
                     jasperReceipt.setDate(receipt.getReceiptDate().substring(0,11));
                     jasperReceipt.setIva(receipt.getIva());
                     jasperReceipt.setPopulation(client.getPopulation().toString());
@@ -1263,7 +1264,6 @@ public class QueryService {
                     receiptList.add(jasperReceipt);
                 });
             }
-            System.out.println(receiptList);
         }
         return receiptList;
     }
