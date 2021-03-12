@@ -1246,7 +1246,7 @@ public class QueryService {
                     JasperReceipt jasperReceipt = new JasperReceipt();
                     Client client = getClient(sale.getClient());
                     jasperReceipt.setDniClient(client.getDni());
-                    jasperReceipt.setDate(receipt.getReceiptDate().substring(0,11));
+                    jasperReceipt.setDate(receipt.getReceiptDate().substring(0, 11));
                     jasperReceipt.setIva(receipt.getIva());
                     jasperReceipt.setPopulation(client.getPopulation().toString());
                     jasperReceipt.setPrice(saleLine.getQuantity() * saleLine.getIdProduct().getSellPrice());
@@ -1254,7 +1254,7 @@ public class QueryService {
                     jasperReceipt.setReceiptNumber(receipt.getId());
                     jasperReceipt.setIban(client.getIban());
                     jasperReceipt.setLocation(client.getDirections().get(0).toString());
-                    jasperReceipt.setQuote(jasperReceipt.getPrice()*(receipt.getIva()/100));
+                    jasperReceipt.setQuote(jasperReceipt.getPrice() * (receipt.getIva() / 100));
                     jasperReceipt.setSubtotal(receipt.getSubtotal());
                     jasperReceipt.setTotal(receipt.getTotal());
                     jasperReceipt.setPvp(saleLine.getIdProduct().getSellPrice());
@@ -1266,5 +1266,32 @@ public class QueryService {
             }
         }
         return receiptList;
+    }
+
+    public List<JasperPurchaseReceipt> getReportReceiptPurchaseListByStaff(int staff, String dateInit, String dateLast) {
+        Staff locatedStaff = staffRepository.findById(staff).orElse(null);
+        List<JasperPurchaseReceipt> list = new ArrayList<>();
+        if (locatedStaff != null) {
+            List<Purchase> whishedPurchases = purchaseRepository.findPurchasesBetweenDatesFromStaff(locatedStaff.getIdStaff(), dateInit, dateLast);
+            whishedPurchases.forEach(purchase -> {
+                JasperPurchaseReceipt jasperPurchaseReceipt = new JasperPurchaseReceipt();
+                jasperPurchaseReceipt.setIdDoc(purchase.getReceipt().getId());
+                jasperPurchaseReceipt.setStaff(locatedStaff.getName());
+                jasperPurchaseReceipt.setDate(purchase.getReceipt().getReceiptDate());
+                jasperPurchaseReceipt.setSupplierName(getSupplier(purchase.getSupplier()).getFullName());
+                jasperPurchaseReceipt.setDni(getSupplier(purchase.getSupplier()).getDni());
+                jasperPurchaseReceipt.setTotal(purchase.getReceipt().getTotal());
+                jasperPurchaseReceipt.setTotalReceipt(list.stream()
+                        .map(JasperPurchaseReceipt::getTotalReceipt)
+                        .reduce(0F, Float::sum) + jasperPurchaseReceipt.getTotalReceipt());
+                list.add(jasperPurchaseReceipt);
+            });
+        } else {
+            System.out.println("No existe ese personal");
+        }
+        List<JasperPurchaseReceipt> sortedList = list.stream()
+                .sorted(Comparator.comparing(JasperPurchaseReceipt::getDate))
+                .collect(Collectors.toList());
+        return sortedList;
     }
 }
