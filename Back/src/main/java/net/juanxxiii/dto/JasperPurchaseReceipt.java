@@ -9,6 +9,8 @@ public class JasperPurchaseReceipt {
     private String supplierName;
     private String staff;
     private String dni;
+    private String initdate;
+    private String lastdate;
     private float totalReceipt;
     private float total;
 }

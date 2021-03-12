@@ -1272,16 +1272,18 @@ public class QueryService {
         Staff locatedStaff = staffRepository.findById(staff).orElse(null);
         List<JasperPurchaseReceipt> list = new ArrayList<>();
         if (locatedStaff != null) {
-            List<Purchase> whishedPurchases = purchaseRepository.findPurchasesBetweenDatesFromStaff(locatedStaff.getIdStaff(), dateInit, dateLast);
-            whishedPurchases.forEach(purchase -> {
+            List<Purchase> purchases = purchaseRepository.findPurchasesBetweenDatesFromStaff(locatedStaff.getIdStaff(), dateInit, dateLast);
+            purchases.forEach(purchase -> {
                 JasperPurchaseReceipt jasperPurchaseReceipt = new JasperPurchaseReceipt();
+                jasperPurchaseReceipt.setInitdate(dateInit);
+                jasperPurchaseReceipt.setLastdate(dateLast);
                 jasperPurchaseReceipt.setIdDoc(purchase.getReceipt().getId());
                 jasperPurchaseReceipt.setStaff(locatedStaff.getName());
-                jasperPurchaseReceipt.setDate(purchase.getReceipt().getReceiptDate());
+                jasperPurchaseReceipt.setDate(purchase.getReceipt().getReceiptDate().substring(0,11));
                 jasperPurchaseReceipt.setSupplierName(getSupplier(purchase.getSupplier()).getFullName());
                 jasperPurchaseReceipt.setDni(getSupplier(purchase.getSupplier()).getDni());
-                jasperPurchaseReceipt.setTotal(purchase.getReceipt().getTotal());
-                jasperPurchaseReceipt.setTotalReceipt(list.stream()
+                jasperPurchaseReceipt.setTotalReceipt(purchase.getReceipt().getTotal());
+                jasperPurchaseReceipt.setTotal(list.stream()
                         .map(JasperPurchaseReceipt::getTotalReceipt)
                         .reduce(0F, Float::sum) + jasperPurchaseReceipt.getTotalReceipt());
                 list.add(jasperPurchaseReceipt);
@@ -1289,9 +1291,8 @@ public class QueryService {
         } else {
             System.out.println("No existe ese personal");
         }
-        List<JasperPurchaseReceipt> sortedList = list.stream()
+        return list.stream()
                 .sorted(Comparator.comparing(JasperPurchaseReceipt::getDate))
                 .collect(Collectors.toList());
-        return sortedList;
     }
 }
