@@ -7,6 +7,7 @@ public class JasperReceipt {
     private String name;
     private String location;
     private String population;
+    private String dniClient;
     private int receiptNumber;
     private String date;
     private float subtotal;

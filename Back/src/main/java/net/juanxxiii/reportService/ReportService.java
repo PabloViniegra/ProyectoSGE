@@ -3,7 +3,6 @@ package net.juanxxiii.reportService;
 import net.juanxxiii.dto.*;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import net.sf.jasperreports.engine.data.JRJpaDataSource;
 import org.springframework.stereotype.Service;
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -80,5 +79,17 @@ public class ReportService {
             e.printStackTrace();
         }
         return "informe_recibo_" + jasperList.get(0).getName() + "_" + jasperList.get(0).getDate();
+    }
+
+    public String exportReportPurchaseReceiptByStaff(List<JasperPurchaseReceipt> jasperList) {
+        try {
+            InputStream stream = getClass().getResourceAsStream("/reportReceiptPurchaseStaffTemplate.jrxml");
+            JasperPrint jasperPrint = getJasperPrint(jasperList, stream);
+            JasperExportManager.exportReportToPdfFile(jasperPrint, "/home/informe-compras-" + jasperList.get(0).getStaff() + ".pdf");
+            JasperExportManager.exportReportToHtmlFile(jasperPrint, "/home/informe-compras-" + jasperList.get(0).getStaff() + ".html");
+        } catch (JRException e) {
+            e.printStackTrace();
+        }
+        return "informe-compras-" + jasperList.get(0).getStaff();
     }
 }

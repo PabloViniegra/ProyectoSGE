@@ -3,6 +3,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Receipt" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d80f184b-96a2-44b3-ba3a-a78bf0359b9e">
     <field name="name" class="java.lang.String"/>
     <field name="location" class="java.lang.String"/>
+    <field name="dniClient" class="java.lang.String"/>
     <field name="population" class="java.lang.String"/>
     <field name="date" class="java.lang.String"/>
     <field name="iban" class="java.lang.String"/>
@@ -25,29 +26,41 @@
                 <imageExpression><![CDATA["/home/logoTemporal.png"]]></imageExpression>
             </image>
             <staticText>
-                <reportElement x="230" y="20" width="110" height="40" uuid="d1b769ca-4058-4828-8d0f-035a56a5e994"/>
+                <reportElement x="227" y="10" width="110" height="40" uuid="d1b769ca-4058-4828-8d0f-035a56a5e994"/>
                 <textElement textAlignment="Center">
                     <font fontName="DejaVu Sans" size="20" isBold="true"/>
                 </textElement>
                 <text><![CDATA[FACTURA]]></text>
             </staticText>
+            <staticText>
+                <reportElement x="403" y="25" width="100" height="25" uuid="51e5f88b-81a2-4b54-9c23-f1a5a7a08c85"/>
+                <textElement textAlignment="Center">
+                    <font fontName="DejaVu Sans" size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[DNI]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="393" y="50" width="120" height="20" uuid="5cb2db8d-1176-4a18-a7fa-2ea936ae6d3c"/>
+                <textElement textAlignment="Center"/>
+                <textFieldExpression><![CDATA[$F{dniClient}]]></textFieldExpression>
+            </textField>
         </band>
     </title>
     <pageHeader>
-        <band height="154" splitType="Stretch">
+        <band height="157" splitType="Stretch">
             <staticText>
                 <reportElement x="20" y="0" width="120" height="40" forecolor="#003399" uuid="7e06fb55-3b98-4c16-b2bd-16cefde793f1"/>
                 <textElement textAlignment="Left">
                     <font fontName="DejaVu Sans" size="16" isBold="true"/>
                 </textElement>
-                <text><![CDATA[FACTURAR A]]></text>
+                <text><![CDATA[DATOS DE LA EMPRESA]]></text>
             </staticText>
             <staticText>
                 <reportElement x="180" y="0" width="120" height="40" forecolor="#003399" uuid="52c35cbc-03cc-42f5-b42c-25f6dea364c2"/>
                 <textElement textAlignment="Left">
                     <font fontName="DejaVu Sans" size="16" isBold="true"/>
                 </textElement>
-                <text><![CDATA[ENVIAR A]]></text>
+                <text><![CDATA[FACTURAR A]]></text>
             </staticText>
             <staticText>
                 <reportElement x="320" y="0" width="120" height="40" forecolor="#003399" uuid="c03ebfac-4b8a-4f67-a0ea-77717bb1ed3a"/>
@@ -64,18 +77,6 @@
                 <text><![CDATA[FECHA:]]></text>
             </staticText>
             <textField>
-                <reportElement x="20" y="50" width="120" height="20" uuid="c0e4a2d9-3e72-4d52-b72e-4dfc5b2aad49"/>
-                <textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement x="20" y="70" width="120" height="30" uuid="8cd2bdca-731a-45e4-869c-98b5fb14a642"/>
-                <textFieldExpression><![CDATA[$F{location}]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement x="20" y="100" width="120" height="30" uuid="a02f617b-4c5f-48f7-897a-7ef840d8aa34"/>
-                <textFieldExpression><![CDATA[$F{population}]]></textFieldExpression>
-            </textField>
-            <textField>
                 <reportElement x="180" y="50" width="120" height="20" uuid="c9edb3a0-fb04-4239-9368-8d8fb0e86f62"/>
                 <textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
             </textField>
@@ -84,7 +85,7 @@
                 <textFieldExpression><![CDATA[$F{location}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="180" y="100" width="120" height="30" uuid="f0ebfa8f-980f-442a-aed5-a7705d171bcb"/>
+                <reportElement x="180" y="100" width="120" height="20" uuid="f0ebfa8f-980f-442a-aed5-a7705d171bcb"/>
                 <textFieldExpression><![CDATA[$F{population}]]></textFieldExpression>
             </textField>
             <textField>
@@ -104,6 +105,22 @@
             <line>
                 <reportElement x="-20" y="153" width="595" height="1" uuid="9b52cdd2-4df9-4e9d-a202-b32467605257"/>
             </line>
+            <staticText>
+                <reportElement x="20" y="49" width="120" height="22" uuid="d41daf9f-1d59-4f2e-a4b5-e1db1e9c3796"/>
+                <text><![CDATA[ERP Solutions Company]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="20" y="70" width="120" height="22" uuid="a3ff579e-aa6d-4c9e-965d-a2ed1e1ce94d"/>
+                <text><![CDATA[C/Nueva 2, 28921]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="20" y="92" width="120" height="18" uuid="ee3ed1dd-c479-40e5-8a76-619bde3fe1e4"/>
+                <text><![CDATA[Alcorcón (Madrid)]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="20" y="110" width="120" height="20" uuid="4195616a-b873-4749-a72d-7f05487d32f9"/>
+                <text><![CDATA[48216543V]]></text>
+            </staticText>
         </band>
     </pageHeader>
     <columnHeader>

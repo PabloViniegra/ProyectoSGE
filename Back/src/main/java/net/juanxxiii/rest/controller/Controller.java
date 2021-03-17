@@ -639,6 +639,16 @@ public class Controller {
         }
     }
 
+    @GetMapping("/reports/staffReceipt/{staff}/{dateInit}/{dateLast}")
+    public String exportReportStaffPurchase(@PathVariable("staff") int staff, @PathVariable("dateInit") String dateInit, @PathVariable("dateLast") String dateLast) {
+        List<JasperPurchaseReceipt> jasperList = queryService.getReportReceiptPurchaseListByStaff(staff,dateInit,dateLast);
+        if (jasperList != null) {
+            return reportService.exportReportPurchaseReceiptByStaff(jasperList);
+        } else {
+            return "No existe ese producto";
+        }
+    }
+
 }
 
 

@@ -34,4 +34,7 @@ public interface PurchaseRepository extends JpaRepository<Purchase, Integer> {
 
     @Query("from Sale  s where s.receipt.id=:receipt")
     Purchase findByReceipt(@Param("receipt") int receipt);
+
+    @Query("from Purchase p where p.staff.idStaff=:id and p.receipt.receiptDate between :initDate and :lastDate")
+    List<Purchase> findPurchasesBetweenDatesFromStaff(@Param("id") int idStaff, @Param("initDate") String dateInit, @Param("lastDate") String dateLast);
 }
