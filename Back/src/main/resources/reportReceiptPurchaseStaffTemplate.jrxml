@@ -10,7 +10,7 @@
     <style name="Row" mode="Transparent" fontName="DejaVu Sans" pdfFontName="Times-Roman"/>
     <field name="idDoc" class="java.lang.Integer"/>
     <field name="date" class="java.lang.String"/>
-    <field name="supplierName" class="java.lang.String"/>
+    <field name="clientName" class="java.lang.String"/>
     <field name="staff" class="java.lang.String"/>
     <field name="dni" class="java.lang.String"/>
     <field name="totalReceipt" class="java.lang.Float"/>
@@ -37,7 +37,7 @@
                     <textElement textAlignment="Right">
                         <font size="22" isBold="false"/>
                     </textElement>
-                    <text><![CDATA[Reporte de Compras]]></text>
+                    <text><![CDATA[Reporte de Ventas]]></text>
                 </staticText>
                 <textField>
                     <reportElement x="170" y="17" width="270" height="20" forecolor="#FFFFFF" uuid="aa388564-e1e8-48cf-a5f4-8ae381f40a7d"/>
@@ -100,7 +100,7 @@
                 <textElement>
                     <font isBold="true"/>
                 </textElement>
-                <text><![CDATA[Proveedor]]></text>
+                <text><![CDATA[Cliente]]></text>
             </staticText>
             <staticText>
                 <reportElement style="Column header" x="420" y="0" width="130" height="18" forecolor="#000000" uuid="95696112-ff9d-44ff-8deb-e418288ba95e">
@@ -169,7 +169,7 @@
                     <textElement>
                         <font size="14"/>
                     </textElement>
-                    <textFieldExpression><![CDATA[$F{supplierName}]]></textFieldExpression>
+                    <textFieldExpression><![CDATA[$F{clientName}]]></textFieldExpression>
                 </textField>
                 <textField textAdjust="StretchHeight">
                     <reportElement style="Detail" positionType="Float" x="420" y="0" width="130" height="18" uuid="fb423e11-69f9-4c89-b7dd-f2186eeb7812">

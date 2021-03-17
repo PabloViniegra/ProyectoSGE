@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -1271,21 +1273,27 @@ public class QueryService {
     public List<JasperPurchaseReceipt> getReportReceiptPurchaseListByStaff(int staff, String dateInit, String dateLast) {
         Staff locatedStaff = staffRepository.findById(staff).orElse(null);
         List<JasperPurchaseReceipt> list = new ArrayList<>();
+        /*BigDecimal a = BigDecimal.valueOf(purchase.getReceipt().getSubtotal() * (purchase.getReceipt().getIva() / 100));
+        BigDecimal roundOff = a.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+        jas.setQuote(roundOff.floatValue());*/
         if (locatedStaff != null) {
-            List<Purchase> purchases = purchaseRepository.findPurchasesBetweenDatesFromStaff(locatedStaff.getIdStaff(), dateInit, dateLast);
-            purchases.forEach(purchase -> {
+            List<Sale> sales = saleRepository.findPurchasesBetweenDatesFromStaff(locatedStaff.getIdStaff(), dateInit, dateLast);
+            sales.forEach(sale -> {
                 JasperPurchaseReceipt jasperPurchaseReceipt = new JasperPurchaseReceipt();
                 jasperPurchaseReceipt.setInitdate(dateInit);
                 jasperPurchaseReceipt.setLastdate(dateLast);
-                jasperPurchaseReceipt.setIdDoc(purchase.getReceipt().getId());
+                jasperPurchaseReceipt.setIdDoc(sale.getReceipt().getId());
                 jasperPurchaseReceipt.setStaff(locatedStaff.getName());
-                jasperPurchaseReceipt.setDate(purchase.getReceipt().getReceiptDate().substring(0,11));
-                jasperPurchaseReceipt.setSupplierName(getSupplier(purchase.getSupplier()).getFullName());
-                jasperPurchaseReceipt.setDni(getSupplier(purchase.getSupplier()).getDni());
-                jasperPurchaseReceipt.setTotalReceipt(purchase.getReceipt().getTotal());
+                jasperPurchaseReceipt.setDate(sale.getReceipt().getReceiptDate().substring(0,11));
+                jasperPurchaseReceipt.setClientName(getClient(sale.getClient()).getFullName());
+                jasperPurchaseReceipt.setDni(getClient(sale.getClient()).getDni());
+                jasperPurchaseReceipt.setTotalReceipt(sale.getReceipt().getTotal());
                 jasperPurchaseReceipt.setTotal(list.stream()
                         .map(JasperPurchaseReceipt::getTotalReceipt)
                         .reduce(0F, Float::sum) + jasperPurchaseReceipt.getTotalReceipt());
+                BigDecimal bg = BigDecimal.valueOf(jasperPurchaseReceipt.getTotal());
+                BigDecimal roundoff = bg.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+                jasperPurchaseReceipt.setTotal(roundoff.floatValue());
                 list.add(jasperPurchaseReceipt);
             });
         } else {

@@ -645,7 +645,7 @@ public class Controller {
         if (jasperList != null) {
             return reportService.exportReportPurchaseReceiptByStaff(jasperList);
         } else {
-            return "No existe ese producto";
+            return "Algo ha ido mal";
         }
     }
 

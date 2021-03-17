@@ -6,7 +6,7 @@ import lombok.Data;
 public class JasperPurchaseReceipt {
     private int idDoc;
     private String date;
-    private String supplierName;
+    private String clientName;
     private String staff;
     private String dni;
     private String initdate;

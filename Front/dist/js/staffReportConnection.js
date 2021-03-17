@@ -35,7 +35,7 @@ async function generateReport() {
     let lastdate = document.querySelector('#endDate')
     let staffSelected = document.querySelector('#staffInASelected');
     let valueSelect = staffSelected.options[staffSelected.selectedIndex].value;    
-    let url = 'http://localhost:8080/api/v1/reports/purchases/' + valueSelect + '/' + initdate.value + '/' + lastdate.value;
+    let url = 'http://localhost:8080/api/v1/reports/staffReceipt/' + valueSelect + '/' + initdate.value + '/' + lastdate.value;
     let getInit = {
         method: 'GET',
         headers: {

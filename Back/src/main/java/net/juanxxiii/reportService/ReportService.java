@@ -85,11 +85,11 @@ public class ReportService {
         try {
             InputStream stream = getClass().getResourceAsStream("/reportReceiptPurchaseStaffTemplate.jrxml");
             JasperPrint jasperPrint = getJasperPrint(jasperList, stream);
-            JasperExportManager.exportReportToPdfFile(jasperPrint, "/home/informe-compras-" + jasperList.get(0).getStaff() + ".pdf");
-            JasperExportManager.exportReportToHtmlFile(jasperPrint, "/home/informe-compras-" + jasperList.get(0).getStaff() + ".html");
+            JasperExportManager.exportReportToPdfFile(jasperPrint, "/home/informe-ventas-" + jasperList.get(0).getStaff() + ".pdf");
+            JasperExportManager.exportReportToHtmlFile(jasperPrint, "/home/informe-ventas-" + jasperList.get(0).getStaff() + ".html");
         } catch (JRException e) {
             e.printStackTrace();
         }
-        return "informe-compras-" + jasperList.get(0).getStaff();
+        return "informe-ventas-" + jasperList.get(0).getStaff();
     }
 }
