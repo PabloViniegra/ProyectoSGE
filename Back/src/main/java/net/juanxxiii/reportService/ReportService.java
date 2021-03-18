@@ -92,4 +92,18 @@ public class ReportService {
         }
         return "informe-compras-" + jasperList.get(0).getStaff();
     }
+
+    public String exportReportSaleReceiptByStaff(List<JasperSaleReceipt> jasperList) {
+        try {
+            InputStream stream = getClass().getResourceAsStream("/salesForStaff.jrxml");
+            JasperPrint jasperPrint = getJasperPrint(jasperList, stream);
+            JasperExportManager.exportReportToPdfFile(jasperPrint, "/home/informe-ventas-" + jasperList.get(0).getStaff() + ".pdf");
+            JasperExportManager.exportReportToHtmlFile(jasperPrint, "/home/informe-ventas-" + jasperList.get(0).getStaff() + ".html");
+        } catch (JRException e) {
+            e.printStackTrace();
+        }
+        return "informe-ventas-" + jasperList.get(0).getStaff();
+    }
+
+
 }

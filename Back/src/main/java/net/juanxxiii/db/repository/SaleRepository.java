@@ -1,5 +1,6 @@
 package net.juanxxiii.db.repository;
 
+import net.juanxxiii.db.entity.Purchase;
 import net.juanxxiii.db.entity.Receipt;
 import net.juanxxiii.db.entity.Sale;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -36,4 +37,8 @@ public interface SaleRepository extends JpaRepository<Sale, Integer> {
 
     @Query("from Sale  s where s.receipt.id=:receipt")
     Sale findByReceipt(@Param("receipt") int receipt);
+
+    @Query("from Sale s where s.staff.idStaff=:id and s.receipt.receiptDate between :initDate and :lastDate")
+    List<Purchase> findSaleBetweenDatesFromStaff(@Param("id") int idStaff, @Param("initDate") String dateInit, @Param("lastDate") String dateLast);
+
 }

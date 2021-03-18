@@ -1295,4 +1295,32 @@ public class QueryService {
                 .sorted(Comparator.comparing(JasperPurchaseReceipt::getDate))
                 .collect(Collectors.toList());
     }
+
+    public List<JasperSaleReceipt> getReportReceiptSaleListByStaff(int staff, String dateInit, String dateLast) {
+        Staff locatedStaff = staffRepository.findById(staff).orElse(null);
+        List<JasperSaleReceipt> list = new ArrayList<>();
+        if (locatedStaff != null) {
+            List<Purchase> sales = saleRepository.findSaleBetweenDatesFromStaff(locatedStaff.getIdStaff(), dateInit, dateLast);
+            sales.forEach(sale -> {
+                JasperSaleReceipt jasperSaleReceipt = new JasperSaleReceipt();
+                jasperSaleReceipt.setInitdate(dateInit);
+                jasperSaleReceipt.setLastdate(dateLast);
+                jasperSaleReceipt.setIdDoc(sale.getReceipt().getId());
+                jasperSaleReceipt.setStaff(locatedStaff.getIdStaff());
+                jasperSaleReceipt.setDate(sale.getReceipt().getReceiptDate().substring(0,11));
+                jasperSaleReceipt.setClientName(getClient(sale.getId()).getFullName());
+                jasperSaleReceipt.setDni(getClient(sale.getId()).getDni());
+                jasperSaleReceipt.setTotalReceipt(sale.getReceipt().getTotal());
+                jasperSaleReceipt.setTotal(list.stream()
+                        .map(JasperSaleReceipt::getTotalReceipt)
+                        .reduce(0F, Float::sum) + jasperSaleReceipt.getTotalReceipt());
+                list.add(jasperSaleReceipt);
+            });
+        } else {
+            System.out.println("No existe ese personal");
+        }
+        return list.stream()
+                .sorted(Comparator.comparing(JasperSaleReceipt::getDate))
+                .collect(Collectors.toList());
+    }
 }

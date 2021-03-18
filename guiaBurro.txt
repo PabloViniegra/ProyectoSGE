@@ -53,7 +53,8 @@
 	8.2- Para modificar:
 		8.2.1- Lo buscamos con findById y lo mapeamos
 		8.2.2- actualizamos cada una de las relaciones por separado
-			8.2.2.1- Si tiene una relacion 1-1 o N-1 buscaremos si la entidad que nos trae el objeto recibido en la peticion existe en el repo, si no, lo guardamos, y por ultimo actualizamos con 				un update el campo necesario en la tabla. Para mas info ver updateSaleReceipt o updateSaleStaff
+			8.2.2.1- Si tiene una relacion 1-1 o N-1 buscaremos si la entidad que nos trae el objeto recibido en la peticion existe en el repo, si no, lo guardamos, y por ultimo actualizamos con 				
+				un update el campo necesario en la tabla. Para mas info ver updateSaleReceipt o updateSaleStaff
 			8.2.2.2- Si tiene una relacion 1-N tendremos que recorrer la lista que nos trae el objeto y vemos cuales faltan en la que hemos encontrado en la BBDD, insertando todas aquellas que 
 			faltan. Luego recorremos las que tenemos en la BBDD eliminando todas aquellas que no estan en la nueva lista. Para mas info ver updateSale (el atributo SaleLines)
 		8.2.3- Devolvemos el nuevo objeto actualizado (tendremos que crear un update de todos los campos basicos y llamarlo)
