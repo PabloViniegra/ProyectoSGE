@@ -43,6 +43,11 @@ public interface StaffRepository extends JpaRepository<Staff, Integer> {
     @Query(value = "UPDATE sge_moviles.personal SET idPuesto=:idpuesto WHERE idPersonal=:id",nativeQuery = true)
     void updateIdPositionStaff(@Param("idpuesto") int idPosition, @Param("id") int id);
 
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE sge_moviles.personal SET iddepartmento=:iddepartamento WHERE idPersonal=:id",nativeQuery = true)
+    void updateIdDepartmentStaff(@Param("iddepartmento") int iddepartamento, @Param("id") int id);
+
     @Query("select s from Staff s where s.name = :name")
     Optional<Staff> findByName(@Param("name")String name);
 

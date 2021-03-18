@@ -659,6 +659,23 @@ public class Controller {
         }
     }
 
+    //Listar todos los deartamentos
+    @GetMapping("/departments")
+    public ResponseEntity<List<Departament>> getDepartmentsList() {
+        return ResponseEntity.ok(queryService.getDepartments());
+    }
+
+    //Buscar un departamento
+    @GetMapping("/departments/{id}")
+    public ResponseEntity<?> getDepartment(@PathVariable("id") int id) {
+        Departament departament = queryService.getDepartment(id);
+        if (departament != null) {
+            return ResponseEntity.ok(departament);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }
 
 

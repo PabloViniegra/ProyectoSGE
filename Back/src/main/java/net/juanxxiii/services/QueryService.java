@@ -38,7 +38,7 @@ public class QueryService {
     private final SamplingRepository samplingRepository;
     private final DetailSamplingRepository detailSamplingRepository;
     private final ProductionRepository productionRepository;
-
+    private final DepartmentRepository departmentRepository;
 
     @Autowired
     public QueryService(ClientRepository clientRepository,
@@ -58,7 +58,8 @@ public class QueryService {
                         PopulationRepository populationRepository,
                         SamplingRepository samplingRepository,
                         DetailSamplingRepository detailSamplingRepository,
-                        ProductionRepository productionRepository) {
+                        ProductionRepository productionRepository,
+                        DepartmentRepository departmentRepository) {
         this.clientRepository = clientRepository;
         this.supplierRepository = supplierRepository;
         this.staffRepository = staffRepository;
@@ -77,6 +78,7 @@ public class QueryService {
         this.samplingRepository = samplingRepository;
         this.detailSamplingRepository = detailSamplingRepository;
         this.productionRepository = productionRepository;
+        this.departmentRepository = departmentRepository;
     }
 
     //Client queryList
@@ -1323,4 +1325,16 @@ public class QueryService {
                 .sorted(Comparator.comparing(JasperSaleReceipt::getDate))
                 .collect(Collectors.toList());
     }
+
+    //Metodo para recoger todos los departamentos
+    public List<Departament> getDepartments(){
+        return departmentRepository.findAll();
+    }
+
+    //Para buscar 1 departamento
+    public Departament getDepartment(int id) {
+        return departmentRepository.findById(id).orElse(null);
+    }
+
+
 }
